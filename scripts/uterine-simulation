@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# usage: uterine-simulation <dim>
+# Runs the chaste simulation, renames the log file and annotates data
+
+# Check arguments
+if [[ $# -ne 1 ]]; then
+	echo "Error: missing simulation dimension"
+	echo "usage: uterine-simulation <dim>"
+	exit
+fi
+
+# Move to the app directory and run the simulation
+cd ${CHASTE_BUILD_DIR}/projects/uterus-modelling
+./apps/main $1
+
+# Get the config file based on dimension
+if [[ $1 -eq 2 ]]; then
+	CONFIG=${CHASTE_MODELLING_CONFIG_DIR}2d_params.toml
+
+elif [[ $1 -eq 3 ]]; then
+	CONFIG=${CHASTE_MODELLING_CONFIG_DIR}3d_params.toml
+fi
+
+# Get the name details
+CELL_TYPE=$(grep "cell_type =" $CONFIG | cut -d '"' -f 2)
+SAVE_DIR=$(grep "save_dir =" $CONFIG | cut -d '"' -f 2)
+STIMULUS=$(grep "stimulus_type =" $CONFIG | cut -d '"' -f 2)
+BASE_DIR=${CHASTE_TEST_OUTPUT}/${SAVE_DIR}/${CELL_TYPE}
+
+# Move to the log folder to rename the log file
+cd ${BASE_DIR}/log
+NB_FILES=$(printf "%0.3d" $(ls | wc -l))
+mv log.log "simulation_${NB_FILES}.log"
+
+# Move to the stimulus folder
+cd ${BASE_DIR}/${STIMULUS}
+
+# Create results folder if it does not exist
+if [ ! -d "${BASE_DIR}/results" ]; then
+	mkdir dir ${BASE_DIR}/results
+fi
+
+# Annotate the data for viewing
+SIM_RES_NAME="simulation_${NB_FILES}_res.vtu"
+python3 ${CHASTE_SOURCE_DIR}/python/utils/AddVtuTimeAnnotations.py vtk_output/results.vtu ${BASE_DIR}/results/${SIM_RES_NAME}
