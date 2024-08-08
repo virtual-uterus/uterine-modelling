@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Executes the cube-to-tet program.
+# Author: Mathias Roesler
+
+python3 ~/.local/bin/cube-to-tet.py $@
+
