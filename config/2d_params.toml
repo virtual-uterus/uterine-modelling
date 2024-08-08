@@ -1,0 +1,20 @@
+# General parameters
+save_dir = "monodomain_2d"
+mesh_name = "2D_0_to_1mm_200_elements"
+mesh_dir = "/mesh/test/data/"
+stimulus_type = "simple"
+
+# Stimulus parameters
+x_stim_start = -0.1
+x_stim_end = 0.2
+y_stim_start = 0.0
+y_stim_end = 0.01
+
+# Time paramters in millisec
+sim_duration = 10000.0
+ode_timestep = 0.1
+pde_timestep = 0.1
+print_timestep = 1.0
+
+# Cell parameters
+cell_type = "Tong"

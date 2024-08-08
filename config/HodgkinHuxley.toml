@@ -1,0 +1,12 @@
+# Cell properties
+capacitance = 1.0 # uF/cm2
+conductivities_2d = [0.01, 0.09] #x, y
+conductivities_3d = [0.01, 0.09, 0.01] #x, y, z
+
+# Stimulus
+magnitude = -2e5 # uA/cm2
+period = 50.0 #ms
+duration = 0.5 # ms
+start_time = 5.0 # ms
+
+cell_id = 0

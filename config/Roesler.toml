@@ -1,0 +1,24 @@
+# Cell properties
+capacitance = 1.0 # uF/cm2
+conductivities_2d = [0.05, 0.05] #x, y
+conductivities_3d = [100.0, 100.0, 100.0] #x, y, z
+
+# Stimulus
+magnitude = -1.1e3 # uA/cm2
+period = 0.1 # ms
+duration = 2000.0 # ms
+start_time = 1000.0 # ms
+
+cell_id = 4
+
+# Cell parameters
+[parameters]
+   gna = 0.0625 # 0.0625
+   beta = 0.0158 # 0.015
+   gkv43 = 2.6 # 2.6
+   gkca = 2.4 # 2.4
+   gcal = 0.3 # 0.3
+   gcat = 0.058 # 0.058
+   E2 = 50.0 # E: 50, M: 43, D: 74, P:90
+   P4 = 13.5 # E: 13.5, M: 28, D: 15, P: 37
+
