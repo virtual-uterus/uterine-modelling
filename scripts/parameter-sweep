@@ -1,64 +1,12 @@
 #!/usr/bin/env bash
-
+#
 # usage: parameter-sweep <dim> <param> <start-val> <end-val> <step>
-# Runs a parameter sweep for the given parameter
+# Runs the parameter-sweep.py script
 
-if [[ $# -ne 5 ]]; then
-	echo "Error: invalid number of arguments"
-	echo "usage: parameter-sweep <dim> <param> <start-val> <end-val> <step>"
-	exit
+if [[ -z ${CHASTE_PROJECTS_DIR} ]]; then
+	SCRIPT_PATH=${APPTAINERENV_CHASTE_PROJECTS_DIR}
+else
+	SCRIPT_PATH=${CHASTE_PROJECTS_DIR}
 fi
 
-DIM=$1
-PARAM=$2
-VALUE=$3
-END=$4
-STEP=$5
-CONFIG=${CHASTE_MODELLING_CONFIG_DIR}2d_params.toml
-
-CONDITION=$(echo "${VALUE} > ${END}" | bc)
-
-if [[ $CONDITION -eq 1 ]]; then
-	echo "Error: the start value is greater than the end value"
-	exit
-fi
-
-CELL_TYPE=$(cat ${CHASTE_MODELLING_CONFIG_DIR}/${DIM}d_params.toml | grep cell_type | cut -d '"' -f2)
-CONFIG_FILE=${CHASTE_MODELLING_CONFIG_DIR}/${CELL_TYPE}.toml 
-
-while :; do
-	LINE=$(cat ${CONFIG_FILE} | cut -d '#' -f1 | grep $PARAM)
-	
-	if [[ "${PARAM}" == "conductivities" ]]; then
-		if [[ "${DIM}" == 2 ]]; then
-			sed -i "s/${PARAM}_2d = \[[^]]*\]/${PARAM} = [${VALUE}, ${VALUE}] /g" ${CONFIG_FILE}
-		else
-			sed -i "s/${PARAM}_3d = \[[^]]*\]/${PARAM} = [${VALUE}, ${VALUE}, ${VALUE}] /g" ${CONFIG_FILE}
-		fi
-	
-	elif [[ "${PARAM}" == "magnitude" ]]; then
-		sed -i "s/${LINE}/${PARAM} = ${VALUE} /g" ${CONFIG_FILE}
-		
-	else
-		sed -i "s/${LINE}/   ${PARAM} = ${VALUE} /g" ${CONFIG_FILE}
-	fi
-
-	CONDITION=$(echo "${VALUE} < 1.0 && ${VALUE} > 0.0" | bc)
-
-	if [[ ${CONDITION} -eq 1 ]]; then
-		VALUE=0$(echo ${VALUE} + ${STEP} | bc)
-	else
-		VALUE=$(echo ${VALUE} + ${STEP} | bc)
-	fi
-
-	# Run the chaste simulation
-	uterine-simulation ${DIM}
-	echo
-
-	CONDITION=$(echo "${VALUE} > ${END}" | bc)
-
-	if [[ ${CONDITION} -eq 1 ]]; then
-		break
-	fi
- 
-done
+python3 ${SCRIPT_PATH}/uterus-modelling/python/parameter-sweep.py $@
