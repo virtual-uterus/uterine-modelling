@@ -125,9 +125,18 @@ if __name__ == "__main__":
         # Create correct timesteps in seconds
         t = np.linspace(0, nb_timesteps * timestep * 1e-3, nb_timesteps)
 
+    # Create figure and plot
+    fig, ax = plt.subplots(dpi=300)
+
     for j in range(V.shape[1]):
         plt.plot(t, V[:, j])
 
-    plt.xlabel("Time (ms)")
+    plt.xlabel("Time (s)")
     plt.ylabel("Amplitude (mV)")
+
+    plt.xlim([0, max(t)])
+
+    # Assume that cells are organised from ovaries to cervix
+    plt.legend(["Ovarian end", "Centre", "Cervical end"])
+    plt.tight_layout()
     plt.show()
