@@ -6,6 +6,18 @@ import argparse
 
 
 def parameter_sweep(dim, param, start_val, end_val, step):
+    """Performs several simulations with different values of a parameter
+
+    Arguments:
+    dim -- int, dimension of the simulation {0, 2, 3}.
+    param -- str, name of the parameter to change in the configuration file.
+    start_val -- float, start value for the parameter.
+    end_val -- float, end value for the parameter.
+    step -- float, increase step between two simulations.
+
+    Return:
+
+    """
     # Initial setup
     value = float(start_val)
     end = float(end_val)
@@ -14,7 +26,7 @@ def parameter_sweep(dim, param, start_val, end_val, step):
     # Get the config directory and files
     config_dir = os.getenv("CHASTE_MODELLING_CONFIG_DIR")
     if not config_dir:
-        print("Error: CHASTE_MODELLING_CONFIG_DIR environment variable is not set")
+        print("Error: CHASTE_MODELLING_CONFIG_DIR env variable is not set")
         return
 
     cell_type_file = os.path.join(config_dir, f"{dim}d_params.toml")
@@ -71,9 +83,21 @@ if __name__ == "__main__":
     )
     parser.add_argument("dim", type=int, help="dimension (2 or 3)")
     parser.add_argument("param", type=str, help="parameter to sweep")
-    parser.add_argument("start_val", type=float, help="start value of the parameter")
-    parser.add_argument("end_val", type=float, help="end value of the parameter")
-    parser.add_argument("step", type=float, help="step value for the parameter sweep")
+    parser.add_argument(
+        "start_val",
+        type=float,
+        help="start value of the parameter",
+    )
+    parser.add_argument(
+        "end_val",
+        type=float,
+        help="end value of the parameter",
+    )
+    parser.add_argument(
+        "step",
+        type=float,
+        help="step value for the parameter sweep",
+    )
 
     args = parser.parse_args()
 
