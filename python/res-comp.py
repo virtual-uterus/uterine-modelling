@@ -9,8 +9,11 @@ import argparse
 import os
 
 import utils
+import plots
 import sklearn.metrics as skm
+import scipy.stats as stat
 
+from itertools import combinations
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -46,8 +49,9 @@ if __name__ == "__main__":
         args.file_name,
     )
 
-    # Dictionnary to store different resolutions
+    # Dictionnary to store data and correlation values
     data = {}
+    correl_values = {}
 
     for resolution in utils.RES:
         # Iterate over each resolution
@@ -58,4 +62,10 @@ if __name__ == "__main__":
 
         data[resolution] = V[:, 0]
 
-        skm.mean_squared_error(y_true, y_pred, squared=False)
+    for res1, res2 in combinations(data.keys(), 2):
+        # Calculate Pearson correlation
+        correlation, _ = stat.pearsonr(data[res1], data[res2])
+        # Store in dictionary
+        correl_values[(res1, res2)] = correlation
+
+    plots.plot_correlation_heatmap(correl_values)
