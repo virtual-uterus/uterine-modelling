@@ -9,7 +9,7 @@ import argparse
 import os
 
 import utils
-import matplotlib.pyplot as plt
+import plots
 
 
 if __name__ == "__main__":
@@ -49,18 +49,5 @@ if __name__ == "__main__":
     log_path = file_path + ".log"
 
     V, t = utils.load_data(data_path, log_path, args.delimiter)
-    # Create figure and plot
-    fig, ax = plt.subplots(dpi=300)
 
-    for j in range(V.shape[1]):
-        plt.plot(t, V[:, j])
-
-    plt.xlabel("Time (s)")
-    plt.ylabel("Amplitude (mV)")
-
-    plt.xlim([0, max(t)])
-
-    # Assume that cells are organised from ovaries to cervix
-    plt.legend(["Ovarian end", "Centre", "Cervical end"])
-    plt.tight_layout()
-    plt.show()
+    plots.plot_cell_data(V, t)
