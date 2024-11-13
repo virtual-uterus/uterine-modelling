@@ -10,6 +10,7 @@ import re
 
 import numpy as np
 import pandas as pd
+import paraview.simple as ps
 
 # Define global constants
 HOME = os.path.expanduser("~")
@@ -50,6 +51,17 @@ def get_print_timestep(log_path):
 
 
 def load_data(data_path, log_path, delimiter=","):
+    """Loads the data from a csv file
+
+    Arguments:
+    data_path -- str, path to the data file.
+    log_path -- str, path to the log file of the simulation.
+    delimiter -- str, delimiter for the csv file, default value ,.
+
+    Return:
+    V -- ndarray, membrane potential values.
+    t -- ndarray, timestep values.
+    """
     try:
         # Read the file using pandas, specifying the delimiter
         df = pd.read_csv(data_path, delimiter=delimiter)
@@ -99,3 +111,58 @@ def load_data(data_path, log_path, delimiter=","):
     t = np.linspace(0, nb_timesteps * timestep * 1e-3, nb_timesteps)
 
     return V, t
+
+
+def paraview_extract(mesh_path, save_path, pts_list):
+    """Extracts the data from the desired points in the mesh and
+    saves in a csv file
+
+    Arguments:
+    mesh_path -- str, path to the mesh vtu file.
+    save_path -- str, path to the export save file.
+    pts_list -- list(int), list of points to extract data from in the mesh.
+
+    Return:
+
+    """
+    # Create a new 'XML Unstructured Grid Reader'
+    mesh = ps.XMLUnstructuredGridReader(
+        registrationName="mesh.vtu",
+        FileName=[mesh_path],
+    )
+    mesh.PointArrayStatus = ["V"]
+
+    # Properties modified on mesh
+    mesh.TimeArray = "None"
+
+    # Get active view
+    view = ps.GetActiveViewOrCreate("RenderView")
+
+    # Update the view to ensure updated data information
+    view.Update()
+
+    # create a query selection
+    ps.QuerySelect(
+        QueryString="(in1d(id, {}))".format(pts_list),
+        FieldType="POINT",
+        InsideOut=0,
+    )
+
+    # Update the view to ensure updated data information
+    view.Update()
+
+    # Create a new 'Extract Selection'
+    selected_pts = ps.ExtractSelection(
+        registrationName="Selected_pts",
+        Input=mesh,
+    )
+
+    # Save data
+    ps.SaveData(
+        save_path,
+        proxy=selected_pts,
+        WriteTimeSteps=1,
+        PointDataArrays=["V"],
+        AddMetaData=0,
+        AddTime=1,
+    )
