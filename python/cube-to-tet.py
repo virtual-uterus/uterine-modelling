@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# cubeToTet.py: Script to convert a cubic mesh to a tetrahedral one
+# cube-to-tet.py: Script to convert a cubic mesh to a tetrahedral one
 # Author: Mathias Roesler
 # Last modified: 09/23
 
@@ -10,7 +10,7 @@ import sys
 import argparse
 
 
-def convertConnections(cube_node_list):
+def convert_connections(cube_node_list):
     """Converts the connections of the cubic element to six tetrahedra
     connections
 
@@ -99,7 +99,7 @@ if __name__ == "__main__":
         # Write the CELLS
         f.write("CELLS {} {}\n".format(new_n, new_size))
 
-        for j, line in enumerate(mesh_lines[i + 1:]):
+        for j, line in enumerate(mesh_lines[(i + 1) :]):
             if line[0] == "C":
                 # Exit after reading all the cells
                 break
@@ -107,7 +107,7 @@ if __name__ == "__main__":
             str_node_list = line.split(" ")
             int_node_list = [int(x) for x in str_node_list[1:]]
 
-            tet_node_list = convertConnections(int_node_list)
+            tet_node_list = convert_connections(int_node_list)
 
             for node_list in tet_node_list:
                 f.write("4 ")  # Write the number of points
