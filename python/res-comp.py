@@ -10,7 +10,6 @@ import os
 
 import utils
 import plots
-import sklearn.metrics as skm
 import scipy.stats as stat
 
 from itertools import combinations
