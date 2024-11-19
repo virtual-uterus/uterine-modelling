@@ -208,8 +208,8 @@ def fetch_quality_data(quality, mesh_quality, view):
 
 
 def paraview_quality(mesh_path):
-    """Inspects the quality of the mesh by looking at the aspect ratio,
-    the Jacobian determinant, and the skewness.
+    """Inspects the quality of the mesh by looking at the aspect ratio
+    and the Jacobian determinant.
 
     Arguments:
     mesh_path -- str, path to the mesh vtu file.
@@ -258,7 +258,6 @@ def paraview_quality(mesh_path):
         mesh_quality,
         view,
     )
-    sk_quality_data = fetch_quality_data("Skewness", mesh_quality, view)
 
     print("Aspect ratio quality data:", end=" ")
     print(
@@ -273,13 +272,5 @@ def paraview_quality(mesh_path):
         "{:.2f} \u00b1 {:.2f}".format(
             np.mean(jd_quality_data),
             np.std(jd_quality_data),
-        )
-    )
-
-    print("Skewness quality data:", end=" ")
-    print(
-        "{:.2f} \u00b1 {:.2f}".format(
-            np.mean(sk_quality_data),
-            np.std(sk_quality_data),
         )
     )
