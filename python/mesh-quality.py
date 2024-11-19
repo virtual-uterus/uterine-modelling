@@ -31,7 +31,7 @@ if __name__ == "__main__":
         "--extension",
         type=str,
         help="mesh extension",
-        default="vtu",
+        default="vtk",
     )
 
     # Parse input arguments
