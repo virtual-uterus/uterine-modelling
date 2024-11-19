@@ -24,12 +24,12 @@ def convertConnections(cube_node_list):
     """
     tet_node_list = []
     conversion_idx = [  # List of node indices for each tetrahedra
-        [0, 1, 2, 4],
-        [0, 3, 2, 4],
-        [1, 2, 4, 5],
-        [3, 2, 4, 7],
-        [2, 4, 5, 6],
-        [2, 4, 7, 6],
+        [0, 1, 2, 4],  # Tetrahedron 1
+        [0, 2, 3, 4],  # Tetrahedron 2
+        [1, 2, 4, 5],  # Tetrahedron 3
+        [2, 3, 4, 7],  # Tetrahedron 4
+        [2, 4, 5, 6],  # Tetrahedron 5
+        [2, 4, 6, 7],  # Tetrahedron 6
     ]
 
     for idx_list in conversion_idx:
