@@ -7,6 +7,7 @@
 
 import os
 import re
+import sys
 
 import numpy as np
 import pandas as pd
@@ -40,13 +41,13 @@ def get_print_timestep(log_path):
                     if match:
                         return float(match.group(1))
     except FileNotFoundError:
-        print("Error: log file at {} not found".format(log_path))
+        sys.stderr.write("Error: log file at {} not found\n".format(log_path))
         exit(1)
     except Exception as e:
-        print("Error reading log file: {}".format(e))
+        sys.stderr.write("Error reading log file: {}\n".format(e))
         exit(1)
 
-    print("Error: print timestep not found in log file")
+    sys.stderr.write("Error: print timestep not found in log file\n")
     exit(1)
 
 
@@ -68,16 +69,16 @@ def load_data(data_path, log_path, delimiter=","):
 
     # Catch common erros
     except FileNotFoundError:
-        print("Error: file at {} not found".format(data_path))
+        sys.stderr.write("Error: file at {} not found\n".format(data_path))
         exit(1)
     except pd.errors.EmptyDataError:
-        print("Error: file is empty.")
+        sys.stderr.write("Error: file is empty.\n")
         exit(1)
     except pd.errors.ParserError:
-        print("Error: could not parse file.")
+        sys.stderr.write("Error: could not parse file\n")
         exit(1)
     except Exception as e:
-        print("Error: {}".format(e))
+        sys.stderr.write("Error: {}\n".format(e))
         exit(1)
 
     # Get print timestep
@@ -103,7 +104,7 @@ def load_data(data_path, log_path, delimiter=","):
             tmp_V[:, i] = V[idx]
 
     else:
-        print("Error: missing point IDs in vtu file.")
+        sys.stderr.write("Error: missing point IDs in vtu file\n")
         exit(1)
 
     V = tmp_V  # Reset V for plotting
