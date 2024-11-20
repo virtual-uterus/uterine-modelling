@@ -14,11 +14,11 @@ class UterineSimpleCellFactory : public AbstractUterineCellFactory {
   double mpX_stim_end;
   double mpY_stim_start;
   double mpY_stim_end;
-    boost::shared_ptr<SimpleStimulus> mpStimulus;
+  boost::shared_ptr<SimpleStimulus> mpStimulus;
 
  public:
   UterineSimpleCellFactory();
-    AbstractCvodeCell* CreateCardiacCellForTissueNode(Node<2>* pNode);
+  AbstractCvodeCell* CreateCardiacCellForTissueNode(Node<2>* pNode);
   void ReadParams(std::string general_param_file);
   void ReadCellParams(std::string cell_param_file);
   void PrintParams() override;

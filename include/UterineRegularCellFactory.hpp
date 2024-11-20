@@ -14,7 +14,7 @@ class UterineRegularCellFactory : public AbstractUterineCellFactory {
   double mpX_stim_end;
   double mpY_stim_start;
   double mpY_stim_end;
-    boost::shared_ptr<RegularStimulus> mpStimulus;
+  boost::shared_ptr<RegularStimulus> mpStimulus;
 
  public:
   UterineRegularCellFactory();
