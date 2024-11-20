@@ -24,7 +24,9 @@ AbstractCvodeCell* AbstractUterineCellFactory3d::CreateCardiacCellForTissueNode(
     case 2:
       cell = new CellMeans2023FromCellMLCvode(mpSolver, mpZeroStimulus);
 
-      for (auto it=mpCell_parameters.begin(); it != mpCell_parameters.end(); ++it) {
+      for (auto it=mpCell_parameters.begin();
+          it != mpCell_parameters.end();
+          ++it) {
         cell->SetParameter(it->first, it->second);
       }
       break;
@@ -32,7 +34,9 @@ AbstractCvodeCell* AbstractUterineCellFactory3d::CreateCardiacCellForTissueNode(
     case 3:
       cell = new CellTong2014FromCellMLCvode(mpSolver, mpZeroStimulus);
 
-      for (auto it=mpCell_parameters.begin(); it != mpCell_parameters.end(); ++it) {
+      for (auto it=mpCell_parameters.begin();
+          it != mpCell_parameters.end();
+          ++it) {
         cell->SetParameter(it->first, it->second);
       }
       break;
@@ -40,7 +44,9 @@ AbstractCvodeCell* AbstractUterineCellFactory3d::CreateCardiacCellForTissueNode(
     case 4:
       cell = new CellRoesler2024FromCellMLCvode(mpSolver, mpZeroStimulus);
 
-      for (auto it=mpCell_parameters.begin(); it != mpCell_parameters.end(); ++it) {
+      for (auto it=mpCell_parameters.begin();
+          it != mpCell_parameters.end();
+          ++it) {
         cell->SetParameter(it->first, it->second);
       }
       break;
@@ -90,7 +96,8 @@ void AbstractUterineCellFactory3d::ReadCellParams(std::string cell_param_file) {
   mpCell_id = toml::find<std::int16_t>(cell_params, "cell_id");
 
   if (cell_params.contains("parameters")) {
-    mpCell_parameters = toml::find<std::unordered_map<std::string, float>>(cell_params,
+    mpCell_parameters = toml::find<std::unordered_map<std::string, float>>(
+      cell_params,
       "parameters");
   }
 }

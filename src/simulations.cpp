@@ -1,4 +1,11 @@
 #include "simulations.hpp"
+#include "FHNOdeSystem.hpp"
+#include "UterineSimpleCellFactory.hpp"
+#include "UterineRegularCellFactory.hpp"
+#include "UterineZeroCellFactory.hpp"
+#include "UterineSimpleCellFactory3d.hpp"
+#include "UterineRegularCellFactory3d.hpp"
+#include "UterineZeroCellFactory3d.hpp"
 
 void simulation_0d() {
   FHNOdeSystem ode;
@@ -74,7 +81,8 @@ void simulation_2d() {
   // Log file location
   std::string log_dir = save_dir + "/" + cell_type + "/log";
   OutputFileHandler output_file_handler(log_dir, false);
-  std::string log_path = output_file_handler.GetOutputDirectoryFullPath() + "log.log";
+  std::string log_path =
+    output_file_handler.GetOutputDirectoryFullPath() + "log.log";
 
   HeartConfig::Instance()->SetSimulationDuration(sim_duration);  // ms
   HeartConfig::Instance()->SetMeshFileName(mesh_dir + mesh_name);
@@ -202,7 +210,8 @@ void simulation_3d() {
   // Log file location
   std::string log_dir = save_dir + "/" + cell_type + "/log";
   OutputFileHandler output_file_handler(log_dir, false);
-  std::string log_path = output_file_handler.GetOutputDirectoryFullPath() + "log.log";
+  std::string log_path =
+    output_file_handler.GetOutputDirectoryFullPath() + "log.log";
 
   HeartConfig::Instance()->SetSimulationDuration(sim_duration);  // ms
   HeartConfig::Instance()->SetMeshFileName(mesh_dir + mesh_name);
