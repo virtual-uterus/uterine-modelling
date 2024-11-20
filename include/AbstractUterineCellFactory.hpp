@@ -18,6 +18,7 @@ constexpr char GENERAL_PARAM_FILE[] = "2d_params.toml";
 class AbstractUterineCellFactory : public AbstractCardiacCellFactory<2> {
  protected:
   std::string mpCell_type;
+  std::string mpEstrus;  // Estrus stage if specified
   std::unordered_map<std::string, float> mpCell_parameters;
   std::int16_t mpCell_id;  // 0 = HH, 1 = CK, 2 = Means, 3 = Tong, 4 = Roesler
 
@@ -26,6 +27,7 @@ class AbstractUterineCellFactory : public AbstractCardiacCellFactory<2> {
   AbstractUterineCellFactory();
   AbstractCvodeCell* CreateCardiacCellForTissueNode(Node<2>* pNode);
   std::string GetCellType();
+  std::string GetCellParamFile();
   virtual void ReadParams(std::string general_param_file);
   virtual void ReadCellParams(std::string cell_param_file);
   virtual void PrintParams();

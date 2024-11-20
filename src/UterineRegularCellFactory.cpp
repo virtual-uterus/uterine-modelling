@@ -5,7 +5,7 @@ UterineRegularCellFactory::UterineRegularCellFactory() :
   AbstractUterineCellFactory(),
   mpStimulus(new RegularStimulus(0.0, 0.0, 0.1, 0.0)) {
   ReadParams(USMC_2D_SYSTEM_CONSTANTS::GENERAL_PARAM_FILE);
-  ReadCellParams(mpCell_type + ".toml");
+  ReadCellParams(AbstractUterineCellFactory::GetCellParamFile());
 }
 
 

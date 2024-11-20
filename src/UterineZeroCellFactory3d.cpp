@@ -5,7 +5,7 @@ UterineZeroCellFactory3d::UterineZeroCellFactory3d() :
   AbstractUterineCellFactory3d(),
   mpStimulus(new ZeroStimulus()) {
   ReadParams(USMC_3D_SYSTEM_CONSTANTS::GENERAL_PARAM_FILE);
-  ReadCellParams(mpCell_type + ".toml");
+  ReadCellParams(AbstractUterineCellFactory3d::GetCellParamFile());
 }
 
 

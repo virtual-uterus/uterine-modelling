@@ -65,6 +65,19 @@ std::string AbstractUterineCellFactory3d::GetCellType() {
 }
 
 
+std::string AbstractUterineCellFactory3d::GetCellParamFile() {
+  std::string cell_param_file = "";
+
+  if (mpEstrus == "") {
+    // No specified estrus phase
+    cell_param_file = mpCell_type + ".toml";
+  } else {
+    cell_param_file = mpCell_type + "_" + mpEstrus + ".toml";
+  }
+
+  return cell_param_file;
+}
+
 void AbstractUterineCellFactory3d::ReadParams(std::string general_param_file) {
   std::string general_param_path = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
     general_param_file;
@@ -72,17 +85,15 @@ void AbstractUterineCellFactory3d::ReadParams(std::string general_param_file) {
 
   mpCell_type = toml::find<std::string>(params, "cell_type");
 
-  // Get the cell configuration
-  std::string cell_param_file = "";
-
   if (mpCell_type == std::string("Roesler")) {
     // Get the estrus phase as well
-    const std::string estrus_phase = toml::find<std::string>(params,
-      "estrus");
-    cell_param_file = mpCell_type + "_" + estrus_phase + ".toml";
+    mpEstrus = toml::find<std::string>(params, "estrus");
   } else {
-    cell_param_file = mpCell_type + ".toml";
+    mpEstrus = "";
   }
+
+  // Get the cell configuration
+  std::string cell_param_file = GetCellParamFile();
 
   ReadCellParams(cell_param_file);
 }

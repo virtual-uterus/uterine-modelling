@@ -65,6 +65,20 @@ std::string AbstractUterineCellFactory::GetCellType() {
 }
 
 
+std::string AbstractUterineCellFactory::GetCellParamFile() {
+  std::string cell_param_file = "";
+
+  if (mpEstrus == "") {
+    // No specified estrus phase
+    cell_param_file = mpCell_type + ".toml";
+  } else {
+    cell_param_file = mpCell_type + "_" + mpEstrus + ".toml";
+  }
+
+  return cell_param_file;
+}
+
+
 void AbstractUterineCellFactory::ReadParams(std::string general_param_file) {
   std::string general_param_path = USMC_2D_SYSTEM_CONSTANTS::CONFIG_DIR +
     general_param_file;
