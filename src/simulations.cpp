@@ -79,7 +79,7 @@ void simulation_2d() {
   std::string save_path = cell_type + "/" + save_dir + "/" + stimulus_type;
 
   // Log file location
-  std::string log_dir = save_dir + "/" + cell_type + "/log";
+  std::string log_dir = cell_type + "/" + save_dir + "/log";
   OutputFileHandler output_file_handler(log_dir, false);
   std::string log_path =
     output_file_handler.GetOutputDirectoryFullPath() + "log.log";
@@ -208,7 +208,7 @@ void simulation_3d() {
   std::string save_path = cell_type + "/" + save_dir + "/" + stimulus_type;
 
   // Log file location
-  std::string log_dir = save_dir + "/" + cell_type + "/log";
+  std::string log_dir = cell_type + "/" + save_dir + "/log";
   OutputFileHandler output_file_handler(log_dir, false);
   std::string log_path =
     output_file_handler.GetOutputDirectoryFullPath() + "log.log";

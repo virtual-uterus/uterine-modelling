@@ -26,8 +26,8 @@ fi
 CELL_TYPE=$(grep "cell_type =" $CONFIG | cut -d '"' -f 2)
 SAVE_DIR=$(grep "save_dir =" $CONFIG | cut -d '"' -f 2)
 STIMULUS=$(grep "stimulus_type =" $CONFIG | cut -d '"' -f 2)
-BASE_DIR=${CHASTE_TEST_OUTPUT}/${SAVE_DIR}/${CELL_TYPE}
-
+BASE_DIR=${CHASTE_TEST_OUTPUT}/${CELL_TYPE}/${SAVE_DIR}
+#
 # Move to the log folder to rename the log file
 cd ${BASE_DIR}/log
 NB_FILES=$(printf "%0.3d" $(ls | wc -l))
