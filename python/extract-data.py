@@ -19,7 +19,7 @@ if __name__ == "__main__":
         "dir_path",
         type=str,
         metavar="dir-path",
-        help="path from BASE to the data",
+        help="path from BASE to the Chaste save directory",
     )
     parser.add_argument(
         "mesh_name",
@@ -45,13 +45,23 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Create file path
-    file_path = os.path.join(
+    dir_path = os.path.join(
         utils.HOME,
         utils.BASE,
         args.dir_path,
-        args.mesh_name,
     )
-    mesh_path = "{}.{}".format(file_path, args.extension)
-    save_path = file_path + ".csv"
 
+    save_dir = os.path.join(dir_path, "extract")
+
+    # Create extract directory if it does not exist
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+
+    mesh_path = "{}/results/{}.{}".format(
+        dir_path,
+        args.mesh_name,
+        args.extension,
+    )
+
+    save_path = save_dir + "/{}.csv".format(args.mesh_name)
     utils.paraview_extract(mesh_path, save_path, args.pts_list)

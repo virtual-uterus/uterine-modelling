@@ -22,7 +22,7 @@ if __name__ == "__main__":
         "dir_path",
         type=str,
         metavar="dir-path",
-        help="path from BASE to the data",
+        help="path from BASE to the Chaste save directory",
     )
     parser.add_argument(
         "file_name",
@@ -40,12 +40,11 @@ if __name__ == "__main__":
     # Parse input arguments
     args = parser.parse_args()
 
-    # Create file path
-    file_path = os.path.join(
+    # Create path to main directory
+    dir_path = os.path.join(
         utils.HOME,
         utils.BASE,
         args.dir_path,
-        args.file_name,
     )
 
     # Dictionnary to store data and correlation values
@@ -54,8 +53,14 @@ if __name__ == "__main__":
 
     for resolution in utils.RES:
         # Iterate over each resolution
-        data_path = file_path + "_{}_res.csv".format(resolution)
-        log_path = file_path + "_{}_res.log".format(resolution)
+        data_path = dir_path + "extract/{}_{}_res.csv".format(
+            args.file_name,
+            resolution,
+        )
+        log_path = dir_path + "log/{}_{}_res.log".format(
+            args.file_name,
+            resolution,
+        )
 
         V, t = utils.load_data(data_path, log_path, args.delimiter)
 

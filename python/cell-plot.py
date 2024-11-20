@@ -20,7 +20,7 @@ if __name__ == "__main__":
         "dir_path",
         type=str,
         metavar="dir-path",
-        help="path from BASE to the data",
+        help="path from BASE to the Chaste save directory",
     )
     parser.add_argument(
         "file_name",
@@ -39,14 +39,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Create file path
-    file_path = os.path.join(
+    dir_path = os.path.join(
         utils.HOME,
         utils.BASE,
         args.dir_path,
-        args.file_name,
     )
-    data_path = file_path + ".csv"
-    log_path = file_path + ".log"
+    data_path = dir_path + "extract/{}.csv".format(args.file_name)
+    log_path = dir_path + "log/{}.log".format(args.file_name)
 
     V, t = utils.load_data(data_path, log_path, args.delimiter)
 
