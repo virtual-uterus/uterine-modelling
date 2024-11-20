@@ -258,29 +258,34 @@ def paraview_quality(mesh_path):
         mesh_quality,
         view,
     )
+    print_quality(ar_quality_data, "Aspect ratio")
+    print()
+    print_quality(jd_quality_data, "Jacobian determinant")
 
-    print("Aspect ratio quality data:", end=" ")
+
+def print_quality(quality_array, metric_name):
+    """Prints statistical information about the quality metric
+
+    Arguments:
+    quality_array -- np.array, quality data for mesh nodes.
+    metric_name -- str, name of the quality metric.
+
+    Return:
+
+    """
+    print("{} quality data:".format(metric_name))
     print(
         "Mean: {:.2f} \u00b1 {:.2f}".format(
-            np.mean(ar_quality_data),
-            np.std(ar_quality_data),
+            np.mean(quality_array),
+            np.std(quality_array),
         )
     )
-    print("Min: {:.2f}".format(np.min(ar_quality_data)))
-    print("Max: {:.2f}".format(np.max(ar_quality_data)))
-    print("Median: {:.2f}".format(np.median(ar_quality_data)))
-    print("25th percentile: {:.2f}".format(np.percentile(ar_quality_data, 25)))
-    print("75th percentile: {:.2f}".format(np.percentile(ar_quality_data, 75)))
-
-    print("Jacobian determinant quality data:", end=" ")
     print(
-        "{:.2f} \u00b1 {:.2f}".format(
-            np.mean(jd_quality_data),
-            np.std(jd_quality_data),
+        "Min-Max: [{:.2f} - {:.2f}]".format(
+            np.min(quality_array),
+            np.max(quality_array),
         )
     )
-    print("Min: {:.2f}".format(np.min(jd_quality_data)))
-    print("Max: {:.2f}".format(np.max(jd_quality_data)))
-    print("Median: {:.2f}".format(np.median(jd_quality_data)))
-    print("25th percentile: {:.2f}".format(np.percentile(jd_quality_data, 25)))
-    print("75th percentile: {:.2f}".format(np.percentile(jd_quality_data, 75)))
+    print("25th percentile: {:.2f}".format(np.percentile(quality_array, 25)))
+    print("Median: {:.2f}".format(np.median(quality_array)))
+    print("75th percentile: {:.2f}".format(np.percentile(quality_array, 75)))
