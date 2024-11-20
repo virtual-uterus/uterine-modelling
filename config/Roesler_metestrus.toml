@@ -4,8 +4,8 @@ conductivities_2d = [0.0, 0.0]
 conductivities_3d = [1000.0, 1000.0, 1000.0] 
 
 # Stimulus
-magnitude = -0.5e3
-period = 45.0e3 # ms
+magnitude = -0.35e3
+period = 71.0e3 # ms
 duration = 10.0e3 # ms
 start_time = 1.0e3 # ms
 cell_id = 4
@@ -13,9 +13,11 @@ cell_id = 4
 # Cell parameters
 [parameters]
    gna = 0.0625 # 0.0625
-   gkv43 = 1.155 # P: 0.95, E: 2.5, M: 2.04, D: 1.155
+   gkv43 = 2.04 # P: 0.95, E: 2.5, M: 2.04, D: 1.155
    gkca = 2.4 # 2.4
    gcal = 0.6 # 0.6
    gcat = 0.058 # 0.058
-   E2 = 90.0 # P: 100, E: 40, M: 49, D: 90
-   P4 = 10.0 # P: 37, E: 14, M: 25, D: 10
+   E2 = 49.0 # P: 100, E: 40, M: 49, D: 90
+   P4 = 25.0 # P: 37, E: 14, M: 25, D: 10
+
+

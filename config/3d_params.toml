@@ -1,22 +1,23 @@
 # General parameters
 save_dir = "monodomain_3d"
-mesh_name = "rat_uterus_idealised_10mm_4704_elem"
-mesh_dir = "/mesh/rat_uterus/"
-stimulus_type = "simple"
+mesh_name = "uterus_scaffold_mid_res"
+mesh_dir = "/mesh/uterus/"
+stimulus_type = "regular"
 
 # Stimulus parameters
-x_stim_start = -1.1
-x_stim_end = 1.1
-y_stim_start = -2.0
-y_stim_end = 2.0
-z_stim_start = -0.1
-z_stim_end = 1.0
+x_stim_start = -500.1
+x_stim_end = 500.1
+y_stim_start = -500.0
+y_stim_end = 500.0
+z_stim_start = 30.0
+z_stim_end = 45.0
 
 # Time paramters in millisec
-sim_duration = 10000.0
-ode_timestep = 0.1
-pde_timestep = 0.1
-print_timestep = 1.0
+sim_duration = 15.0e3
+ode_timestep = 1.0
+pde_timestep = 1.0
+print_timestep = 2.0
 
 # Cell parameters
-cell_type = "Means"
+cell_type = "Roesler"
+estrus = "metestrus"
