@@ -59,6 +59,7 @@ void simulation_2d() {
   const double capacitance = toml::find<double>(cell_params, "capacitance");
 
   std::string default_ionic_model = cell_type + "I";
+  std::string save_path = cell_type + "/" + save_dir + "/" + stimulus_type;
 
   // Log file location
   std::string log_dir = save_dir + "/" + cell_type + "/log";
@@ -175,6 +176,7 @@ void simulation_3d() {
   const double capacitance = toml::find<double>(cell_params, "capacitance");
 
   std::string default_ionic_model = cell_type + "I";
+  std::string save_path = cell_type + "/" + save_dir + "/" + stimulus_type;
 
   // Log file location
   std::string log_dir = save_dir + "/" + cell_type + "/log";
