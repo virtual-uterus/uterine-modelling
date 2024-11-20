@@ -44,8 +44,16 @@ if __name__ == "__main__":
         utils.BASE,
         args.dir_path,
     )
-    data_path = dir_path + "extract/{}.csv".format(args.file_name)
-    log_path = dir_path + "log/{}.log".format(args.file_name)
+    data_path = os.path.join(
+        dir_path,
+        "extract",
+        "{}.csv".format(args.file_name),
+    )
+    log_path = os.path.join(
+        dir_path,
+        "log",
+        "{}.log".format(args.file_name),
+    )
 
     V, t = utils.load_data(data_path, log_path, args.delimiter)
 
