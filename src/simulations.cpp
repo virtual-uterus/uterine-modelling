@@ -49,8 +49,18 @@ void simulation_2d() {
   const std::string stimulus_type = toml::find<std::string>(sys_params,
     "stimulus_type");  // Regular, simple or zero stimulus
 
-  std::string cell_param_file = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
-    cell_type + ".toml";
+  std::string cell_param_file = "";
+
+  if (cell_type == std::string("Roesler")) {
+    // Get the estrus phase as well
+    const std::string estrus_phase = toml::find<std::string>(sys_params,
+      "estrus");
+    std::string cell_param_file = USMC_2D_SYSTEM_CONSTANTS::CONFIG_DIR +
+      cell_type + "_" + estrus_phase + ".toml";
+  } else {
+    std::string cell_param_file = USMC_2D_SYSTEM_CONSTANTS::CONFIG_DIR +
+      cell_type + ".toml";
+  }
   const auto cell_params = toml::parse(cell_param_file);
 
   // Cell parameters
@@ -84,7 +94,7 @@ void simulation_2d() {
   } else {
     const std::string err_message = "Unrecognized stimulus type";
     const std::string err_filename = "simulations.cpp";
-    unsigned line_number = 96;
+    unsigned line_number = 87;
 
     throw Exception(err_message, err_filename, line_number);
   }
@@ -166,8 +176,19 @@ void simulation_3d() {
   const std::string stimulus_type = toml::find<std::string>(sys_params,
     "stimulus_type");  // Regular, simple or zero stimulus
 
-  std::string cell_param_file = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
-    cell_type + ".toml";
+  std::string cell_param_file = "";
+
+  if (cell_type == std::string("Roesler")) {
+    // Get the estrus phase as well
+    const std::string estrus_phase = toml::find<std::string>(sys_params,
+      "estrus");
+    cell_param_file = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
+      cell_type + "_" + estrus_phase + ".toml";
+  } else {
+    cell_param_file = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
+      cell_type + ".toml";
+  }
+
   const auto cell_params = toml::parse(cell_param_file);
 
   // Cell parameters
@@ -201,7 +222,7 @@ void simulation_3d() {
   } else {
     const std::string err_message = "Unrecognized stimulus type";
     const std::string err_filename = "simulations.cpp";
-    unsigned line_number = 220;
+    unsigned line_number = 204;
 
     throw Exception(err_message, err_filename, line_number);
   }

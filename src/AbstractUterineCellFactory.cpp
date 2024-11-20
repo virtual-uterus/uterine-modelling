@@ -74,8 +74,18 @@ void AbstractUterineCellFactory::ReadParams(std::string general_param_file)
 	
 	mpCell_type = toml::find<std::string>(params, "cell_type");
 
-	// Get the cell id
-	std::string cell_param_file = mpCell_type + ".toml";
+  // Get the cell configuration
+  std::string cell_param_file = "";
+
+  if (mpCell_type == std::string("Roesler")) {
+    // Get the estrus phase as well
+    const std::string estrus_phase = toml::find<std::string>(params,
+      "estrus");
+    cell_param_file = mpCell_type + "_" + estrus_phase + ".toml";
+  } else {
+    cell_param_file = mpCell_type + ".toml";
+  }
+
 	ReadCellParams(cell_param_file);
 }
 
