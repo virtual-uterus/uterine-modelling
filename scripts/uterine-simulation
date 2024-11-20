@@ -42,5 +42,5 @@ if [ ! -d "${BASE_DIR}/results" ]; then
 fi
 
 # Annotate the data for viewing
-SIM_RES_NAME="simulation_${NB_FILES}_res.vtu"
+SIM_RES_NAME="simulation_${NB_FILES}.vtu"
 python3 ${CHASTE_SOURCE_DIR}/python/utils/AddVtuTimeAnnotations.py vtk_output/results.vtu ${BASE_DIR}/results/${SIM_RES_NAME}
