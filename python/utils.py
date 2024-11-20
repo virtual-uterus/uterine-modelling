@@ -261,11 +261,16 @@ def paraview_quality(mesh_path):
 
     print("Aspect ratio quality data:", end=" ")
     print(
-        "{:.2f} \u00b1 {:.2f}".format(
+        "Mean: {:.2f} \u00b1 {:.2f}".format(
             np.mean(ar_quality_data),
             np.std(ar_quality_data),
         )
     )
+    print("Min: {:.2f}".format(np.min(ar_quality_data)))
+    print("Max: {:.2f}".format(np.max(ar_quality_data)))
+    print("Median: {:.2f}".format(np.median(ar_quality_data)))
+    print("25th percentile: {:.2f}".format(np.percentile(ar_quality_data, 25)))
+    print("75th percentile: {:.2f}".format(np.percentile(ar_quality_data, 75)))
 
     print("Jacobian determinant quality data:", end=" ")
     print(
@@ -274,3 +279,8 @@ def paraview_quality(mesh_path):
             np.std(jd_quality_data),
         )
     )
+    print("Min: {:.2f}".format(np.min(jd_quality_data)))
+    print("Max: {:.2f}".format(np.max(jd_quality_data)))
+    print("Median: {:.2f}".format(np.median(jd_quality_data)))
+    print("25th percentile: {:.2f}".format(np.percentile(jd_quality_data, 25)))
+    print("75th percentile: {:.2f}".format(np.percentile(jd_quality_data, 75)))
