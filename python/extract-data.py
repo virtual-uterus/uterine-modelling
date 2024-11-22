@@ -91,7 +91,9 @@ if __name__ == "__main__":
             pts_list = constants.PTS_LIST[mesh_name]
 
         except KeyError:
-            sys.stderr.write("Error: mesh {} was not found in list\n".format(mesh_name))
+            sys.stderr.write(
+                "Error: mesh {} was not found in list\n".format(mesh_name),
+            )
             exit()
 
         save_path = save_dir + "/{}.csv".format(current_sim_name)

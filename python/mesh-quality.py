@@ -11,7 +11,6 @@ Date: 11/24
 import argparse
 import os
 
-import utils
 import constants
 
 import paraview_fct as pf
