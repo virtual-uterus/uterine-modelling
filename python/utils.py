@@ -8,14 +8,11 @@ Author: Mathias Roesler
 Date: 11/24
 """
 
-import os
 import re
 import sys
 
 import numpy as np
 import pandas as pd
-import paraview.simple as ps
-import paraview.servermanager as psm
 
 
 def get_print_timestep(log_path):
@@ -113,152 +110,29 @@ def load_data(data_path, log_path, delimiter=","):
     return V, t
 
 
-def paraview_extract(mesh_path, save_path, pts_list):
-    """Extracts the data from the desired points in the mesh and
-    saves in a csv file
+def get_range(num_range):
+    """Converts the input range into a list of numbers
 
     Arguments:
-    mesh_path -- str, path to the mesh vtu file.
-    save_path -- str, path to the export save file.
-    pts_list -- list(int), list of points to extract data from in the mesh.
+    num_range -- str, range of number from the input argument.
 
     Return:
+    num_list -- list[int], list of numbers extracted from the range.
 
     """
-    # Create a new 'XML Unstructured Grid Reader'
-    mesh = ps.XMLUnstructuredGridReader(
-        registrationName="mesh.vtu",
-        FileName=[mesh_path],
-    )
-    mesh.PointArrayStatus = ["V"]
-
-    # Properties modified on mesh
-    mesh.TimeArray = "None"
-
-    # Get active view
-    view = ps.GetActiveViewOrCreate("RenderView")
-
-    # Update the view to ensure updated data information
-    view.Update()
-
-    # create a query selection
-    ps.QuerySelect(
-        QueryString="(in1d(id, {}))".format(pts_list),
-        FieldType="POINT",
-        InsideOut=0,
-    )
-
-    # Update the view to ensure updated data information
-    view.Update()
-
-    # Create a new 'Extract Selection'
-    selected_pts = ps.ExtractSelection(
-        registrationName="Selected_pts",
-        Input=mesh,
-    )
-
-    # Save data
-    ps.SaveData(
-        save_path,
-        proxy=selected_pts,
-        WriteTimeSteps=1,
-        PointDataArrays=["V"],
-        AddMetaData=0,
-        AddTime=1,
-    )
-
-
-def fetch_quality_data(quality, mesh_quality, view):
-    """Fetches the quality data based on the selected quality
-
-    Arguments:
-    quality -- str, quality metric to fecth.
-    mesh_quality -- psm.MeshQuality, Paraview extracted mesh quality object.
-    view -- psm.RenderView, Paraview rendered view of the mesh.
-
-    Return:
-    quality_data -- np.array, quality value for the cells in the mesh.
-
-    """
-    # Properties modified on mesh_quality
-    mesh_quality.TetQualityMeasure = quality
-
-    # Update the view to ensure updated data information
-    view.Update()
-
-    fetched_data = psm.Fetch(mesh_quality)
-    cell_data = fetched_data.GetCellData()
-    quality_array = cell_data.GetArray("Quality")
-
-    if quality_array:
-        quality_data = [
-            quality_array.GetValue(i)
-            for i in range(
-                quality_array.GetNumberOfTuples(),
-            )
-        ]
-
+    if len(num_range) == 1:
+        split = num_range[0].split("-")
+        if len(split) == 1:
+            # Single number
+            num_list = int(num_range[0])
+        else:
+            # Range
+            num_list = [i for i in range(int(split[0]), int(split[1]) + 1)]
     else:
-        sys.stderr.write("Error: quality array not found\n")
-        exit()
+        # Convert to list to int
+        num_list = [int(i) for i in num_range]
 
-    return np.array(quality_data)
-
-
-def paraview_quality(mesh_path):
-    """Inspects the quality of the mesh by looking at the aspect ratio
-    and the Jacobian determinant.
-
-    Arguments:
-    mesh_path -- str, path to the mesh vtu file.
-
-    Return:
-
-    """
-    extension = os.path.splitext(mesh_path)[1]
-
-    if extension == ".vtk":
-        mesh = ps.LegacyVTKReader(
-            registrationName="mesh.vtk",
-            FileNames=[mesh_path],
-        )
-
-    elif extension == ".vtu":
-        # Create a new 'XML Unstructured Grid Reader'
-        mesh = ps.XMLUnstructuredGridReader(
-            registrationName="mesh.vtu",
-            FileName=[mesh_path],
-        )
-
-    else:
-        sys.stderr.write(
-            "Error: unrecognised extension {}\n".format(extension),
-        )
-        exit()
-
-    # Get active view
-    view = ps.GetActiveViewOrCreate("RenderView")
-
-    # Update the view to ensure updated data information
-    view.Update()
-
-    # Create a new 'Mesh Quality'
-    mesh_quality = ps.MeshQuality(
-        registrationName="quality",
-        Input=mesh,
-    )
-    # Update the view to ensure updated data information
-    view.Update()
-
-    ar_quality_data = fetch_quality_data("Aspect Ratio", mesh_quality, view)
-    jd_quality_data = fetch_quality_data(
-        "Jacobian",
-        mesh_quality,
-        view,
-    )
-    print_quality(ar_quality_data, "Aspect ratio")
-    print()
-    print_quality(jd_quality_data, "Jacobian determinant")
+    return num_list
 
 
 def print_quality(quality_array, metric_name):

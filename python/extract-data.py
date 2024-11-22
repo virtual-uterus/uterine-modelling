@@ -14,6 +14,7 @@ import os
 
 import utils
 import constants
+import paraview_fct as pf
 
 
 if __name__ == "__main__":
@@ -48,17 +49,7 @@ if __name__ == "__main__":
     # Parse input arguments
     args = parser.parse_args()
 
-    if len(args.sim_numbers) == 1:
-        split = args.sim_numbers[0].split("-")
-        if len(split) == 1:
-            # Single number
-            sim_numbers = int(args.sim_numbers[0])
-        else:
-            # Range
-            sim_numbers = [i for i in range(int(split[0]), int(split[1]) + 1)]
-    else:
-        # Convert to list to int
-        sim_numbers = [int(i) for i in args.sim_numbers]
+    sim_numbers = utils.get_range(args.sim_numbers)
 
     # Create file path
     dir_path = os.path.join(
@@ -104,4 +95,4 @@ if __name__ == "__main__":
             exit()
 
         save_path = save_dir + "/{}.csv".format(current_sim_name)
-        utils.paraview_extract(sim_file, save_path, pts_list)
+        pf.paraview_extract(sim_file, save_path, pts_list)

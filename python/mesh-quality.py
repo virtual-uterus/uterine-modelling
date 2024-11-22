@@ -14,6 +14,8 @@ import os
 import utils
 import constants
 
+import paraview_fct as pf
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -50,4 +52,4 @@ if __name__ == "__main__":
     )
     mesh_path = "{}.{}".format(file_path, args.extension)
 
-    utils.paraview_quality(mesh_path)
+    pf.paraview_quality(mesh_path)
