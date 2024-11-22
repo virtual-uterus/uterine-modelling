@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# cell-plot.py: Script that plots single cell data from Paraview
-# Author: Mathias Roesler
-# Last modified: 11/24
+"""
+cell-plot.py
+
+Script that plots single cell data from Paraview
+Author: Mathias Roesler
+Date: 11/24
+"""
 
 import argparse
 import os

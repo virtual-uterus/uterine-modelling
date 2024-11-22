@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# mesh-quality.py: Script that inspects the quality of a mesh
-# Author: Mathias Roesler
-# Last modified: 11/24
+"""
+mesh-quality.py
+
+Script that inspects the quality of a mesh
+Author: Mathias Roesler
+Date: 11/24
+"""
 
 import argparse
 import os

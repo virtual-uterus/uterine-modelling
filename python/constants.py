@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# constants.py: Constants for the Python code
-# Author: Mathias Roesler
-# Last modified: 11/24
+"""
+constants.py
+
+Constants for the Python code
+Author: Mathias Roesler
+Date: 11/24
+"""
 
 import os
 

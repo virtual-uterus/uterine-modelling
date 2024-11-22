@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# extract-data.py: Script that extracts data from Paraview
-# Author: Mathias Roesler
-# Last modified: 11/24
+"""
+extract-data.py
+
+Script that extracts data from Paraview
+Author: Mathias Roesler
+Date: 11/24
+"""
 
 import argparse
 import sys
@@ -97,8 +100,7 @@ if __name__ == "__main__":
             pts_list = constants.PTS_LIST[mesh_name]
 
         except KeyError:
-            sys.stderr.write(
-                "Error: mesh {} was not found in list\n".format(mesh_name))
+            sys.stderr.write("Error: mesh {} was not found in list\n".format(mesh_name))
             exit()
 
         save_path = save_dir + "/{}.csv".format(current_sim_name)

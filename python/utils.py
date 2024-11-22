@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# utils.py: Utility functions used for Python code
-# Author: Mathias Roesler
-# Last modified: 11/24
+"""
+utils.py
+
+Utility functions used for Python code
+Author: Mathias Roesler
+Date: 11/24
+"""
 
 import os
 import re

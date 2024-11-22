@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# plots.py: Plot functions used in the Python code
-# Author: Mathias Roesler
-# Last modified: 11/24
+"""
+plots.py
+
+Plot functions used in the Python code
+Author: Mathias Roesler
+Date: 11/24
+"""
 
 import matplotlib.pyplot as plt
 import numpy as np

@@ -3,7 +3,8 @@
 """
 sweeps.py
 
-Contains function used for changing parameters when running multiple simulations
+Contains function used for changing parameters when running multiple
+simulations
 Author: Mathias Roesler
 Date: 11/24
 """

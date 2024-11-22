@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# simulation-sweep.py: Performs multiple simulations with different parameters
-# Author: Mathias Roesler
-# Last modified: 11/24
+"""
+simulation-sweep.py
+
+Performs multiple simulations with different parameters
+Author: Mathias Roesler
+Date: 11/24
+"""
 
 import sweeps
 import argparse

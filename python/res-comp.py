@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# res-comp.py: Script that compares the outputs at different mesh resolutions
-# Author: Mathias Roesler
-# Last modified: 11/24
+"""
+res-comp.py
+
+Script that compares the outputs at different mesh resolutions
+Author: Mathias Roesler
+Date: 11/24
+"""
 
 import argparse
 import os

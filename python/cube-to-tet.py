@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#
-# cube-to-tet.py: Script to convert a cubic mesh to a tetrahedral one
-# Author: Mathias Roesler
-# Last modified: 09/23
+"""
+cube-to-tet.py
+
+Script to convert a cubic mesh to a tetrahedral one
+Author: Mathias Roesler
+Date: 09/23
+"""
 
 import os
 import sys
