@@ -12,8 +12,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
-import utils
-
 
 def plot_cell_data(V, t):
     """Plots the membrane potential of cells

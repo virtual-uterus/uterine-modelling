@@ -10,11 +10,12 @@ Date: 11/24
 
 import os
 import sys
-import utils
 
 import numpy as np
 import paraview.simple as ps
 import paraview.servermanager as psm
+
+from symprobe import utils
 
 
 def paraview_extract(mesh_path, save_path, pts_list):

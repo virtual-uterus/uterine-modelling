@@ -8,8 +8,9 @@ Author: Mathias Roesler
 Date: 11/24
 """
 
-import argparse
 import os
+import sys
+import argparse
 
 from symprobe import utils, plots, constants
 
@@ -57,6 +58,9 @@ if __name__ == "__main__":
         "{}.log".format(args.file_name),
     )
 
-    V, t = utils.load_data(data_path, log_path, args.delimiter)
+    try:
+        V, t = utils.load_data(data_path, log_path, args.delimiter)
+    except Exception as e:
+        sys.stderr.write("Error: {}\n".format(e))
 
     plots.plot_cell_data(V, t)

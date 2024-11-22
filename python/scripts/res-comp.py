@@ -8,8 +8,9 @@ Author: Mathias Roesler
 Date: 11/24
 """
 
-import argparse
 import os
+import sys
+import argparse
 
 import scipy.stats as stat
 
@@ -67,10 +68,16 @@ if __name__ == "__main__":
         current_sim_name = f"{args.sim_name}_{sim_nb:03}"
         sim_names.append(current_sim_name)
 
-        data_path = os.path.join(dir_path, "extract", "{}.csv".format(current_sim_name))
-        log_path = os.path.join(dir_path, "log", "{}.log".format(current_sim_name))
+        data_path = os.path.join(
+            dir_path, "extract", "{}.csv".format(current_sim_name))
+        log_path = os.path.join(
+            dir_path, "log", "{}.log".format(current_sim_name))
 
-        V, t = utils.load_data(data_path, log_path, args.delimiter)
+        try:
+            V, t = utils.load_data(data_path, log_path, args.delimiter)
+        except Exception as e:
+            sys.stderr.write("Error: {}\n".format(e))
+            exit()
 
         data[current_sim_name] = V[:, 0]
 

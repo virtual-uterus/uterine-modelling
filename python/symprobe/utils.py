@@ -9,7 +9,6 @@ Date: 11/24
 """
 
 import re
-import sys
 
 import numpy as np
 import pandas as pd
@@ -24,6 +23,11 @@ def get_print_timestep(log_path):
     Return:
     timestep -- float, print timestep value in ms.
 
+    Raises:
+    FileNotFoundError -- if the log file is not found.
+    RuntimeError -- if there was a problem reading the log file
+    ValueError -- if the print timestep value is not found or cannot be parsed.
+
     """
     try:
         with open(log_path, "r") as log_file:
@@ -36,15 +40,13 @@ def get_print_timestep(log_path):
                     )
                     if match:
                         return float(match.group(1))
-    except FileNotFoundError:
-        sys.stderr.write("Error: log file at {} not found\n".format(log_path))
-        exit(1)
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"log file at {log_path} not found.") from e
     except Exception as e:
-        sys.stderr.write("Error reading log file: {}\n".format(e))
-        exit(1)
+        raise RuntimeError(f"error reading log file: {e}") from e
 
-    sys.stderr.write("Error: print timestep not found in log file\n")
-    exit(1)
+    # If no valid line is found
+    raise ValueError("print timestep not found in the log file.")
 
 
 def load_data(data_path, log_path, delimiter=","):
@@ -58,27 +60,39 @@ def load_data(data_path, log_path, delimiter=","):
     Return:
     V -- ndarray, membrane potential values.
     t -- ndarray, timestep values.
+
+    Raises:
+    FileNotFoundError -- if the data file is not found.
+    FileNotFoundError -- if the log file is not found.
+    pd.errors.EmptyDataError -- if the data file is empty.
+    pd.errors.ParserError -- if the data file cannot be parsed.
+    RuntimeError -- if an error occurs during parsing.
+    RuntimeError -- if there was a problem reading the log file
+    ValueError -- if the print timestep value is not found or cannot be parsed.
+
+    ValueError -- if the required column is missing in the CSV file.
+
     """
     try:
-        # Read the file using pandas, specifying the delimiter
         df = pd.read_csv(data_path, delimiter=delimiter)
-
-    # Catch common erros
-    except FileNotFoundError:
-        sys.stderr.write("Error: file at {} not found\n".format(data_path))
-        exit(1)
-    except pd.errors.EmptyDataError:
-        sys.stderr.write("Error: file is empty.\n")
-        exit(1)
-    except pd.errors.ParserError:
-        sys.stderr.write("Error: could not parse file\n")
-        exit(1)
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"data file at {data_path} not found.") from e
+    except pd.errors.EmptyDataError as e:
+        raise pd.errors.EmptyDataError("file is empty.") from e
+    except pd.errors.ParserError as e:
+        raise pd.errors.ParserError("could not parse file.") from e
     except Exception as e:
-        sys.stderr.write("Error: {}\n".format(e))
-        exit(1)
+        raise RuntimeError(f"an unexpected error occurred: {e}") from e
 
     # Get print timestep
-    timestep = get_print_timestep(log_path)
+    try:
+        timestep = get_print_timestep(log_path)
+    except FileNotFoundError as e:
+        raise FileNotFoundError from e
+    except RuntimeError as e:
+        raise RuntimeError from e
+    except ValueError as e:
+        raise ValueError from e
 
     # Get column names
     columns = df.columns
@@ -86,6 +100,9 @@ def load_data(data_path, log_path, delimiter=","):
     # Extract time and membrane potential
     time_vals = df[columns[0]].to_numpy()
     V = df[columns[1]].to_numpy()
+
+    if len(columns) < 3:
+        raise IndexError("missing point IDs in vtu file.")
 
     if columns[2] == "vtkOriginalPointIds":
         # Paraview export of single cell data
@@ -100,12 +117,11 @@ def load_data(data_path, log_path, delimiter=","):
             tmp_V[:, i] = V[idx]
 
     else:
-        sys.stderr.write("Error: missing point IDs in vtu file\n")
-        exit(1)
+        raise ValueError(f"incorrect column {columns[2]}")
 
     V = tmp_V  # Reset V for plotting
     # Create correct timesteps in seconds
-    t = np.linspace(0, nb_timesteps * timestep * 1e-3, nb_timesteps)
+    t = np.linspace(0, (nb_timesteps - 1) * timestep * 1e-3, nb_timesteps)
 
     return V, t
 
