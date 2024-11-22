@@ -8,9 +8,9 @@ Author: Mathias Roesler
 Date: 11/24
 """
 
-import argparse
-import sys
 import os
+import sys
+import argparse
 
 from symprobe import utils, constants
 import symprobe.paraview_fct as pf
@@ -96,4 +96,9 @@ if __name__ == "__main__":
             exit()
 
         save_path = save_dir + "/{}.csv".format(current_sim_name)
-        pf.paraview_extract(sim_file, save_path, pts_list)
+
+        try:
+            pf.paraview_extract(sim_file, save_path, pts_list)
+        except Exception as e:
+            sys.stderr.write("Error: {}\n".format(e))
+            exit()

@@ -8,8 +8,9 @@ Author: Mathias Roesler
 Date: 11/24
 """
 
-import argparse
 import os
+import sys
+import argparse
 
 from symprobe import constants
 import symprobe.paraview_fct as pf
@@ -50,4 +51,8 @@ if __name__ == "__main__":
     )
     mesh_path = "{}.{}".format(file_path, args.extension)
 
-    pf.paraview_quality(mesh_path)
+    try:
+        pf.paraview_quality(mesh_path)
+    except Exception as e:
+        sys.stderr.write("Error: {}\n".format(e))
+        exit()

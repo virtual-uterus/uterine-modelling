@@ -13,6 +13,7 @@ import os
 # Define global constants
 HOME = os.path.expanduser("~")
 BASE = "Documents/phd"
+CONFIG_ENV_VAR = "CHASTE_MODELLING_CONFIG_DIR"
 PTS_LIST = {  # List of points to extract for the scaffolds
     "uterus_scaffold_0": [195, 265, 329],
     "uterus_scaffold_1": [365, 499, 627],

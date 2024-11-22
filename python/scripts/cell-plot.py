@@ -60,7 +60,6 @@ if __name__ == "__main__":
 
     try:
         V, t = utils.load_data(data_path, log_path, args.delimiter)
+        plots.plot_cell_data(V, t)
     except Exception as e:
         sys.stderr.write("Error: {}\n".format(e))
-
-    plots.plot_cell_data(V, t)

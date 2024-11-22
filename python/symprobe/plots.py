@@ -22,16 +22,15 @@ def plot_cell_data(V, t):
 
     Return:
 
+    Raises:
+    ValueError -- if the shapes do not agree.
+
     """
     # Create figure and plot
     fig, ax = plt.subplots(dpi=300)
 
-    try:
-        assert V.shape[0] == t.shape[0]
-
-    except AssertionError:
-        print("Error: dimensions must agree.")
-        exit()
+    if not V.shape[0] == t.shape[0]:
+        raise ValueError("dimensions must agree.")
 
     for j in range(V.shape[1]):
         plt.plot(t, V[:, j])

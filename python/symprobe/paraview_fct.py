@@ -9,7 +9,6 @@ Date: 11/24
 """
 
 import os
-import sys
 
 import numpy as np
 import paraview.simple as ps
@@ -28,13 +27,21 @@ def paraview_extract(mesh_path, save_path, pts_list):
     pts_list -- list(int), list of points to extract data from in the mesh.
 
     Return:
+    FileNotFoundError -- if the file is not found.
+    RuntimeError -- if the an error occurs while opening the file.
 
     """
     # Create a new 'XML Unstructured Grid Reader'
-    mesh = ps.XMLUnstructuredGridReader(
-        registrationName="mesh.vtu",
-        FileName=[mesh_path],
-    )
+    try:
+        mesh = ps.XMLUnstructuredGridReader(
+            registrationName="mesh.vtu",
+            FileName=[mesh_path],
+        )
+    except FileNotFoundError as e:
+        raise FileNotFoundError(e)
+    except Exception as e:
+        raise RuntimeError(e)
+
     mesh.PointArrayStatus = ["V"]
 
     # Properties modified on mesh
@@ -84,6 +91,9 @@ def fetch_quality_data(quality, mesh_quality, view):
     Return:
     quality_data -- np.array, quality value for the cells in the mesh.
 
+    Raises:
+    ValueError -- if the quality array is not found.
+
     """
     # Properties modified on mesh_quality
     mesh_quality.TetQualityMeasure = quality
@@ -104,8 +114,7 @@ def fetch_quality_data(quality, mesh_quality, view):
         ]
 
     else:
-        sys.stderr.write("Error: quality array not found\n")
-        exit()
+        raise ValueError("quality array not found")
 
     return np.array(quality_data)
 
@@ -119,27 +128,37 @@ def paraview_quality(mesh_path):
 
     Return:
 
+    Raises:
+    ValueError -- if the extension is not vtk of vtu.
+    FileNotFoundError -- if the file is not found.
+    RuntimeError -- if the an error occurs while opening the file.
+    ValueError -- if the quality array is not found.
+
     """
     extension = os.path.splitext(mesh_path)[1]
 
-    if extension == ".vtk":
-        mesh = ps.LegacyVTKReader(
-            registrationName="mesh.vtk",
-            FileNames=[mesh_path],
-        )
+    try:
+        if extension == ".vtk":
+            mesh = ps.LegacyVTKReader(
+                registrationName="mesh.vtk",
+                FileNames=[mesh_path],
+            )
 
-    elif extension == ".vtu":
-        # Create a new 'XML Unstructured Grid Reader'
-        mesh = ps.XMLUnstructuredGridReader(
-            registrationName="mesh.vtu",
-            FileName=[mesh_path],
-        )
+        elif extension == ".vtu":
+            # Create a new 'XML Unstructured Grid Reader'
+            mesh = ps.XMLUnstructuredGridReader(
+                registrationName="mesh.vtu",
+                FileName=[mesh_path],
+            )
 
-    else:
-        sys.stderr.write(
-            "Error: unrecognised extension {}\n".format(extension),
-        )
-        exit()
+        else:
+            raise ValueError(
+                "unrecognised extension {}\n".format(extension),
+            )
+    except FileNotFoundError as e:
+        raise FileNotFoundError(e)
+    except Exception as e:
+        raise RuntimeError(e)
 
     # Get active view
     view = ps.GetActiveViewOrCreate("RenderView")
@@ -155,12 +174,17 @@ def paraview_quality(mesh_path):
     # Update the view to ensure updated data information
     view.Update()
 
-    ar_quality_data = fetch_quality_data("Aspect Ratio", mesh_quality, view)
-    jd_quality_data = fetch_quality_data(
-        "Jacobian",
-        mesh_quality,
-        view,
-    )
+    try:
+        ar_quality_data = fetch_quality_data(
+            "Aspect Ratio", mesh_quality, view)
+        jd_quality_data = fetch_quality_data(
+            "Jacobian",
+            mesh_quality,
+            view,
+        )
+    except ValueError as e:
+        raise ValueError(e)
+
     utils.print_quality(ar_quality_data, "Aspect ratio")
     print()
     utils.print_quality(jd_quality_data, "Jacobian determinant")
