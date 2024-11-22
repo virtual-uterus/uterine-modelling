@@ -9,3 +9,4 @@ CMakeCache.txt
 python/__pycache__
 python/symprobe/__pycache__
 python/symprobe.egg-info
+python/tests/__pycache__
