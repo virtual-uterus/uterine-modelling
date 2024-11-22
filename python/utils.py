@@ -14,11 +14,6 @@ import pandas as pd
 import paraview.simple as ps
 import paraview.servermanager as psm
 
-# Define global constants
-HOME = os.path.expanduser("~")
-BASE = "Documents/phd"
-RES = ["low", "mid", "high"]  # Different resolution strings
-
 
 def get_print_timestep(log_path):
     """Extracts the print timestep value from the log file

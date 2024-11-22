@@ -10,6 +10,7 @@ import os
 
 import utils
 import plots
+import constants
 
 
 if __name__ == "__main__":
@@ -40,8 +41,8 @@ if __name__ == "__main__":
 
     # Create file path
     dir_path = os.path.join(
-        utils.HOME,
-        utils.BASE,
+        constants.HOME,
+        constants.BASE,
         args.dir_path,
     )
     data_path = os.path.join(

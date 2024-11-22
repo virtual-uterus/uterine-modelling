@@ -9,6 +9,7 @@ import argparse
 import os
 
 import utils
+import constants
 
 
 if __name__ == "__main__":
@@ -39,8 +40,8 @@ if __name__ == "__main__":
 
     # Create file path
     file_path = os.path.join(
-        utils.HOME,
-        utils.BASE,
+        constants.HOME,
+        constants.BASE,
         args.dir_path,
         args.mesh_name,
     )
