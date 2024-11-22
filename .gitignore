@@ -7,4 +7,5 @@ CMakeCache.txt
 
 # Ignore Python stuff
 python/__pycache__
+python/symprobe/__pycache__
 python/symprobe.egg-info
