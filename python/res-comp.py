@@ -13,6 +13,7 @@ import os
 
 import utils
 import plots
+import constants
 import scipy.stats as stat
 
 from itertools import combinations
@@ -28,10 +29,16 @@ if __name__ == "__main__":
         help="path from BASE to the Chaste save directory",
     )
     parser.add_argument(
-        "file_name",
+        "sim_numbers",
+        nargs="+",
+        metavar="sim-numbers",
+        help="numbers of the simulations to extract data from",
+    )
+    parser.add_argument(
+        "--sim-name",
         type=str,
-        metavar="file-name",
-        help="name of the file to load",
+        default="simulation",
+        help="name of the simulation prefix",
     )
     parser.add_argument(
         "--delimiter",
@@ -43,31 +50,33 @@ if __name__ == "__main__":
     # Parse input arguments
     args = parser.parse_args()
 
+    sim_numbers = utils.get_range(args.sim_numbers)
+
     # Create path to main directory
     dir_path = os.path.join(
-        utils.HOME,
-        utils.BASE,
+        constants.HOME,
+        constants.BASE,
         args.dir_path,
     )
 
     # Dictionnary to store data and correlation values
     data = {}
     correl_values = {}
+    sim_names = []
 
-    for resolution in utils.RES:
-        # Iterate over each resolution
-        data_path = dir_path + "extract/{}_{}_res.csv".format(
-            args.file_name,
-            resolution,
-        )
-        log_path = dir_path + "log/{}_{}_res.log".format(
-            args.file_name,
-            resolution,
-        )
+    for sim_nb in sim_numbers:
+        # Iterate over each simulation
+        current_sim_name = f"{args.sim_name}_{sim_nb:03}"
+        sim_names.append(current_sim_name)
+
+        data_path = os.path.join(
+            dir_path, "extract", "{}.csv".format(current_sim_name))
+        log_path = os.path.join(
+            dir_path, "log", "{}.log".format(current_sim_name))
 
         V, t = utils.load_data(data_path, log_path, args.delimiter)
 
-        data[resolution] = V[:, 0]
+        data[current_sim_name] = V[:, 0]
 
     for res1, res2 in combinations(data.keys(), 2):
         # Calculate Pearson correlation
@@ -75,4 +84,4 @@ if __name__ == "__main__":
         # Store in dictionary
         correl_values[(res1, res2)] = correlation
 
-    plots.plot_correlation_heatmap(correl_values)
+    plots.plot_correlation_heatmap(correl_values, sim_names)

@@ -49,42 +49,42 @@ def plot_cell_data(V, t):
     plt.show()
 
 
-def plot_correlation_heatmap(correl_values):
+def plot_correlation_heatmap(correl_values, sim_names):
     """Creates a heatmap to display the correlation between different
-    resolutions contained in utils.RES
+    resolutions
 
     Arguments:
     correl_values -- dict, dictionnary of correlation values with
-    resolution as keys.
+    resolution pairs as keys.
+    sim_names -- list[str], names of the simulations.
 
     Return:
 
     """
     # Initialize a matrix for the heatmap
-    n = len(utils.RES)
-    correl_matrix = np.ones((n, n))
+    nb_sims = len(sim_names)
+    correl_matrix = np.ones((nb_sims, nb_sims))
 
     # Fill only the upper triangle of the matrix
-    for i, res1 in enumerate(utils.RES):
-        for j in range(i + 1, n):
-            res2 = utils.RES[j]
+    for i, res1 in enumerate(sim_names):
+        for j in range(i + 1, nb_sims):
+            res2 = sim_names[j]
             # Retrieve the correlaltion value from the dictionary
             correl = correl_values.get((res1, res2)) or correl_values.get(
                 (res2, res1),
                 0,
             )
+
             correl_matrix[i, j] = correl
             # Mirror the value to the lower triangle
             correl_matrix[j, i] = correl
 
-    labels = [x.capitalize() for x in utils.RES]
+    labels = [x for x in range(nb_sims)]
 
     # Create the heatmap
     plt.figure(dpi=300)
     ax = sns.heatmap(
         correl_matrix,
-        annot=True,
-        fmt=".2f",
         cmap="YlGnBu",
         vmax=1,
         vmin=0,
