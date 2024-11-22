@@ -1,9 +1,9 @@
 import pytest
-from unittest.mock import patch, mock_open
 import numpy as np
 import pandas as pd
 
 from symprobe import utils
+from unittest.mock import patch, mock_open
 
 
 def test_get_print_timestep():

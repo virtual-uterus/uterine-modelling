@@ -1,5 +1,6 @@
 import os
 import pytest
+
 from unittest.mock import patch, mock_open, call
 from symprobe.sweeps import resolution_sweep, parameter_sweep, modify_config
 from symprobe.constants import HOME, BASE, CONFIG_ENV_VAR
