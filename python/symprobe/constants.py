@@ -3,7 +3,7 @@
 """
 constants.py
 
-Constants for the Python code
+Constants for the symprobe package
 Author: Mathias Roesler
 Date: 11/24
 """
@@ -13,7 +13,7 @@ import os
 # Define global constants
 HOME = os.path.expanduser("~")
 BASE = "Documents/phd"
-PTS_LIST = {
+PTS_LIST = {  # List of points to extract for the scaffolds
     "uterus_scaffold_0": [195, 265, 329],
     "uterus_scaffold_1": [365, 499, 627],
     "uterus_scaffold_2": [725, 995, 1251],
