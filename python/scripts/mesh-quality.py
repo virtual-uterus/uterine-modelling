@@ -11,9 +11,8 @@ Date: 11/24
 import argparse
 import os
 
-import constants
-
-import paraview_fct as pf
+from symprobe import constants
+import symprobe.paraview_fct as pf
 
 
 if __name__ == "__main__":

@@ -8,9 +8,9 @@ Author: Mathias Roesler
 Date: 11/24
 """
 
-import sweeps
 import argparse
 
+from symprobe import sweeps
 
 if __name__ == "__main__":
     # Main argument parser setup

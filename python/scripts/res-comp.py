@@ -11,12 +11,10 @@ Date: 11/24
 import argparse
 import os
 
-import utils
-import plots
-import constants
 import scipy.stats as stat
 
 from itertools import combinations
+from symprobe import utils, plots, constants
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -69,10 +67,8 @@ if __name__ == "__main__":
         current_sim_name = f"{args.sim_name}_{sim_nb:03}"
         sim_names.append(current_sim_name)
 
-        data_path = os.path.join(
-            dir_path, "extract", "{}.csv".format(current_sim_name))
-        log_path = os.path.join(
-            dir_path, "log", "{}.log".format(current_sim_name))
+        data_path = os.path.join(dir_path, "extract", "{}.csv".format(current_sim_name))
+        log_path = os.path.join(dir_path, "log", "{}.log".format(current_sim_name))
 
         V, t = utils.load_data(data_path, log_path, args.delimiter)
 

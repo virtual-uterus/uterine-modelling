@@ -11,9 +11,7 @@ Date: 11/24
 import argparse
 import os
 
-import utils
-import plots
-import constants
+from symprobe import utils, plots, constants
 
 
 if __name__ == "__main__":
