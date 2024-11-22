@@ -37,8 +37,11 @@ def modify_config(config_file, param, value):
     except FileNotFoundError as e:
         raise FileNotFoundError(e)
 
+    found = False  # To check param is found
+
     for i, line in enumerate(lines):
         if param in line:
+            found = True
             match param:
                 case "conductivities_2d":
                     lines[i] = f"{param} = [{value}, {value}] \n"
@@ -55,8 +58,8 @@ def modify_config(config_file, param, value):
                 case _:
                     lines[i] = f"   {param} = {value} \n"
                     break
-    else:
-        # If the loop completes without finding the param, raise an error
+    if not found:
+        # If the parameter was not found
         raise ValueError(
             f"the parameter '{param}' was not found in the configuration file."
         )
