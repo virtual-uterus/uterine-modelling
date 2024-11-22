@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# simulation-sweep.py: Performs multiple simulations with different parameters
+# Author: Mathias Roesler
+# Last modified: 11/24
+
+import sweeps
+import argparse
+
+
+if __name__ == "__main__":
+    # Main argument parser setup
+    parser = argparse.ArgumentParser(
+        description="Runs multiple simulations with different parameters"
+    )
+    subparsers = parser.add_subparsers(
+        title="subcommands", description="Available commands", dest="command"
+    )
+
+    # Subcommand: parameter
+    param_parser = subparsers.add_parser(
+        "parameter", help="Run a parameter sweep for the given parameter"
+    )
+    param_parser.add_argument("dim", type=int, help="dimension (2 or 3)")
+    param_parser.add_argument("param", type=str, help="parameter to sweep")
+    param_parser.add_argument(
+        "start_val",
+        type=float,
+        help="start value of the parameter",
+    )
+    param_parser.add_argument(
+        "end_val",
+        type=float,
+        help="end value of the parameter",
+    )
+    param_parser.add_argument(
+        "step",
+        type=float,
+        help="step value for the parameter sweep",
+    )
+    param_parser.set_defaults(func=sweeps.parameter_sweep)
+
+    # Subcommand: resolution
+    res_parser = subparsers.add_parser(
+        "resolution", help="Run a simulation on different resolution meshes"
+    )
+    res_parser.add_argument("dim", type=int, help="dimension (2 or 3)")
+    res_parser.add_argument(
+        "mesh_name",
+        metavar="mesh-name",
+        type=str,
+        help="base name of the mesh",
+    )
+    res_parser.add_argument(
+        "start_val",
+        type=int,
+        help="start value of the mesh index",
+    )
+    res_parser.add_argument(
+        "end_val",
+        type=int,
+        help="end value of the mesh index",
+    )
+    res_parser.set_defaults(func=sweeps.resolution_sweep)
+
+    # Parse the arguments and call the appropriate function
+    args = parser.parse_args()
+
+    if args.command:
+        # Call the function associated with the chosen subcommand
+        args.func(args)
+    else:
+        parser.print_help()

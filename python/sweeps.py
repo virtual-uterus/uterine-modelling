@@ -1,8 +1,64 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+sweeps.py
+
+Contains function used for changing parameters when running multiple simulations
+Author: Mathias Roesler
+Date: 11/24
+"""
 
 import os
 import subprocess
-import argparse
+
+
+def resolution_sweep(dim, mesh_name, start_val, end_val):
+    """Performs several simulations with different resolution meshes
+
+    The meshes should be named like mesh_name_X.{ele, node, face}, where
+    X is a number.
+
+    Arguments:
+    dim -- int, dimension of the simulation {0, 2, 3}.
+    mesh_name -- str, base name of the mesh.
+    start_val -- float, start value for X.
+    end_val -- float, end value for X.
+
+    Return:
+
+    """
+    # Get the config directory and files
+    config_dir = os.getenv("CHASTE_MODELLING_CONFIG_DIR")
+    if not config_dir:
+        print("Error: CHASTE_MODELLING_CONFIG_DIR env variable is not set")
+        return
+
+    config_file = os.path.join(config_dir, f"{dim}d_params.toml")
+
+    # Check if start value is greater than end value
+    try:
+        assert start_val < end_val
+
+    except AssertionError:
+        print("Error: the start value is greater than the end value")
+        return
+
+    for j in range(start_val, end_val + 1):
+        # Read and modify config file
+        with open(config_file, "r") as f:
+            lines = f.readlines()
+
+        for i, line in enumerate(lines):
+            if "mesh_name" in line:
+                # Replace the mesh name
+                lines[i] = f'mesh_name = "{mesh_name}_{j}"\n'
+                break
+
+        with open(config_file, "w") as f:
+            f.writelines(lines)
+
+        # Run the chaste simulation
+        subprocess.run(["uterine-simulation", str(dim)])
 
 
 def parameter_sweep(dim, param, start_val, end_val, step):
@@ -74,37 +130,3 @@ def parameter_sweep(dim, param, start_val, end_val, step):
         # Check termination condition
         if value > end:
             break
-
-
-if __name__ == "__main__":
-    # Argument parser setup
-    parser = argparse.ArgumentParser(
-        description="Run a parameter sweep for the given parameter"
-    )
-    parser.add_argument("dim", type=int, help="dimension (2 or 3)")
-    parser.add_argument("param", type=str, help="parameter to sweep")
-    parser.add_argument(
-        "start_val",
-        type=float,
-        help="start value of the parameter",
-    )
-    parser.add_argument(
-        "end_val",
-        type=float,
-        help="end value of the parameter",
-    )
-    parser.add_argument(
-        "step",
-        type=float,
-        help="step value for the parameter sweep",
-    )
-
-    args = parser.parse_args()
-
-    if args.param == "conductivities":
-        param = args.param + "_" + str(args.dim) + "d"
-    else:
-        param = args.param
-
-    # Run the parameter sweep with the parsed arguments
-    parameter_sweep(args.dim, param, args.start_val, args.end_val, args.step)

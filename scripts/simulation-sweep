@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Runs the simulation-sweep.py script
+
+if [[ -z ${CHASTE_PROJECTS_DIR} ]]; then
+	SCRIPT_PATH=${APPTAINERENV_CHASTE_PROJECTS_DIR}
+else
+	SCRIPT_PATH=${CHASTE_PROJECTS_DIR}
+fi
+
+python3 ${SCRIPT_PATH}/uterus-modelling/python/simulation-sweep.py $@
