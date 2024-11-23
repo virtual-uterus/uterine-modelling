@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-res-comp.py
+convergene-plot.py
 
 Script that compares the outputs at different mesh resolutions
 Author: Mathias Roesler
@@ -12,20 +12,25 @@ import os
 import sys
 import argparse
 
-import scipy.stats as stat
+import numpy as np
 
-from itertools import combinations
-from symprobe import utils, plots, constants
+from symprobe import utils, plots, constants, metrics
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Plots single cell data exported from Paraview"
+        description="Plots the comparison for different resolution meshes"
     )
     parser.add_argument(
         "dir_path",
         type=str,
         metavar="dir-path",
         help="path from BASE to the Chaste save directory",
+    )
+    parser.add_argument(
+        "metric",
+        type=str,
+        choices={"rmse", "mae", "mse"},
+        help="metric used for comparison",
     )
     parser.add_argument(
         "sim_numbers",
@@ -59,14 +64,10 @@ if __name__ == "__main__":
     )
 
     # Dictionnary to store data and correlation values
-    data = {}
-    correl_values = {}
-    sim_names = []
 
-    for sim_nb in sim_numbers:
+    for i, sim_nb in enumerate(sim_numbers):
         # Iterate over each simulation
         current_sim_name = f"{args.sim_name}_{sim_nb:03}"
-        sim_names.append(current_sim_name)
 
         data_path = os.path.join(
             dir_path, "extract", "{}.csv".format(current_sim_name))
@@ -79,12 +80,19 @@ if __name__ == "__main__":
             sys.stderr.write("Error: {}\n".format(e))
             exit()
 
-        data[current_sim_name] = V[:, 0]
+        if i == 0:
+            # Allocate space for data on the first loop
+            data = np.zeros((len(V), len(sim_numbers)))
 
-    for res1, res2 in combinations(data.keys(), 2):
-        # Calculate Pearson correlation
-        correlation, _ = stat.pearsonr(data[res1], data[res2])
-        # Store in dictionary
-        correl_values[(res1, res2)] = correlation
+        data[:, i] = V[:, 0]
 
-    plots.plot_correlation_heatmap(correl_values, sim_names)
+    comp_data = np.zeros((len(sim_numbers) - 1))
+
+    for i in range(len(sim_numbers) - 1):
+        comp_data[i] = metrics.compute_comparison(
+            data[:, i],
+            data[:, i + 1],
+            args.metric,
+        )
+
+    plots.plot_resolution_convergence(comp_data, args.metric)
