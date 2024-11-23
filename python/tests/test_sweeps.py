@@ -1,3 +1,20 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+test_sweeps.py
+
+Unit tests for the sweep functions in sweeps.py.
+Author: Mathias Roesler
+Date: 11/24
+
+This file contains test cases for the functions:
+- resolution_sweep
+- parameter_sweep
+- modify_config
+
+The tests cover various scenarios including valid inputs, invalid inputs.
+"""
+
 import os
 import pytest
 
@@ -75,10 +92,13 @@ def test_resolution_sweep_success(mock_env):
     mock_file_content = ["mesh_name = 'old_mesh'\n"]
     mock_open_obj = mock_open(read_data="".join(mock_file_content))
 
-    with patch(
-        "builtins.open",
-        mock_open_obj,
-    ), patch("subprocess.run") as mock_run:
+    with (
+        patch(
+            "builtins.open",
+            mock_open_obj,
+        ),
+        patch("subprocess.run") as mock_run,
+    ):
         resolution_sweep(2, "test_mesh", 1, 3)
 
     # Assert subprocess was called three times (once per mesh value)
@@ -110,10 +130,13 @@ def test_parameter_sweep_success(mock_env):
     mock_file_content = ["param = old_value\n", 'cell_type = "Roesler"\n']
     mock_open_obj = mock_open(read_data="".join(mock_file_content))
 
-    with patch(
-        "builtins.open",
-        mock_open_obj,
-    ), patch("subprocess.run") as mock_run:
+    with (
+        patch(
+            "builtins.open",
+            mock_open_obj,
+        ),
+        patch("subprocess.run") as mock_run,
+    ):
         parameter_sweep(2, "param", 1.0, 3.0, 1.0)
 
     # Assert subprocess was called three times (once per parameter value)

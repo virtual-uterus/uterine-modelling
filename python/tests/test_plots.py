@@ -1,3 +1,19 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+test_plots.py
+
+Unit tests for the plot functions in plots.py.
+Author: Mathias Roesler
+Date: 11/24
+
+This file contains test cases for the functions:
+- plot_cell_data
+- plot_resolution_convergence
+
+The tests cover various scenarios including valid inputs, invalid inputs.
+"""
+
 import pytest
 import numpy as np
 

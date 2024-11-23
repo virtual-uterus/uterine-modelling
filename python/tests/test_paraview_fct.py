@@ -1,3 +1,21 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+test_paraview_fct.py
+
+Unit tests for the paraview functions in paraview_fct.py.
+Author: Mathias Roesler
+Date: 11/24
+
+This file contains test cases for the functions:
+- paraview_extract
+- fetch_quality_data
+- paraview_quality
+
+The tests cover various scenarios including valid inputs, invalid inputs,
+and edge cases.
+"""
+
 import pytest
 import os
 import numpy as np

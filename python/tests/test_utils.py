@@ -1,3 +1,22 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+test_utils.py
+
+Unit tests for the utility functions in utils.py.
+Author: Mathias Roesler
+Date: 11/24
+
+This file contains test cases for the functions:
+- get_print_timestep
+- load_data
+- modify_config
+- get_range
+- print_quality
+
+The tests cover various scenarios including valid inputs, invalid inputs.
+"""
+
 import pytest
 import numpy as np
 import pandas as pd
