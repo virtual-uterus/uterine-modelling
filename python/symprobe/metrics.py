@@ -92,3 +92,36 @@ def compute_mse(y_true, y_pred):
     except ValueError as e:
         raise ValueError(e)
     return np.mean((y_true - y_pred) ** 2)
+
+
+def compute_comparison(y_true, y_pred, metric):
+    """Computes the comparison between y_true and y_pred based on the metric
+
+    Arguments:
+    y_true -- np.array, ground truth values.
+    y_pred -- np.array, estimated values.
+    metric -- str, comparison metric {rmse, mae, mse}.
+
+    Return:
+    comp_point -- float, comparison point.
+
+    Raises:
+    ValueError -- if the provided metric is not one of
+    {'rmse', 'mae', 'mse'}.
+    ValueError -- if the arrays are not broadcastable
+
+    """
+    try:
+        match metric:
+            case "rmse":
+                return compute_rmse(y_true, y_pred)
+
+            case "mae":
+                return compute_mae(y_true, y_pred)
+
+            case "mse":
+                return compute_mse(y_true, y_pred)
+            case _:
+                raise ValueError("invalid metric {}\n".format(metric))
+    except ValueError as e:
+        raise ValueError(e)
