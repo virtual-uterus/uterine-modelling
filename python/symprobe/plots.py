@@ -68,3 +68,46 @@ def plot_resolution_convergence(comp_data, metric):
     plt.ylabel("{}".format(metric.upper()))
 
     plt.show()
+
+
+def plot_mesh_quality(quality_dict, metric):
+    """Plots the quality data for a mesh as a boxplot
+
+    Arguments:
+    quality_dict -- np.array, dictionnary with the quality data as value
+    and mesh number as key.
+    metric -- str, name of the quality metric.
+
+    Return:
+
+    Raises:
+
+    """
+    # Create figure and plot
+    fig, ax = plt.subplots(dpi=300)
+    data = np.zeros(len(quality_dict.keys()))  # Empty list for data
+    yerr = np.zeros(len(quality_dict.keys()))  # Empty list for error
+    cpt = 0  # Loop counter
+
+    for sim_nb, quality_data in quality_dict.items():
+        data[cpt] = np.mean(quality_data)
+        yerr[cpt] = np.std(quality_data)
+
+        cpt += 1
+
+    ax.errorbar(
+        np.arange(len(data)),
+        data,
+        yerr=yerr,
+        fmt=".-",
+        color="black",
+        capsize=5,
+        label="Mean ± Std",
+    )
+
+    # Reset x-axis ticks
+    plt.xticks(ticks=[0, len(data) - 1], labels=["Coarse", "Fine"])
+
+    plt.xlabel("Mesh resolution")
+    plt.ylabel("{}".format(metric))
+    plt.show()

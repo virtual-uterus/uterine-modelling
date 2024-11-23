@@ -14,8 +14,6 @@ import numpy as np
 import paraview.simple as ps
 import paraview.servermanager as psm
 
-from symprobe import utils
-
 
 def paraview_extract(mesh_path, save_path, pts_list):
     """Extracts the data from the desired points in the mesh and
@@ -119,14 +117,14 @@ def fetch_quality_data(quality, mesh_quality, view):
     return np.array(quality_data)
 
 
-def paraview_quality(mesh_path):
-    """Inspects the quality of the mesh by looking at the aspect ratio
-    and the Jacobian determinant.
+def paraview_quality(mesh_path, metric):
+    """Inspects the quality of the mesh for a given metric
 
     Arguments:
     mesh_path -- str, path to the mesh vtu file.
 
     Return:
+    quality_data -- np.array, quality data for the given metric.
 
     Raises:
     ValueError -- if the extension is not vtk of vtu.
@@ -175,16 +173,6 @@ def paraview_quality(mesh_path):
     view.Update()
 
     try:
-        ar_quality_data = fetch_quality_data(
-            "Aspect Ratio", mesh_quality, view)
-        jd_quality_data = fetch_quality_data(
-            "Jacobian",
-            mesh_quality,
-            view,
-        )
+        return fetch_quality_data(metric, mesh_quality, view)
     except ValueError as e:
         raise ValueError(e)
-
-    utils.print_quality(ar_quality_data, "Aspect ratio")
-    print()
-    utils.print_quality(jd_quality_data, "Jacobian determinant")
