@@ -6,6 +6,7 @@ numerical simulations.
 
 Modules:
 - sweeps: Functions for parameter and mesh sweeps.
+- metrics: Comparison metrics.
 - utils: General utilities for handling data and file operations.
 - constants: Constants used in the project.
 - paraview_fct: Functions based on the Paraview API.
@@ -14,5 +15,3 @@ Modules:
 """
 
 __version__ = "0.1.0"
-__author__ = "Mathias Roesler"
-__license__ = "Apache License 2.0"
