@@ -3,14 +3,13 @@
 """
 plots.py
 
-Plot functions used in the Python code
+Plot functions used in the symprobe package
 Author: Mathias Roesler
 Date: 11/24
 """
 
 import matplotlib.pyplot as plt
 import numpy as np
-import seaborn as sns
 
 
 def plot_cell_data(V, t):
@@ -46,51 +45,26 @@ def plot_cell_data(V, t):
     plt.show()
 
 
-def plot_correlation_heatmap(correl_values, sim_names):
-    """Creates a heatmap to display the correlation between different
-    resolutions
+def plot_resolution_convergence(comp_data, metric):
+    """Plots the convergence for different resolution meshes
 
     Arguments:
-    correl_values -- dict, dictionnary of correlation values with
-    resolution pairs as keys.
-    sim_names -- list[str], names of the simulations.
+    comp_data -- np.array, comparison data.
+    metric -- str, metric used for the comparison
 
     Return:
 
+    Raises:
+
     """
-    # Initialize a matrix for the heatmap
-    nb_sims = len(sim_names)
-    correl_matrix = np.ones((nb_sims, nb_sims))
+    # Create figure and plot
+    fig, ax = plt.subplots(dpi=300)
 
-    # Fill only the upper triangle of the matrix
-    for i, res1 in enumerate(sim_names):
-        for j in range(i + 1, nb_sims):
-            res2 = sim_names[j]
-            # Retrieve the correlaltion value from the dictionary
-            correl = correl_values.get((res1, res2)) or correl_values.get(
-                (res2, res1),
-                0,
-            )
+    x_axis = np.arange(len(comp_data))
 
-            correl_matrix[i, j] = correl
-            # Mirror the value to the lower triangle
-            correl_matrix[j, i] = correl
+    plt.plot(x_axis, comp_data)
 
-    labels = [x for x in range(nb_sims)]
+    plt.xlabel("Mesh number")
+    plt.ylabel("{}".format(metric.upper()))
 
-    # Create the heatmap
-    plt.figure(dpi=300)
-    ax = sns.heatmap(
-        correl_matrix,
-        cmap="YlGnBu",
-        vmax=1,
-        vmin=0,
-        xticklabels=labels,
-        yticklabels=labels,
-        cbar_kws={"label": "Correlation"},
-    )
-
-    ax.set_aspect("equal", "box")
-    plt.xlabel("Resolution")
-    plt.ylabel("Resolution")
     plt.show()
