@@ -12,34 +12,7 @@ import os
 import sys
 import argparse
 
-
-def convert_connections(cube_node_list):
-    """Converts the connections of the cubic element to six tetrahedra
-    connections
-
-    Arguments:
-    cube_node_list -- list[int], list of nodes for the cubic element.
-
-    Return:
-    tet_node_list -- list[list[int]], list of the six node lists for the
-            tetrahedral elements.
-
-    """
-    tet_node_list = []
-    conversion_idx = [  # List of node indices for each tetrahedra
-        [0, 1, 2, 4],  # Tetrahedron 1
-        [0, 2, 3, 4],  # Tetrahedron 2
-        [1, 2, 4, 5],  # Tetrahedron 3
-        [2, 3, 4, 7],  # Tetrahedron 4
-        [2, 4, 5, 6],  # Tetrahedron 5
-        [2, 4, 6, 7],  # Tetrahedron 6
-    ]
-
-    for idx_list in conversion_idx:
-        tet_list = [cube_node_list[idx] for idx in idx_list]
-        tet_node_list.append(tet_list)
-
-    return tet_node_list
+from symprobe.utils import convert_connections
 
 
 if __name__ == "__main__":
@@ -102,7 +75,7 @@ if __name__ == "__main__":
         # Write the CELLS
         f.write("CELLS {} {}\n".format(new_n, new_size))
 
-        for j, line in enumerate(mesh_lines[(i + 1) :]):
+        for j, line in enumerate(mesh_lines[(i + 1):]):
             if line[0] == "C":
                 # Exit after reading all the cells
                 break

@@ -26,3 +26,11 @@ PTS_LIST = {  # List of points to extract for the scaffolds
     "uterus_scaffold_8": [5587, 7695, 9743],
     "uterus_scaffold_9": [6984, 9619, 12179],
 }
+CONVERSION_IDX = [  # List of node indices for each tetrahedra
+    [0, 1, 2, 4],  # Tetrahedron 1
+    [0, 2, 3, 4],  # Tetrahedron 2
+    [1, 2, 4, 5],  # Tetrahedron 3
+    [2, 3, 4, 7],  # Tetrahedron 4
+    [2, 4, 5, 6],  # Tetrahedron 5
+    [2, 4, 6, 7],  # Tetrahedron 6
+]
