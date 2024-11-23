@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 
 from unittest.mock import patch
-from symprobe.plots import plot_cell_data, plot_correlation_heatmap
+from symprobe.plots import plot_cell_data, plot_resolution_convergence
 
 
 def test_plot_cell_data_shape_mismatch():
@@ -28,14 +28,26 @@ def test_plot_cell_data_success(mock_show):
     mock_show.assert_called_once()
 
 
+# Test plot_resolution_convergence function
 @patch("matplotlib.pyplot.show")  # Prevent plots from displaying
-def test_plot_correlation_heatmap_success(mock_show):
-    # Define correlation values and simulation names
-    correl_values = {("res1", "res2"): 0.9, ("res2", "res3"): 0.8}
-    sim_names = ["res1", "res2", "res3"]
+def test_plot_resolution_convergence_valid(mock_show):
+    comp_data = np.array([1.0, 2.0, 1.5, 1.2])  # Sample comparison data
+    metric = "rmse"  # Metric to be plotted
 
     # Run the function
-    plot_correlation_heatmap(correl_values, sim_names)
+    plot_resolution_convergence(comp_data, metric)
 
-    # Verify that `show` is called to display the heatmap
+    # Verify that `show` was called to display the plot
+    mock_show.assert_called_once()
+
+
+@patch("matplotlib.pyplot.show")  # Prevent plots from displaying
+def test_plot_resolution_convergence_empty_data(mock_show):
+    comp_data = np.array([])  # Empty comparison data
+    metric = "rmse"
+
+    # Run the function
+    plot_resolution_convergence(comp_data, metric)
+
+    # Ensure plt.show was still called even with empty data
     mock_show.assert_called_once()
