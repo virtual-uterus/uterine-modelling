@@ -34,3 +34,7 @@ CONVERSION_IDX = [  # List of node indices for each tetrahedra
     [2, 4, 5, 6],  # Tetrahedron 5
     [2, 4, 6, 7],  # Tetrahedron 6
 ]
+QUALITY_METRIC_MAP = {  # Mapping for quality metrics
+    "ar": "Aspect Ratio",
+    "ja": "Jacobian",
+}
