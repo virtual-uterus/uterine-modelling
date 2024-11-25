@@ -11,7 +11,7 @@ Date: 11/24
 import sys
 import argparse
 
-from symprobe import sweeps
+import sweeps
 
 if __name__ == "__main__":
     # Main argument parser setup
@@ -71,11 +71,18 @@ if __name__ == "__main__":
     # Parse the arguments and call the appropriate function
     args = parser.parse_args()
 
-    if args.command:
-        # Call the function associated with the chosen subcommand
-        try:
-            args.func(args)
-        except Exception as e:
-            sys.stderr.write("Error: {}\n".format(e))
-    else:
-        parser.print_help()
+    try:
+        if args.command == "resolution":
+            args.func(args.dim, args.mesh_name, args.start_val, args.end_val)
+        elif args.command == "parameter":
+            args.func(
+                args.dim,
+                args.param,
+                args.start_val,
+                args.end_val,
+                args.step,
+            )
+        else:
+            parser.print_help()
+    except Exception as e:
+        sys.stderr.write("Error: {}\n".format(e))
