@@ -122,6 +122,7 @@ def paraview_quality(mesh_path, metric):
 
     Arguments:
     mesh_path -- str, path to the mesh vtu file.
+    metric -- str, quality metric used {Aspect ratio, Jacobian}.
 
     Return:
     quality_data -- np.array, quality data for the given metric.
@@ -155,6 +156,8 @@ def paraview_quality(mesh_path, metric):
             )
     except FileNotFoundError as e:
         raise FileNotFoundError(e)
+    except ValueError as e:
+        raise ValueError(e)
     except Exception as e:
         raise RuntimeError(e)
 

@@ -114,14 +114,42 @@ def test_fetch_quality_data_missing_quality_array(mock_fetch):
 
 
 def test_paraview_quality_success():
+    """Test successful execution of paraview_quality."""
     # Define the path to the test mesh
     mesh_path = os.path.join("tests", "test_tet.vtk")
+    metric = "Aspect Ratio"
 
-    # Check if the file exists to avoid test failures
+    # Check if the test file exists to avoid false negatives
     assert os.path.isfile(mesh_path), f"Test mesh not found at {mesh_path}"
 
-    # Run the function
+    # Run the function and ensure it does not raise any exceptions
     try:
-        paraview_quality(mesh_path)
+        quality_data = paraview_quality(mesh_path, metric)
+        assert isinstance(quality_data, np.ndarray), "Output is not an np.array"
     except Exception as e:
-        pytest.fail(f"paraview_quality raised an exception: {e}\n")
+        pytest.fail(f"paraview_quality raised an exception: {e}")
+
+
+def test_paraview_quality_invalid_extension():
+    """Test paraview_quality with an unsupported file extension."""
+    invalid_mesh_path = os.path.join("tests", "test_tet.obj")
+    metric = "Aspect ratio"
+
+    # Simulate an invalid extension scenario
+    with pytest.raises(ValueError):
+        paraview_quality(invalid_mesh_path, metric)
+
+
+def test_paraview_quality_metric_not_found():
+    """Test paraview_quality with a non-existent metric."""
+    mesh_path = os.path.join("tests", "test_tet.vtk")
+    invalid_metric = "Invalid Metric"
+
+    # Check if the test file exists to avoid false negatives
+    assert os.path.isfile(mesh_path), f"Test mesh not found at {mesh_path}"
+
+    # Ensure the function raises ValueError for an invalid metric
+    with pytest.raises(
+        ValueError,
+    ):
+        paraview_quality(mesh_path, invalid_metric)
