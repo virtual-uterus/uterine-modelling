@@ -12,7 +12,7 @@ Date: 11/24
 import os
 import subprocess
 
-from symprobe.constants import CONFIG_ENV_VAR
+from symprobe.constants import CONFIG_ENV_VAR, DIST_DICT, RESISTIVITY
 
 
 def modify_config(config_file, param, value):
@@ -75,7 +75,7 @@ def resolution_sweep(dim, mesh_name, start_val, end_val):
     X is a number.
 
     Arguments:
-    dim -- int, dimension of the simulation {0, 2, 3}.
+    dim -- int, dimension of the simulation {2, 3}.
     mesh_name -- str, base name of the mesh.
     start_val -- float, start value for X.
     end_val -- float, end value for X.
@@ -102,8 +102,16 @@ def resolution_sweep(dim, mesh_name, start_val, end_val):
 
     for j in range(start_val, end_val + 1):
         # Read and modify config file
+        cur_mesh = f"{mesh_name}_{j}"
+        conduct_val = 1 / (RESISTIVITY * DIST_DICT[cur_mesh] ** 2)
         try:
-            modify_config(config_file, "mesh_name", f"{mesh_name}_{j}")
+            modify_config(config_file, "mesh_name", cur_mesh)
+            modify_config(
+                config_file,
+                f"conductivities_{dim}d",
+                cur_mesh,
+                conduct_val,
+            )
         except ValueError as e:
             raise ValueError(e)
         except FileNotFoundError as e:
