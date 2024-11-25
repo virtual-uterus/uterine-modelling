@@ -25,6 +25,8 @@ from symprobe.constants import HOME, BASE, CONFIG_ENV_VAR
 CONFIG_DIR = os.path.join(HOME, BASE, "uterine-modelling", "config")
 PARAMS_FILE = os.path.join(CONFIG_DIR, "2d_params.toml")
 ROESLER_FILE = os.path.join(CONFIG_DIR, "Roesler.toml")
+PROESTRUS_FILE = os.path.join(CONFIG_DIR, "Roesler_proestrus.toml")
+MEANS_FILE = os.path.join(CONFIG_DIR, "Means.toml")
 
 
 @pytest.fixture
@@ -126,8 +128,11 @@ def test_resolution_sweep_invalid_range(mock_env):
         resolution_sweep(2, "test_mesh", 3, 1)
 
 
-def test_parameter_sweep_success(mock_env):
-    mock_file_content = ["param = old_value\n", 'cell_type = "Roesler"\n']
+def test_parameter_sweep_estrus_success(mock_env):
+    mock_file_content = [
+        "param = old_value\n",
+        'cell_type = "Means"\n',
+    ]
     mock_open_obj = mock_open(read_data="".join(mock_file_content))
 
     with (
@@ -145,11 +150,59 @@ def test_parameter_sweep_success(mock_env):
 
     # Ensure the file was written to three times with updated param values
     expected_calls = [
-        call(ROESLER_FILE, "w"),
-        call(ROESLER_FILE, "w"),
-        call(ROESLER_FILE, "w"),
+        call(MEANS_FILE, "w"),
+        call(MEANS_FILE, "w"),
+        call(MEANS_FILE, "w"),
     ]
     mock_open_obj.assert_has_calls(expected_calls, any_order=True)
+
+
+def test_parameter_sweep_estrus_success(mock_env):
+    mock_file_content = [
+        "param = old_value\n",
+        'cell_type = "Roesler"\n',
+        'estrus = "proestrus"\n',
+    ]
+    mock_open_obj = mock_open(read_data="".join(mock_file_content))
+
+    with (
+        patch(
+            "builtins.open",
+            mock_open_obj,
+        ),
+        patch("subprocess.run") as mock_run,
+    ):
+        parameter_sweep(2, "param", 1.0, 3.0, 1.0)
+
+    # Assert subprocess was called three times (once per parameter value)
+    assert mock_run.call_count == 3
+    mock_run.assert_called_with(["uterine-simulation", "2"])
+
+    # Ensure the file was written to three times with updated param values
+    expected_calls = [
+        call(PROESTRUS_FILE, "w"),
+        call(PROESTRUS_FILE, "w"),
+        call(PROESTRUS_FILE, "w"),
+    ]
+    mock_open_obj.assert_has_calls(expected_calls, any_order=True)
+
+
+def test_parameter_sweep_estrus_presence(mock_env):
+    mock_file_content = ["param = old_value\n", 'cell_type = "Roesler"\n']
+    mock_open_obj = mock_open(read_data="".join(mock_file_content))
+
+    with (
+        patch(
+            "builtins.open",
+            mock_open_obj,
+        ),
+        patch("subprocess.run"),
+        pytest.raises(
+            ValueError,
+            match="estrus not found in config file",
+        ),
+    ):
+        parameter_sweep(2, "param", 1.0, 3.0, 1.0)
 
 
 def test_parameter_sweep_missing_env():

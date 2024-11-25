@@ -145,19 +145,35 @@ def parameter_sweep(dim, param, start_val, end_val, step):
         raise OSError(f"{CONFIG_ENV_VAR} environment variable is not set")
 
     cell_type_file = os.path.join(config_dir, f"{dim}d_params.toml")
+    type_found = False
+    estrus_found = False
+
     try:
         with open(cell_type_file, "r") as f:
             for line in f:
                 if "cell_type" in line:
                     cell_type = line.split('"')[1]
-                    break
-            else:
-                raise ValueError("cell_type not found in config file")
-                return
+                    type_found = True
+
+                if "estrus" in line:
+                    # Get estrus if the cell type is Roesler
+                    estrus = line.split('"')[1]
+                    estrus_found = True
     except FileNotFoundError as e:
         raise FileNotFoundError(e)
 
-    config_file = os.path.join(config_dir, f"{cell_type}.toml")
+    if not type_found:
+        raise ValueError("cell_type not found in config file")
+        return
+    if not estrus_found and cell_type == "Roesler":
+        raise ValueError("estrus not found in config file")
+        return
+
+    if cell_type == "Roesler":
+        config_file = os.path.join(config_dir, f"{cell_type}_{estrus}.toml")
+
+    else:
+        config_file = os.path.join(config_dir, f"{cell_type}.toml")
 
     # Check if start value is greater than end value
     if value > end:
