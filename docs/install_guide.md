@@ -97,5 +97,5 @@ To run a specific test use the -R flag followed by a regular expression. For exa
 <a id="project"></a>
 ## Setting up a project
 
-To setup a project follow the instructions [here](https://chaste.cs.ox.ac.uk/trac/wiki/ChasteGuides/UserProjects)
+To setup a project follow the instructions [here](https://chaste.github.io/docs/user-guides/user-projects/)
 
