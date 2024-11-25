@@ -11,7 +11,7 @@ if [[ $# -ne 1 ]]; then
 fi
 
 # Move to the app directory and run the simulation
-cd ${CHASTE_BUILD_DIR}/projects/uterus-modelling
+cd ${CHASTE_BUILD_DIR}/projects/uterine-modelling
 ./apps/main $1
 
 # Get the config file based on dimension
