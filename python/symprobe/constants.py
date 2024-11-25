@@ -13,6 +13,7 @@ import os
 # Define global constants
 HOME = os.path.expanduser("~")
 BASE = "Documents/phd"
+RESISTIVITY = 1e-2  # Intracellular resistivity
 CONFIG_ENV_VAR = "CHASTE_MODELLING_CONFIG_DIR"
 PTS_LIST = {  # List of points to extract for the scaffolds
     "uterus_scaffold_0": [195, 265, 329],
@@ -25,6 +26,18 @@ PTS_LIST = {  # List of points to extract for the scaffolds
     "uterus_scaffold_7": [4195, 5775, 7311],
     "uterus_scaffold_8": [5587, 7695, 9743],
     "uterus_scaffold_9": [6984, 9619, 12179],
+}
+DIST_DICT = {  # Average distance between elements for the scaffolds
+    "uterus_scaffold_0": 1.27,
+    "uterus_scaffold_1": 0.77,
+    "uterus_scaffold_2": 0.70,
+    "uterus_scaffold_3": 0.65,
+    "uterus_scaffold_4": 0.48,
+    "uterus_scaffold_5": 0.46,
+    "uterus_scaffold_6": 0.44,
+    "uterus_scaffold_7": 0.35,
+    "uterus_scaffold_8": 0.34,
+    "uterus_scaffold_9": 0.33,
 }
 CONVERSION_IDX = [  # List of node indices for each tetrahedra
     [0, 1, 2, 4],  # Tetrahedron 1
