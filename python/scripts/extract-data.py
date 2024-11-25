@@ -50,6 +50,9 @@ if __name__ == "__main__":
 
     sim_numbers = utils.get_range(args.sim_numbers)
 
+    if type(sim_numbers) is int:
+        sim_numbers = [sim_numbers]
+
     # Create file path
     dir_path = os.path.join(
         constants.HOME,
