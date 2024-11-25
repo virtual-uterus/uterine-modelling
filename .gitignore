@@ -1,8 +1,6 @@
 build/
 *.swp
-CMakeLists.txt
 CMakeFiles/
-CMakeCache.txt
 *.backup
 
 # Ignore Python stuff
