@@ -62,7 +62,7 @@ def plot_resolution_convergence(comp_data, metric):
 
     x_axis = np.arange(len(comp_data))
 
-    plt.plot(x_axis, comp_data)
+    plt.plot(x_axis, comp_data, ".-")
 
     # Reset x-axis ticks
     plt.xticks(ticks=[0, len(comp_data) - 1], labels=["Coarse", "Fine"])
