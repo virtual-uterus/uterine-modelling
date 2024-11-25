@@ -1,4 +1,4 @@
-#include "UterineRegularCellFactory.hpp"
+#include "../include/UterineRegularCellFactory.hpp"
 #include "Exception.hpp"
 
 UterineRegularCellFactory::UterineRegularCellFactory() :

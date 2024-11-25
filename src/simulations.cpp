@@ -1,11 +1,11 @@
-#include "simulations.hpp"
-#include "FHNOdeSystem.hpp"
-#include "UterineSimpleCellFactory.hpp"
-#include "UterineRegularCellFactory.hpp"
-#include "UterineZeroCellFactory.hpp"
-#include "UterineSimpleCellFactory3d.hpp"
-#include "UterineRegularCellFactory3d.hpp"
-#include "UterineZeroCellFactory3d.hpp"
+#include "../include/simulations.hpp"
+#include "../include/FHNOdeSystem.hpp"
+#include "../include/UterineSimpleCellFactory.hpp"
+#include "../include/UterineRegularCellFactory.hpp"
+#include "../include/UterineZeroCellFactory.hpp"
+#include "../include/UterineSimpleCellFactory3d.hpp"
+#include "../include/UterineRegularCellFactory3d.hpp"
+#include "../include/UterineZeroCellFactory3d.hpp"
 
 void simulation_0d() {
   FHNOdeSystem ode;

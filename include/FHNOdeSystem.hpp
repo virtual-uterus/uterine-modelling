@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <toml.hpp>
+#include "../include/toml.hpp"
 
 #include "CheckpointArchiveTypes.hpp"
 #include "EulerIvpOdeSolver.hpp"
