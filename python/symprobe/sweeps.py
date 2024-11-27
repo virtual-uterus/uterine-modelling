@@ -55,6 +55,8 @@ def modify_config(config_file, param, value):
                 case "mesh_name":
                     lines[i] = f'mesh_name = "{value}"\n'
                     break
+                case "estrus":
+                    lines[i] = f'estrus = "{value}"\n'
                 case _:
                     lines[i] = f"   {param} = {value} \n"
                     break
