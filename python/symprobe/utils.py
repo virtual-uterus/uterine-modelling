@@ -12,7 +12,6 @@ import re
 
 import numpy as np
 import pandas as pd
-import pyvista as pv
 
 from symprobe.constants import CONVERSION_IDX
 
@@ -172,49 +171,6 @@ def convert_connections(cube_node_list):
         tet_node_list.append(tet_list)
 
     return tet_node_list
-
-
-def neighbour_distance(mesh_path):
-    """Finds the Euclidean distance between neighbouring elements in
-    a volumetric mesh
-
-    Arguments:
-    mesh_path -- str, path to the mesh to load.
-
-    Return:
-    distances -- np.array(float), array of mean distance between each cell and
-    its neighbours.
-
-    Raises:
-    FileNotFoundError -- if the mesh is not found
-    """
-    try:
-        mesh = pv.read(mesh_path)
-
-    except FileNotFoundError:
-        raise
-
-    # Calculate centroids of all cells
-    centroids = mesh.cell_centers().points
-
-    # Dictionary to store distances between neighbouring cells
-    neighbour_distances = np.zeros(mesh.n_cells)
-
-    # Iterate through all cells in the mesh
-    for i in range(mesh.n_cells):
-        # Get indices of neighbouring cells using faces
-        neighbours = mesh.cell_neighbors(i, "faces")
-
-        # Calculate distances to neighbours
-        distances = []
-        for neighbour in neighbours:
-            dist = np.linalg.norm(centroids[i] - centroids[neighbour])
-            distances.append(dist)
-
-        # Store distances
-        neighbour_distances[i] = np.mean(distances)
-
-    return np.array(neighbour_distances)
 
 
 def print_quality(quality_array, metric_name):
