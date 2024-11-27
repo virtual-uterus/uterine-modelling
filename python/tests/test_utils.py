@@ -10,7 +10,6 @@ Date: 11/24
 This file contains test cases for the functions:
 - get_print_timestep
 - load_data
-- modify_config
 - get_range
 - print_quality
 

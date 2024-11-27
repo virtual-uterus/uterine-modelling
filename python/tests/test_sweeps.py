@@ -11,6 +11,7 @@ This file contains test cases for the functions:
 - resolution_sweep
 - parameter_sweep
 - modify_config
+- estrus_sweep
 
 The tests cover various scenarios including valid inputs, invalid inputs.
 """

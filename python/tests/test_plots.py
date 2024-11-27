@@ -10,6 +10,8 @@ Date: 11/24
 This file contains test cases for the functions:
 - plot_cell_data
 - plot_resolution_convergence
+- plot_single_mesh_quality
+- plot_multi_mesh_quality
 
 The tests cover various scenarios including valid inputs, invalid inputs.
 """
