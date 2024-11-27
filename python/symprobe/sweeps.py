@@ -12,7 +12,7 @@ Date: 11/24
 import os
 import subprocess
 
-from symprobe.constants import CONFIG_ENV_VAR, DIST_DICT, RESISTIVITY
+from symprobe.constants import CONFIG_ENV_VAR, DIST_DICT, RESISTIVITY, ESTRUS
 
 
 def modify_config(config_file, param, value):
@@ -205,3 +205,38 @@ def parameter_sweep(dim, param, start_val, end_val, step):
         # Check termination condition
         if value > end:
             break
+
+
+def estrus_sweep(dim):
+    """Performs simulations over all four stages of the estrus cycle
+
+    Arguments:
+    dim -- int, dimension of the simulation {2, 3}.
+
+    Return:
+
+    Raises:
+    OSError -- if the CONFIG_ENV_VAR is not set.
+    ValueError -- if the start value is greater than the end value.
+    FileNotFoundError -- if the cell configuration file is not found.
+    ValueError -- if the parameter is not found in the configuration file.
+
+    """
+    # Get the config directory and files
+    config_dir = os.getenv(CONFIG_ENV_VAR)
+    if not config_dir:
+        raise OSError(f"{CONFIG_ENV_VAR} environment variable is not set")
+
+    config_file = os.path.join(config_dir, f"{dim}d_params.toml")
+
+    for j in range(4):
+        # Read and modify config file
+        try:
+            modify_config(config_file, "estrus", ESTRUS[j])
+        except ValueError:
+            raise
+        except FileNotFoundError:
+            raise
+
+        # Run the chaste simulation
+        subprocess.run(["uterine-simulation", str(dim)])
