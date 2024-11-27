@@ -128,7 +128,7 @@ def paraview_quality(mesh_path, metric):
     quality_data -- np.array, quality data for the given metric.
 
     Raises:
-    ValueError -- if the extension is not vtk of vtu.
+    ValueError -- if the extension is not vtk or vtu.
     FileNotFoundError -- if the file is not found.
     RuntimeError -- if the an error occurs while opening the file.
     ValueError -- if the quality array is not found.
