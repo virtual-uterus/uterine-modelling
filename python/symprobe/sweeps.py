@@ -34,8 +34,8 @@ def modify_config(config_file, param, value):
     try:
         with open(config_file, "r") as f:
             lines = f.readlines()
-    except FileNotFoundError as e:
-        raise FileNotFoundError(e)
+    except FileNotFoundError:
+        raise
 
     found = False  # To check param is found
 
@@ -113,10 +113,10 @@ def resolution_sweep(dim, mesh_name, start_val, end_val):
                 f"conductivities_{dim}d",
                 conduct_val,
             )
-        except ValueError as e:
-            raise ValueError(e)
-        except FileNotFoundError as e:
-            raise FileNotFoundError(e)
+        except ValueError:
+            raise
+        except FileNotFoundError:
+            raise
 
         # Run the chaste simulation
         subprocess.run(["uterine-simulation", str(dim)])
@@ -168,8 +168,8 @@ def parameter_sweep(dim, param, start_val, end_val, step):
                     # Get estrus if the cell type is Roesler
                     estrus = line.split('"')[1]
                     estrus_found = True
-    except FileNotFoundError as e:
-        raise FileNotFoundError(e)
+    except FileNotFoundError:
+        raise
 
     if not type_found:
         raise ValueError("cell_type not found in config file")
@@ -192,10 +192,10 @@ def parameter_sweep(dim, param, start_val, end_val, step):
         # Read and modify config file
         try:
             modify_config(config_file, param, value)
-        except ValueError as e:
-            raise ValueError(e)
-        except FileNotFoundError as e:
-            raise FileNotFoundError(e)
+        except ValueError:
+            raise
+        except FileNotFoundError:
+            raise
 
         # Run the chaste simulation
         subprocess.run(["uterine-simulation", str(dim)])

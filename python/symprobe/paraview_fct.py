@@ -35,10 +35,10 @@ def paraview_extract(mesh_path, save_path, pts_list):
             registrationName="mesh.vtu",
             FileName=[mesh_path],
         )
-    except FileNotFoundError as e:
-        raise FileNotFoundError(e)
-    except Exception as e:
-        raise RuntimeError(e)
+    except FileNotFoundError:
+        raise
+    except Exception:
+        raise
 
     mesh.PointArrayStatus = ["V"]
 
@@ -154,12 +154,12 @@ def paraview_quality(mesh_path, metric):
             raise ValueError(
                 "unrecognised extension {}\n".format(extension),
             )
-    except FileNotFoundError as e:
-        raise FileNotFoundError(e)
-    except ValueError as e:
-        raise ValueError(e)
-    except Exception as e:
-        raise RuntimeError(e)
+    except FileNotFoundError:
+        raise
+    except ValueError:
+        raise
+    except Exception:
+        raise
 
     # Get active view
     view = ps.GetActiveViewOrCreate("RenderView")
@@ -177,5 +177,5 @@ def paraview_quality(mesh_path, metric):
 
     try:
         return fetch_quality_data(metric, mesh_quality, view)
-    except ValueError as e:
-        raise ValueError(e)
+    except ValueError:
+        raise

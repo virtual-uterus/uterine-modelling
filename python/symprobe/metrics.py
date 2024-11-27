@@ -27,8 +27,8 @@ def check_broadcasting(y_true, y_pred):
     try:
         # Check broadcasting compatibility
         np.broadcast_arrays(y_true, y_pred)
-    except ValueError as e:
-        raise ValueError(f"arrays are not broadcastable: {e}\n")
+    except ValueError:
+        raise
 
 
 def compute_rmse(y_true, y_pred):
@@ -47,8 +47,8 @@ def compute_rmse(y_true, y_pred):
     # Check broadcasting before calculation
     try:
         check_broadcasting(y_true, y_pred)
-    except ValueError as e:
-        raise ValueError(e)
+    except ValueError:
+        raise
     return np.sqrt(np.mean((y_true - y_pred) ** 2))
 
 
@@ -68,8 +68,8 @@ def compute_mae(y_true, y_pred):
     # Check broadcasting before calculation
     try:
         check_broadcasting(y_true, y_pred)
-    except ValueError as e:
-        raise ValueError(e)
+    except ValueError:
+        raise
     return np.mean(np.abs(y_true - y_pred))
 
 
@@ -89,8 +89,8 @@ def compute_mse(y_true, y_pred):
     # Check broadcasting before calculation
     try:
         check_broadcasting(y_true, y_pred)
-    except ValueError as e:
-        raise ValueError(e)
+    except ValueError:
+        raise
     return np.mean((y_true - y_pred) ** 2)
 
 
@@ -123,5 +123,5 @@ def compute_comparison(y_true, y_pred, metric):
                 return compute_mse(y_true, y_pred)
             case _:
                 raise ValueError("invalid metric {}\n".format(metric))
-    except ValueError as e:
-        raise ValueError(e)
+    except ValueError:
+        raise
