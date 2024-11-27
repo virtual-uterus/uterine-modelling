@@ -19,7 +19,12 @@ import os
 import pytest
 
 from unittest.mock import patch, mock_open, call
-from symprobe.sweeps import resolution_sweep, parameter_sweep, modify_config
+from symprobe.sweeps import (
+    resolution_sweep,
+    parameter_sweep,
+    modify_config,
+    estrus_sweep,
+)
 from symprobe.constants import HOME, BASE, CONFIG_ENV_VAR
 
 CONFIG_DIR = os.path.join(HOME, BASE, "uterine-modelling", "config")
@@ -218,3 +223,54 @@ def test_parameter_sweep_invalid_range(mock_env):
         ValueError, match="the start value is greater than the end value"
     ):
         parameter_sweep(2, "param", 3.0, 1.0, 1.0)
+
+
+def test_estrus_sweep_success(mock_env):
+    mock_file_content = [
+        "mesh_name = 'uterus_scaffold_0'\n",
+        "conductivities_2d = [0, 0]\n",
+        "estrus = proestrus\n",
+    ]
+    mock_open_obj = mock_open(read_data="".join(mock_file_content))
+
+    with (
+        patch(
+            "builtins.open",
+            mock_open_obj,
+        ),
+        patch("subprocess.run") as mock_run,
+    ):
+        estrus_sweep(2)
+
+    # Assert subprocess was called three times (once per mesh value)
+    assert mock_run.call_count == 4
+    mock_run.assert_called_with(["uterine-simulation", "2"])
+
+    # Ensure the file was written to three times with updated mesh_name
+    expected_calls = [
+        call(PARAMS_FILE, "w"),
+        call(PARAMS_FILE, "w"),
+        call(PARAMS_FILE, "w"),
+        call(PARAMS_FILE, "w"),
+    ]
+    mock_open_obj.assert_has_calls(expected_calls, any_order=True)
+
+
+def test_estrus_sweep_invalid_parameter(mock_env):
+    mock_file_content = [
+        "mesh_name = 'uterus_scaffold_0'\n",
+        "conductivities_2d = [0, 0]",
+    ]
+    mock_open_obj = mock_open(read_data="".join(mock_file_content))
+
+    with (
+        patch(
+            "builtins.open",
+            mock_open_obj,
+        ),
+        patch("subprocess.run"),
+        pytest.raises(
+            ValueError,
+        ),
+    ):
+        estrus_sweep(2)
