@@ -68,6 +68,14 @@ if __name__ == "__main__":
     )
     res_parser.set_defaults(func=sweeps.resolution_sweep)
 
+    # Subcommand: estrus
+    estrus_parser = subparsers.add_parser(
+        "estrus",
+        help="Run an estrus sweep with the same mesh and base parameters",
+    )
+    estrus_parser.add_argument("dim", type=int, help="dimension (2 or 3)")
+    estrus_parser.set_defaults(func=sweeps.estrus_sweep)
+
     # Parse the arguments and call the appropriate function
     args = parser.parse_args()
 
@@ -82,6 +90,8 @@ if __name__ == "__main__":
                 args.end_val,
                 args.step,
             )
+        elif args.command == "estrus":
+            args.func(args.dim)
         else:
             parser.print_help()
     except Exception as e:
