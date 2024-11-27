@@ -18,7 +18,12 @@ import pytest
 import numpy as np
 
 from unittest.mock import patch
-from symprobe.plots import plot_cell_data, plot_resolution_convergence
+from symprobe.plots import (
+    plot_cell_data,
+    plot_resolution_convergence,
+    plot_single_mesh_quality,
+    plot_multi_mesh_quality,
+)
 
 
 def test_plot_cell_data_shape_mismatch():
@@ -66,4 +71,31 @@ def test_plot_resolution_convergence_empty_data(mock_show):
     plot_resolution_convergence(comp_data, metric)
 
     # Ensure plt.show was still called even with empty data
+    mock_show.assert_called_once()
+
+
+# Test plot_multi_mesh_quality function
+@patch("matplotlib.pyplot.show")  # Prevent plots from displaying
+def test_plot_multi_mesh_quality_valid(mock_show):
+    quality_dict = {"test_1": 0.0, "test_2": 1.0}  # Sample dict
+    metric = "rmse"  # Metric to be plotted
+
+    # Run the function
+    plot_multi_mesh_quality(quality_dict, metric)
+
+    # Verify that `show` was called to display the plot
+    mock_show.assert_called_once()
+
+
+# Test plot_single_mesh_quality function
+@patch("matplotlib.pyplot.show")  # Prevent plots from displaying
+def test_plot_single_mesh_quality_valid(mock_show):
+    quality_data = np.array([0.0, 1.0])  # Sample data
+    mesh_name = "test_mesh"
+    metric = "rmse"  # Metric to be plotted
+
+    # Run the function
+    plot_single_mesh_quality(quality_data, metric, mesh_name)
+
+    # Verify that `show` was called to display the plot
     mock_show.assert_called_once()
