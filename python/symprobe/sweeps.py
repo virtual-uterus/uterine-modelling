@@ -109,7 +109,6 @@ def resolution_sweep(dim, mesh_name, start_val, end_val):
             modify_config(
                 config_file,
                 f"conductivities_{dim}d",
-                cur_mesh,
                 conduct_val,
             )
         except ValueError as e:

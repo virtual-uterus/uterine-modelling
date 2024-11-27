@@ -91,7 +91,10 @@ def test_modify_config_file_not_found(mock_env):
 
 
 def test_resolution_sweep_success(mock_env):
-    mock_file_content = ["mesh_name = 'old_mesh'\n"]
+    mock_file_content = [
+        "mesh_name = 'uterus_scaffold_0'\n",
+        "conductivities_2d = [0, 0]",
+    ]
     mock_open_obj = mock_open(read_data="".join(mock_file_content))
 
     with (
@@ -101,7 +104,7 @@ def test_resolution_sweep_success(mock_env):
         ),
         patch("subprocess.run") as mock_run,
     ):
-        resolution_sweep(2, "test_mesh", 1, 3)
+        resolution_sweep(2, "uterus_scaffold", 1, 3)
 
     # Assert subprocess was called three times (once per mesh value)
     assert mock_run.call_count == 3
@@ -128,7 +131,7 @@ def test_resolution_sweep_invalid_range(mock_env):
         resolution_sweep(2, "test_mesh", 3, 1)
 
 
-def test_parameter_sweep_estrus_success(mock_env):
+def test_parameter_sweep_no_estrus_success(mock_env):
     mock_file_content = [
         "param = old_value\n",
         'cell_type = "Means"\n',
