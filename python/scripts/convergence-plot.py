@@ -70,9 +70,15 @@ if __name__ == "__main__":
         current_sim_name = f"{args.sim_name}_{sim_nb:03}"
 
         data_path = os.path.join(
-            dir_path, "extract", "{}.csv".format(current_sim_name))
+            dir_path,
+            "extract",
+            "{}.csv".format(current_sim_name),
+        )
         log_path = os.path.join(
-            dir_path, "log", "{}.log".format(current_sim_name))
+            dir_path,
+            "log",
+            "{}.log".format(current_sim_name),
+        )
 
         try:
             V, t = utils.load_data(data_path, log_path, args.delimiter)
