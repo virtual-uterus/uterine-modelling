@@ -41,3 +41,4 @@ QUALITY_METRIC_MAP = {  # Mapping for quality metrics
     "ar": "Aspect Ratio",
     "ja": "Jacobian",
 }
+ESTRUS = ["proestrus", "estrus", "metestrus", "diestrus"]
