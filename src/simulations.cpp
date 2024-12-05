@@ -102,7 +102,7 @@ void simulation_2d() {
   } else {
     const std::string err_message = "Unrecognized stimulus type";
     const std::string err_filename = "simulations.cpp";
-    unsigned line_number = 87;
+    unsigned line_number = 105;
 
     throw Exception(err_message, err_filename, line_number);
   }
@@ -231,7 +231,7 @@ void simulation_3d() {
   } else {
     const std::string err_message = "Unrecognized stimulus type";
     const std::string err_filename = "simulations.cpp";
-    unsigned line_number = 204;
+    unsigned line_number = 234;
 
     throw Exception(err_message, err_filename, line_number);
   }
@@ -241,7 +241,7 @@ void simulation_3d() {
   HeartConfig::Instance()->SetIntracellularConductivities(Create_c_vector(
     conductivities[0], conductivities[1], conductivities[2]));
 
-  // HeartConfig::Instance()->SetSurfaceAreaToVolumeRatio(1400); // 1/cm
+  HeartConfig::Instance()->SetSurfaceAreaToVolumeRatio(1400);  // 1/cm
   HeartConfig::Instance()->SetCapacitance(capacitance);  // uF/cm^2
 
   HeartConfig::Instance()->SetOdePdeAndPrintingTimeSteps(ode_timestep,
