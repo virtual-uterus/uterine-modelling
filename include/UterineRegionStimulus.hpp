@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <utility>
+#include <algorithm>
 #include <vector>
 #include <cmath>
 
@@ -25,6 +26,7 @@ class UterineRegionStimulus : public RegularStimulus {
                 double period,
                 double startTime,
                 std::vector<double> regionProbs);
+    void ValidateProbabilities(const std::vector<double>& regionProbs);
     double GetStimulus(double time) override;
     unsigned SelectRegion();
     void SetRegion(unsigned region);

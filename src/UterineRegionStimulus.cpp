@@ -1,10 +1,32 @@
 #include "../include/UterineRegionStimulus.hpp"
 
 UterineRegionStimulus::UterineRegionStimulus(
-    double magnitude, double duration, double period, double start, std::vector<double> regionProbs)
+    double magnitude, double duration, double period, double start,
+    std::vector<double> regionProbs)
     : RegularStimulus(magnitude, duration, period, start),
       mpRegion(0),
       mpRegionProbs(std::move(regionProbs)) {
+    ValidateProbabilities(regionProbs);  // Check the regionProbs are correct
+}
+
+
+// Helper function to validate probabilities
+void UterineRegionStimulus::ValidateProbabilities(
+    const std::vector<double>& regionProbs) {
+    // Ensure the probabilities sum to 1.0
+    const double tolerance = 1e-6;
+    double sum = std::accumulate(regionProbs.begin(), regionProbs.end(), 0.0);
+
+    if (std::abs(sum - 1.0) > tolerance) {
+        throw std::invalid_argument("Region probabilities must sum to 1.0");
+    }
+
+    // Ensure all probabilities are non-negative
+    for (unsigned i=0; i < regionProbs.size(); ++i) {
+        if (regionProbs[i] < 0.0) {
+            throw std::invalid_argument("Region probabilities must be positive");
+        }
+    }
 }
 
 double UterineRegionStimulus::GetStimulus(double time) {
