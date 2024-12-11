@@ -41,7 +41,6 @@ void UterineRegionSelector::SetRegionProbs(
 unsigned UterineRegionSelector::GetCurrentRegion() {
     if (mpCurrentRegion == 0) {
         mpCurrentRegion = SelectRegion();
-        std::cout << mpCurrentRegion << std::endl;
     }
     return mpCurrentRegion;
 }
