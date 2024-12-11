@@ -6,6 +6,16 @@
 #include "PetscException.hpp"
 #include "OutputFileHandler.hpp"
 
+#include "FHNOdeSystem.hpp"
+#include "factories/UterineSimpleCellFactory.hpp"
+#include "factories/UterineRegularCellFactory.hpp"
+#include "factories/UterineZeroCellFactory.hpp"
+#include "factories/UterineSimpleCellFactory3d.hpp"
+#include "factories/UterineRegularCellFactory3d.hpp"
+#include "factories/UterineRegionCellFactory3d.hpp"
+#include "factories/UterineZeroCellFactory3d.hpp"
+
+
 void simulation_0d();
 void simulation_2d();
 void simulation_3d();
