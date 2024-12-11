@@ -226,6 +226,8 @@ void simulation_3d() {
     factory = new UterineSimpleCellFactory3d();
   } else if (stimulus_type == "regular") {
     factory = new UterineRegularCellFactory3d();
+  } else if (stimulus_type == "region") {
+    factory = new UterineRegionCellFactory3d();
   } else if (stimulus_type == "zero") {
     factory = new UterineZeroCellFactory3d();
   } else {
