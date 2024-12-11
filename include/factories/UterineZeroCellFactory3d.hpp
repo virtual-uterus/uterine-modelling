@@ -1,5 +1,5 @@
-#ifndef INCLUDE_UTERINEZEROCELLFACTORY3D_HPP_
-#define INCLUDE_UTERINEZEROCELLFACTORY3D_HPP_
+#ifndef INCLUDE_FACTORIES_UTERINEZEROCELLFACTORY3D_HPP_
+#define INCLUDE_FACTORIES_UTERINEZEROCELLFACTORY3D_HPP_
 
 #include <iostream>
 #include <string>
@@ -21,7 +21,7 @@ class UterineZeroCellFactory3d : public AbstractUterineCellFactory3d {
   void WriteLogInfo(std::string log_file);
 };
 
-#endif  // INCLUDE_UTERINEZEROCELLFACTORY3D_HPP_
+#endif  // INCLUDE_FACTORIES_UTERINEZEROCELLFACTORY3D_HPP_
 
 
 

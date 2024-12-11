@@ -1,5 +1,5 @@
-#ifndef INCLUDE_ABSTRACTUTERINECELLFACTORY3D_HPP_
-#define INCLUDE_ABSTRACTUTERINECELLFACTORY3D_HPP_
+#ifndef INCLUDE_FACTORIES_ABSTRACTUTERINECELLFACTORY3D_HPP_
+#define INCLUDE_FACTORIES_ABSTRACTUTERINECELLFACTORY3D_HPP_
 
 #include "../toml.hpp"
 #include "MonodomainProblem.hpp"
@@ -34,5 +34,5 @@ class AbstractUterineCellFactory3d : public AbstractCardiacCellFactory<3> {
   virtual void WriteLogInfo(std::string log_file);
 };
 
-#endif  // INCLUDE_ABSTRACTUTERINECELLFACTORY3D_HPP_
+#endif  // INCLUDE_FACTORIES_ABSTRACTUTERINECELLFACTORY3D_HPP_
 

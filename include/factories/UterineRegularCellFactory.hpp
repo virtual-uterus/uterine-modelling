@@ -1,5 +1,5 @@
-#ifndef INCLUDE_UTERINEREGULARCELLFACTORY_HPP_
-#define INCLUDE_UTERINEREGULARCELLFACTORY_HPP_
+#ifndef INCLUDE_FACTORIES_UTERINEREGULARCELLFACTORY_HPP_
+#define INCLUDE_FACTORIES_UTERINEREGULARCELLFACTORY_HPP_
 
 #include <iostream>
 #include <string>
@@ -25,5 +25,5 @@ class UterineRegularCellFactory : public AbstractUterineCellFactory {
   void WriteLogInfo(std::string log_file);
 };
 
-#endif  // INCLUDE_UTERINEREGULARCELLFACTORY_HPP_
+#endif  // INCLUDE_FACTORIES_UTERINEREGULARCELLFACTORY_HPP_
 
