@@ -1,15 +1,15 @@
-#include "../include/UterineRegularCellFactory.hpp"
+#include "../../include/factories/UterineSimpleCellFactory.hpp"
 #include "Exception.hpp"
 
-UterineRegularCellFactory::UterineRegularCellFactory() :
+UterineSimpleCellFactory::UterineSimpleCellFactory() :
   AbstractUterineCellFactory(),
-  mpStimulus(new RegularStimulus(0.0, 0.0, 0.1, 0.0)) {
+  mpStimulus(new SimpleStimulus(0.0, 0.0)) {
   ReadParams(USMC_2D_SYSTEM_CONSTANTS::GENERAL_PARAM_FILE);
   ReadCellParams(AbstractUterineCellFactory::GetCellParamFile());
 }
 
 
-AbstractCvodeCell* UterineRegularCellFactory::CreateCardiacCellForTissueNode(
+AbstractCvodeCell* UterineSimpleCellFactory::CreateCardiacCellForTissueNode(
   Node<2>* pNode) {
   double x = pNode->rGetLocation()[0];
   double y = pNode->rGetLocation()[1];
@@ -71,7 +71,7 @@ AbstractCvodeCell* UterineRegularCellFactory::CreateCardiacCellForTissueNode(
 }
 
 
-void UterineRegularCellFactory::ReadParams(std::string general_param_file) {
+void UterineSimpleCellFactory::ReadParams(std::string general_param_file) {
   AbstractUterineCellFactory::ReadParams(general_param_file);
 
   std::string general_param_path = USMC_2D_SYSTEM_CONSTANTS::CONFIG_DIR +
@@ -86,20 +86,19 @@ void UterineRegularCellFactory::ReadParams(std::string general_param_file) {
 }
 
 
-void UterineRegularCellFactory::ReadCellParams(std::string cell_param_file) {
+void UterineSimpleCellFactory::ReadCellParams(std::string cell_param_file) {
   std::string cell_param_path = USMC_2D_SYSTEM_CONSTANTS::CONFIG_DIR +
     cell_param_file;
   const auto cell_params = toml::parse(cell_param_path);
 
   // Stimulus parameters
   mpStimulus->SetMagnitude(toml::find<double>(cell_params, "magnitude"));
-  mpStimulus->SetPeriod(toml::find<double>(cell_params, "period"));
   mpStimulus->SetDuration(toml::find<double>(cell_params, "duration"));
   mpStimulus->SetStartTime(toml::find<double>(cell_params, "start_time"));
 }
 
 
-void UterineRegularCellFactory::PrintParams() {
+void UterineSimpleCellFactory::PrintParams() {
   AbstractUterineCellFactory::PrintParams();
   std::cout << "mpX_stim_start = " << mpX_stim_start << "\n";
   std::cout << "mpX_stim_end = " << mpX_stim_end << "\n";
@@ -108,7 +107,6 @@ void UterineRegularCellFactory::PrintParams() {
   std::cout << "mpStimulus magnitude = "
     << mpStimulus->GetMagnitude()
     << std::endl;
-  std::cout << "mpStimulus period = " << mpStimulus->GetPeriod() << std::endl;
   std::cout << "mpStimulus duration = "
     << mpStimulus->GetDuration()
     << std::endl;
@@ -116,14 +114,14 @@ void UterineRegularCellFactory::PrintParams() {
 }
 
 
-void UterineRegularCellFactory::WriteLogInfo(std::string log_file) {
+void UterineSimpleCellFactory::WriteLogInfo(std::string log_file) {
   AbstractUterineCellFactory::WriteLogInfo(log_file);
 
   std::ofstream log_stream;
   log_stream.open(log_file, ios::app);  // Open log file in append mode
 
   log_stream << "Stimulus parameters" << std::endl;
-  log_stream << "  type: regular" << std::endl;
+  log_stream << "  type: simple" << std::endl;
   log_stream << "  start time: "
     << mpStimulus->GetStartTime()
     << " ms"
@@ -136,7 +134,6 @@ void UterineRegularCellFactory::WriteLogInfo(std::string log_file) {
     << mpStimulus->GetMagnitude()
     << " uA/cm2"
     << std::endl;
-  log_stream << "  period: " << mpStimulus->GetPeriod() << " ms" << std::endl;
   log_stream << "  stimulated region: " << mpX_stim_start << " <= x <= ";
   log_stream << mpX_stim_end << "   " << mpY_stim_start << " <= y <= ";
   log_stream << mpY_stim_end << std::endl;

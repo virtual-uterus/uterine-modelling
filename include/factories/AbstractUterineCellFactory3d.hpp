@@ -1,7 +1,7 @@
 #ifndef INCLUDE_ABSTRACTUTERINECELLFACTORY3D_HPP_
 #define INCLUDE_ABSTRACTUTERINECELLFACTORY3D_HPP_
 
-#include "../include/toml.hpp"
+#include "../toml.hpp"
 #include "MonodomainProblem.hpp"
 #include "ZeroStimulus.hpp"
 #include "HodgkinHuxley1952Cvode.hpp"

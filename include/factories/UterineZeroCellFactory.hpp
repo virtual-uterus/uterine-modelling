@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include "../include/toml.hpp"
+#include "../toml.hpp"
 #include "AbstractUterineCellFactory.hpp"
 #include "MonodomainProblem.hpp"
 #include "ZeroStimulus.hpp"

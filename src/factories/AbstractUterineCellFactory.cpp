@@ -1,14 +1,14 @@
-#include "../include/AbstractUterineCellFactory3d.hpp"
+#include "../../include/factories/AbstractUterineCellFactory.hpp"
 #include "Exception.hpp"
 
-AbstractUterineCellFactory3d::AbstractUterineCellFactory3d() : 
-  AbstractCardiacCellFactory<3>() {
-  ReadParams(USMC_3D_SYSTEM_CONSTANTS::GENERAL_PARAM_FILE);
+AbstractUterineCellFactory::AbstractUterineCellFactory() :
+  AbstractCardiacCellFactory<2>() {
+  ReadParams(USMC_2D_SYSTEM_CONSTANTS::GENERAL_PARAM_FILE);
 }
 
 
-AbstractCvodeCell* AbstractUterineCellFactory3d::CreateCardiacCellForTissueNode(
-  Node<3>* pNode) {
+AbstractCvodeCell* AbstractUterineCellFactory::CreateCardiacCellForTissueNode(
+  Node<2>* pNode) {
   AbstractCvodeCell* cell;
 
   switch (mpCell_id) {
@@ -25,8 +25,8 @@ AbstractCvodeCell* AbstractUterineCellFactory3d::CreateCardiacCellForTissueNode(
       cell = new CellMeans2023FromCellMLCvode(mpSolver, mpZeroStimulus);
 
       for (auto it=mpCell_parameters.begin();
-          it != mpCell_parameters.end();
-          ++it) {
+        it != mpCell_parameters.end();
+        ++it) {
         cell->SetParameter(it->first, it->second);
       }
       break;
@@ -35,8 +35,8 @@ AbstractCvodeCell* AbstractUterineCellFactory3d::CreateCardiacCellForTissueNode(
       cell = new CellTong2014FromCellMLCvode(mpSolver, mpZeroStimulus);
 
       for (auto it=mpCell_parameters.begin();
-          it != mpCell_parameters.end();
-          ++it) {
+        it != mpCell_parameters.end();
+        ++it) {
         cell->SetParameter(it->first, it->second);
       }
       break;
@@ -45,8 +45,8 @@ AbstractCvodeCell* AbstractUterineCellFactory3d::CreateCardiacCellForTissueNode(
       cell = new CellRoesler2024FromCellMLCvode(mpSolver, mpZeroStimulus);
 
       for (auto it=mpCell_parameters.begin();
-          it != mpCell_parameters.end();
-          ++it) {
+        it != mpCell_parameters.end();
+        ++it) {
         cell->SetParameter(it->first, it->second);
       }
       break;
@@ -60,12 +60,12 @@ AbstractCvodeCell* AbstractUterineCellFactory3d::CreateCardiacCellForTissueNode(
 }
 
 
-std::string AbstractUterineCellFactory3d::GetCellType() {
+std::string AbstractUterineCellFactory::GetCellType() {
   return mpCell_type;
 }
 
 
-std::string AbstractUterineCellFactory3d::GetCellParamFile() {
+std::string AbstractUterineCellFactory::GetCellParamFile() {
   std::string cell_param_file = "";
 
   if (mpEstrus == "") {
@@ -78,29 +78,32 @@ std::string AbstractUterineCellFactory3d::GetCellParamFile() {
   return cell_param_file;
 }
 
-void AbstractUterineCellFactory3d::ReadParams(std::string general_param_file) {
-  std::string general_param_path = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
+
+void AbstractUterineCellFactory::ReadParams(std::string general_param_file) {
+  std::string general_param_path = USMC_2D_SYSTEM_CONSTANTS::CONFIG_DIR +
     general_param_file;
   const auto params = toml::parse(general_param_path);
 
   mpCell_type = toml::find<std::string>(params, "cell_type");
 
+  // Get the cell configuration
+  std::string cell_param_file = "";
+
   if (mpCell_type == std::string("Roesler")) {
     // Get the estrus phase as well
-    mpEstrus = toml::find<std::string>(params, "estrus");
+    const std::string estrus_phase = toml::find<std::string>(params,
+      "estrus");
+    cell_param_file = mpCell_type + "_" + estrus_phase + ".toml";
   } else {
-    mpEstrus = "";
+    cell_param_file = mpCell_type + ".toml";
   }
-
-  // Get the cell configuration
-  std::string cell_param_file = GetCellParamFile();
 
   ReadCellParams(cell_param_file);
 }
 
 
-void AbstractUterineCellFactory3d::ReadCellParams(std::string cell_param_file) {
-  std::string cell_param_path = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
+void AbstractUterineCellFactory::ReadCellParams(std::string cell_param_file) {
+  std::string cell_param_path = USMC_2D_SYSTEM_CONSTANTS::CONFIG_DIR +
     cell_param_file;
   const auto cell_params = toml::parse(cell_param_path);
 
@@ -114,9 +117,9 @@ void AbstractUterineCellFactory3d::ReadCellParams(std::string cell_param_file) {
 }
 
 
-void AbstractUterineCellFactory3d::PrintParams() {
-  std::cout << "mpCell_type = " << mpCell_type << std::endl;
-  std::cout << "mpCell_id = " << mpCell_id << std::endl;
+void AbstractUterineCellFactory::PrintParams() {
+  std::cout << "mpCell_type = " << mpCell_type << "\n";
+  std::cout << "mpCell_id = " << mpCell_id << "\n";
   std::cout << "mpCell_parameters\n";
 
   for (auto it=mpCell_parameters.begin(); it != mpCell_parameters.end(); ++it) {
@@ -125,7 +128,7 @@ void AbstractUterineCellFactory3d::PrintParams() {
 }
 
 
-void AbstractUterineCellFactory3d::WriteLogInfo(std::string log_file) {
+void AbstractUterineCellFactory::WriteLogInfo(std::string log_file) {
   std::ofstream log_stream;
   log_stream.open(log_file, ios::app);  // Open log file in append mode
 
@@ -137,4 +140,3 @@ void AbstractUterineCellFactory3d::WriteLogInfo(std::string log_file) {
 
   log_stream.close();
 }
-

@@ -1,4 +1,4 @@
-#include "../include/UterineZeroCellFactory.hpp"
+#include "../../include/factories/UterineZeroCellFactory.hpp"
 #include "Exception.hpp"
 
 UterineZeroCellFactory::UterineZeroCellFactory() : 

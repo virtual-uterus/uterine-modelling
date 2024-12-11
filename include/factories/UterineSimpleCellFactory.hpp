@@ -1,23 +1,23 @@
-#ifndef INCLUDE_UTERINEREGULARCELLFACTORY_HPP_
-#define INCLUDE_UTERINEREGULARCELLFACTORY_HPP_
+#ifndef INCLUDE_UTERINESIMPLECELLFACTORY_HPP_
+#define INCLUDE_UTERINESIMPLECELLFACTORY_HPP_
 
 #include <iostream>
 #include <string>
-#include "../include/toml.hpp"
+#include "../toml.hpp"
 #include "AbstractUterineCellFactory.hpp"
 #include "MonodomainProblem.hpp"
-#include "RegularStimulus.hpp"
+#include "SimpleStimulus.hpp"
 
-class UterineRegularCellFactory : public AbstractUterineCellFactory {
+class UterineSimpleCellFactory : public AbstractUterineCellFactory {
  private:
   double mpX_stim_start;
   double mpX_stim_end;
   double mpY_stim_start;
   double mpY_stim_end;
-  boost::shared_ptr<RegularStimulus> mpStimulus;
+  boost::shared_ptr<SimpleStimulus> mpStimulus;
 
  public:
-  UterineRegularCellFactory();
+  UterineSimpleCellFactory();
   AbstractCvodeCell* CreateCardiacCellForTissueNode(Node<2>* pNode);
   void ReadParams(std::string general_param_file);
   void ReadCellParams(std::string cell_param_file);
@@ -25,5 +25,4 @@ class UterineRegularCellFactory : public AbstractUterineCellFactory {
   void WriteLogInfo(std::string log_file);
 };
 
-#endif  // INCLUDE_UTERINEREGULARCELLFACTORY_HPP_
-
+#endif  // INCLUDE_UTERINESIMPLECELLFACTORY_HPP_
