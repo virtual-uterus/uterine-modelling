@@ -1,26 +1,26 @@
-#ifndef INCLUDE_UTERINEREGIONSTIMULUS_HPP_
-#define INCLUDE_UTERINEREGIONSTIMULUS_HPP_
+#ifndef INCLUDE_STIMULUS_UTERINEREGIONSTIMULUS_HPP_
+#define INCLUDE_STIMULUS_UTERINEREGIONSTIMULUS_HPP_
 
 #include <iostream>
 #include <utility>
-#include <algorithm>
 #include <vector>
-#include <cmath>
+#include <boost/shared_ptr.hpp>
 
-#include "RandomNumberGenerator.hpp"
+#include "RegularStimulus.hpp"
+#include "UterineRegionSelector.hpp"
 
-class UterineRegionStimulus {
+class UterineRegionStimulus : public RegularStimulus {
  private:
-    int mpCurrentRegion;  // Current region for stimulus
-    std::vector<double> mpRegionProbs;  // Probabilities for each region
+    double mpRegion;
+    boost::shared_ptr<UterineRegionSelector> mpSelector;
 
  public:
-    UterineRegionStimulus(std::vector<double> regionProbs);
-    int SelectRegion();
-    void SetRegionProbs(const std::vector<double>& regionProbs);
-    int GetCurrentRegion();
+    UterineRegionStimulus(
+      double magnitude, double duration, double period, double start,
+      boost::shared_ptr<UterineRegionSelector> selector);
+    double GetStimulus(double time) override;
+    void SetRegionProbs(const std::vector<double> regionProbs);
+    void SetRegion(const unsigned region);
 };
 
-#endif  // INCLUDE_UTERINEREGIONSTIMULUS_HPP_
-
-
+#endif  // INCLUDE_STIMULUS_UTERINEREGIONSTIMULUS_HPP_
