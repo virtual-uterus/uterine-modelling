@@ -3,10 +3,14 @@
 
 UterineRegionCellFactory3d::UterineRegionCellFactory3d() :
   AbstractUterineCellFactory3d() {
-  boost::shared_ptr<UterineRegionSelector> selector(new UterineRegionSelector());
-  mpOvariesStimulus = boost::make_shared<UterineRegionStimulus>(0.0, 0.0, 1.0, 0.0, selector);
-  mpCentreStimulus = boost::make_shared<UterineRegionStimulus>(0.0, 0.0, 1.0, 0.0, selector);
-  mpCervicalStimulus = boost::make_shared<UterineRegionStimulus>(0.0, 0.0, 1.0, 0.0, selector);
+  boost::shared_ptr<UterineRegionSelector> selector(
+    new UterineRegionSelector());
+  mpOvariesStimulus = boost::make_shared<UterineRegionStimulus>(
+    0.0, 0.0, 1.0, 0.0, selector);
+  mpCentreStimulus = boost::make_shared<UterineRegionStimulus>(
+    0.0, 0.0, 1.0, 0.0, selector);
+  mpCervicalStimulus = boost::make_shared<UterineRegionStimulus>(
+    0.0, 0.0, 1.0, 0.0, selector);
   ReadParams(USMC_3D_SYSTEM_CONSTANTS::GENERAL_PARAM_FILE);
   ReadCellParams(AbstractUterineCellFactory3d::GetCellParamFile());
 }
@@ -166,7 +170,8 @@ void UterineRegionCellFactory3d::PrintParams() {
   std::cout << "stimulus magnitude = "
     << mpOvariesStimulus->GetMagnitude()
     << std::endl;
-  std::cout << "stimulus period = " << mpOvariesStimulus->GetPeriod() << std::endl;
+  std::cout << "stimulus period = "
+    << mpOvariesStimulus->GetPeriod() << std::endl;
   std::cout << "stimulus duration = "
     << mpOvariesStimulus->GetDuration()
     << std::endl;
@@ -194,7 +199,8 @@ void UterineRegionCellFactory3d::WriteLogInfo(std::string log_file) {
     << mpOvariesStimulus->GetMagnitude()
     << " uA/cm2"
     << std::endl;
-  log_stream << "  period: " << mpOvariesStimulus->GetPeriod() << " ms" << std::endl;
+  log_stream << "  period: " << mpOvariesStimulus->GetPeriod()
+    << " ms" << std::endl;
   log_stream << "  stimulated region: " << mpX_stim_start << " <= x <= ";
   log_stream << mpX_stim_end << "   " << mpY_stim_start << " <= y <= ";
   log_stream << mpY_stim_end << "   " << mpZ_stim_start << " <= z <= ";
