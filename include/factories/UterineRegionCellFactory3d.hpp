@@ -12,12 +12,10 @@
 
 class UterineRegionCellFactory3d : public AbstractUterineCellFactory3d {
  private:
-  double mpX_stim_start;
-  double mpX_stim_end;
-  double mpY_stim_start;
-  double mpY_stim_end;
-  double mpZ_stim_start;
-  double mpZ_stim_end;
+  std::vector<double> mpXStim;  // Cols: start, end
+  std::vector<double> mpYStim;  // Cols: start, end
+  std::vector<std::vector<double>> mpZStimLeft;  // Rows: ova, cen, cerv
+  std::vector<std::vector<double>> mpZStimRight;  // Rows: ova, cen, cerv
   boost::shared_ptr<UterineRegionStimulus> mpOvariesStimulus;
   boost::shared_ptr<UterineRegionStimulus> mpCentreStimulus;
   boost::shared_ptr<UterineRegionStimulus> mpCervicalStimulus;
@@ -28,6 +26,7 @@ class UterineRegionCellFactory3d : public AbstractUterineCellFactory3d {
   unsigned FindRegion(double z);
   void ReadParams(std::string general_param_file);
   void ReadCellParams(std::string cell_param_file);
+  void ReadMeshParams(std::string mesh_param_file, std::string horn);
   void SetStimulusParams(
     boost::shared_ptr<UterineRegionStimulus> stimulus,
     double magnitude,

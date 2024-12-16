@@ -109,17 +109,18 @@ unsigned UterineRegionCellFactory3d::FindRegion(double z) {
 void UterineRegionCellFactory3d::ReadParams(std::string general_param_file) {
   AbstractUterineCellFactory3d::ReadParams(general_param_file);
 
+  // Read region stimulus specific parameters
   std::string general_param_path = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
     general_param_file;
   const auto params = toml::parse(general_param_path);
+  std::string mesh_name = toml::find<std::string>(
+    params, "mesh_name");  // Get mesh name
 
-  // Stimulus location parameters
-  mpX_stim_start = toml::find<double>(params, "x_stim_start");
-  mpX_stim_end = toml::find<double>(params, "x_stim_end");
-  mpY_stim_start = toml::find<double>(params, "y_stim_start");
-  mpY_stim_end = toml::find<double>(params, "y_stim_end");
-  mpZ_stim_start = toml::find<double>(params, "z_stim_start");
-  mpZ_stim_end = toml::find<double>(params, "z_stim_end");
+  // Get mesh stimulus locations
+  const auto mesh_param_file = "mesh/" + mesh_name + ".toml";
+
+  ReadMeshParams(mesh_param_file, "left");
+  ReadMeshParams(mesh_param_file, "right");
 }
 
 
@@ -143,6 +144,68 @@ void UterineRegionCellFactory3d::ReadCellParams(std::string cell_param_file) {
     mpCervicalStimulus, magnitude, period, duration, start, region_probs);
 }
 
+
+void UterineRegionCellFactory3d::ReadMeshParams(
+  std::string mesh_param_file, std::string horn) {
+  std::string mesh_param_path = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
+    mesh_param_file;
+  const auto mesh_params = toml::parse(mesh_param_path);
+
+  // Get x and y stim parameters that are common
+  mpXStim[0] = toml::find<double>(mesh_params, "x_start");
+  mpXStim[1] = toml::find<double>(mesh_params, "x_end");
+  mpYStim[0] = toml::find<double>(mesh_params, "y_start");
+  mpYStim[1] = toml::find<double>(mesh_params, "y_end");
+
+  // Read horn specific parameters
+  if (mesh_params.contains(horn)) {
+    double z_start_ova(0.0);
+    double z_end_ova(0.0);
+    double z_start_cen(0.0);
+    double z_end_cen(0.0);
+    double z_start_cev(0.0);
+    double z_end_cev(0.0);
+
+    z_start_ova = toml::find<double>(
+      mesh_params,
+      horn + ".ovaries.z_start");
+    z_end_ova = toml::find<double>(
+      mesh_params,
+      horn + ".ovaries.z_end");
+
+    z_start_cen = toml::find<double>(
+      mesh_params,
+      horn + ".centre.z_start");
+    z_end_cen = toml::find<double>(
+      mesh_params,
+      horn + ".centre.z_end");
+
+    z_start_cev = toml::find<double>(
+      mesh_params,
+      horn + ".cervical.z_start");
+    z_end_cev = toml::find<double>(
+      mesh_params,
+      horn + ".cervical.z_end");
+
+    if (horn == "left") {
+      mpZStimLeft[0][0] = z_start_ova;
+      mpZStimLeft[0][1] = z_end_ova;
+      mpZStimLeft[1][0] = z_start_cen;
+      mpZStimLeft[1][1] = z_end_cen;
+      mpZStimLeft[2][0] = z_start_cev;
+      mpZStimLeft[2][1] = z_end_cev;
+    } else if (horn == "right") {
+      mpZStimRight[0][0] = z_start_ova;
+      mpZStimRight[0][1] = z_end_ova;
+      mpZStimRight[1][0] = z_start_cen;
+      mpZStimRight[1][1] = z_end_cen;
+      mpZStimRight[2][0] = z_start_cev;
+      mpZStimRight[2][1] = z_end_cev;
+    } else {
+      throw Exception("Incorrect horn", "UterineRegionCellFactory3d.cpp", 196);
+    }
+  }
+}
 
 void UterineRegionCellFactory3d::SetStimulusParams(
     boost::shared_ptr<UterineRegionStimulus> stimulus,
