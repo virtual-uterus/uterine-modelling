@@ -28,7 +28,7 @@ void simulation_0d() {
 void simulation_2d() {
   // Get parameters from config file
   std::string param_file = USMC_2D_SYSTEM_CONSTANTS::CONFIG_DIR +
-    USMC_2D_SYSTEM_CONSTANTS::GENERAL_PARAM_FILE;
+    + USMC_2D_SYSTEM_CONSTANTS::GENERAL_PARAM_FILE;
   const auto sys_params = toml::parse(param_file);
 
   // Time constants
@@ -56,10 +56,10 @@ void simulation_2d() {
     const std::string estrus_phase = toml::find<std::string>(sys_params,
       "estrus");
     std::string cell_param_file = USMC_2D_SYSTEM_CONSTANTS::CONFIG_DIR +
-      cell_type + "_" + estrus_phase + ".toml";
+      "estrus/" + cell_type + "_" + estrus_phase + ".toml";
   } else {
     std::string cell_param_file = USMC_2D_SYSTEM_CONSTANTS::CONFIG_DIR +
-      cell_type + ".toml";
+      "cell/" + cell_type + ".toml";
   }
   const auto cell_params = toml::parse(cell_param_file);
 
@@ -155,7 +155,7 @@ void simulation_2d() {
 void simulation_3d() {
   // Get parameters from config file
   std::string param_file = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
-    USMC_3D_SYSTEM_CONSTANTS::GENERAL_PARAM_FILE;
+    + USMC_3D_SYSTEM_CONSTANTS::GENERAL_PARAM_FILE;
 
   const auto sys_params = toml::parse(param_file);
 
@@ -184,10 +184,10 @@ void simulation_3d() {
     const std::string estrus_phase = toml::find<std::string>(sys_params,
       "estrus");
     cell_param_file = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
-      cell_type + "_" + estrus_phase + ".toml";
+      "estrus/" + cell_type + "_" + estrus_phase + ".toml";
   } else {
     cell_param_file = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
-      cell_type + ".toml";
+      "cell/" + cell_type + ".toml";
   }
 
   const auto cell_params = toml::parse(cell_param_file);
