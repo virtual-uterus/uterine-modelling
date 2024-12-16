@@ -12,9 +12,11 @@
 
 class UterineRegionCellFactory3d : public AbstractUterineCellFactory3d {
  private:
-  std::vector<double> mpXStim;  // Cols: start, end
-  std::vector<double> mpYStim;  // Cols: start, end
+  std::vector<double> mpXStimLeft;  // Cols: start, end
+  std::vector<double> mpYStimLeft;  // Cols: start, end
   std::vector<std::vector<double>> mpZStimLeft;  // Rows: ova, cen, cerv
+  std::vector<double> mpXStimRight;  // Cols: start, end
+  std::vector<double> mpYStimRight;  // Cols: start, end
   std::vector<std::vector<double>> mpZStimRight;  // Rows: ova, cen, cerv
   boost::shared_ptr<UterineRegionStimulus> mpOvariesStimulus;
   boost::shared_ptr<UterineRegionStimulus> mpCentreStimulus;
