@@ -16,7 +16,7 @@
 namespace FHN_ODE_SYSTEM_CONSTANTS {
 const std::string CONFIG_DIR = getenv("CHASTE_MODELLING_CONFIG_DIR");
 constexpr char GENERAL_PARAM_FILE[] = "0d_params.toml";
-const std::string CONFIG_PATH = CONFIG_DIR + GENERAL_PARAM_FILE;
+const std::string CONFIG_PATH = CONFIG_DIR + "general/" + GENERAL_PARAM_FILE;
 }
 
 class FHNOdeSystem : public AbstractOdeSystem {

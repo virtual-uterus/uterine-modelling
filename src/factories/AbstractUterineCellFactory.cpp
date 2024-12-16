@@ -70,9 +70,9 @@ std::string AbstractUterineCellFactory::GetCellParamFile() {
 
   if (mpEstrus == "") {
     // No specified estrus phase
-    cell_param_file = mpCell_type + ".toml";
+    cell_param_file = "cell/" + mpCell_type + ".toml";
   } else {
-    cell_param_file = mpCell_type + "_" + mpEstrus + ".toml";
+    cell_param_file = "estrus/" + mpCell_type + "_" + mpEstrus + ".toml";
   }
 
   return cell_param_file;

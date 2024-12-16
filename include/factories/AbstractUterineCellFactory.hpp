@@ -12,7 +12,7 @@
 
 namespace USMC_2D_SYSTEM_CONSTANTS {
 const std::string CONFIG_DIR = getenv("CHASTE_MODELLING_CONFIG_DIR");
-constexpr char GENERAL_PARAM_FILE[] = "2d_params.toml";
+constexpr char GENERAL_PARAM_FILE[] = "general/2d_params.toml";
 }
 
 class AbstractUterineCellFactory : public AbstractCardiacCellFactory<2> {
