@@ -224,12 +224,6 @@ void UterineRegionCellFactory3d::SetStimulusParams(
 
 void UterineRegionCellFactory3d::PrintParams() {
   AbstractUterineCellFactory3d::PrintParams();
-  std::cout << "mpX_stim_start = " << mpX_stim_start << "\n";
-  std::cout << "mpX_stim_end = " << mpX_stim_end << "\n";
-  std::cout << "mpY_stim_start = " << mpY_stim_start << "\n";
-  std::cout << "mpY_stim_end = " << mpY_stim_end << "\n";
-  std::cout << "mpZ_stim_start = " << mpZ_stim_start << "\n";
-  std::cout << "mpZ_stim_end = " << mpZ_stim_end << "\n";
   std::cout << "stimulus magnitude = "
     << mpOvariesStimulus->GetMagnitude()
     << std::endl;
@@ -239,6 +233,23 @@ void UterineRegionCellFactory3d::PrintParams() {
     << mpOvariesStimulus->GetDuration()
     << std::endl;
   std::cout << "stimulus start time = " << mpOvariesStimulus->GetStartTime() << std::endl;
+  std::cout << "  stimulated regions: " << std::endl;
+  std::cout << "    " << mpXStim[0] << " <= x <= " << mpXStim[1] << std::endl;
+  std::cout << "    " << mpYStim[0] << " <= y <= " << mpYStim[1] << std::endl;
+  std::cout << "    left" << std::endl;
+  std::cout << "      ovaries: " << mpZStimLeft[0][0] << " <= z <= " <<
+    mpZStimLeft[0][1] << std::endl;
+  std::cout << "      centre: " << mpZStimLeft[1][0] << " <= z <= " <<
+    mpZStimLeft[1][1] << std::endl;
+  std::cout << "      cervical: " << mpZStimLeft[2][0] << " <= z <= " <<
+    mpZStimLeft[2][1] << std::endl;
+  std::cout << "    right" << std::endl;
+  std::cout << "      ovaries: " << mpZStimRight[0][0] << " <= z <= " <<
+    mpZStimRight[0][1] << std::endl;
+  std::cout << "      centre: " << mpZStimRight[1][0] << " <= z <= " <<
+    mpZStimRight[1][1] << std::endl;
+  std::cout << "      cervical: " << mpZStimRight[2][0] << " <= z <= " <<
+    mpZStimRight[2][1] << std::endl;
 }
 
 
@@ -249,7 +260,7 @@ void UterineRegionCellFactory3d::WriteLogInfo(std::string log_file) {
   log_stream.open(log_file, ios::app);  // Open log file in append mode
 
   log_stream << "Stimulus parameters" << std::endl;
-  log_stream << "  type: regular" << std::endl;
+  log_stream << "  type: region" << std::endl;
   log_stream << "  start time: "
     << mpOvariesStimulus->GetStartTime()
     << " ms"
@@ -264,10 +275,24 @@ void UterineRegionCellFactory3d::WriteLogInfo(std::string log_file) {
     << std::endl;
   log_stream << "  period: " << mpOvariesStimulus->GetPeriod()
     << " ms" << std::endl;
-  log_stream << "  stimulated region: " << mpX_stim_start << " <= x <= ";
-  log_stream << mpX_stim_end << "   " << mpY_stim_start << " <= y <= ";
-  log_stream << mpY_stim_end << "   " << mpZ_stim_start << " <= z <= ";
-  log_stream << mpZ_stim_end << std::endl;
+  log_stream << "  stimulated regions: " << std::endl;
+  log_stream << "    " << mpXStim[0] << " <= x <= " << mpXStim[1] << std::endl;
+  log_stream << "    " << mpYStim[0] << " <= y <= " << mpYStim[1] << std::endl;
+  log_stream << "    left" << std::endl;
+  log_stream << "      ovaries: " << mpZStimLeft[0][0] << " <= z <= " <<
+    mpZStimLeft[0][1] << std::endl;
+  log_stream << "      centre: " << mpZStimLeft[1][0] << " <= z <= " <<
+    mpZStimLeft[1][1] << std::endl;
+  log_stream << "      cervical: " << mpZStimLeft[2][0] << " <= z <= " <<
+    mpZStimLeft[2][1] << std::endl;
+  log_stream << "    right" << std::endl;
+  log_stream << "      ovaries: " << mpZStimRight[0][0] << " <= z <= " <<
+    mpZStimRight[0][1] << std::endl;
+  log_stream << "      centre: " << mpZStimRight[1][0] << " <= z <= " <<
+    mpZStimRight[1][1] << std::endl;
+  log_stream << "      cervical: " << mpZStimRight[2][0] << " <= z <= " <<
+    mpZStimRight[2][1] << std::endl;
+
 
   log_stream.close();
 }
