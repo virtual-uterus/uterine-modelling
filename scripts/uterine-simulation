@@ -16,10 +16,10 @@ cd ${CHASTE_BUILD_DIR}/projects/uterine-modelling
 
 # Get the config file based on dimension
 if [[ $1 -eq 2 ]]; then
-	CONFIG=${CHASTE_MODELLING_CONFIG_DIR}2d_params.toml
+	CONFIG=${CHASTE_MODELLING_CONFIG_DIR}general/2d_params.toml
 
 elif [[ $1 -eq 3 ]]; then
-	CONFIG=${CHASTE_MODELLING_CONFIG_DIR}3d_params.toml
+	CONFIG=${CHASTE_MODELLING_CONFIG_DIR}general/3d_params.toml
 fi
 
 # Get the name details
