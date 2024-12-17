@@ -18,11 +18,11 @@ UterineRegionCellFactory3d::UterineRegionCellFactory3d() :
 
 AbstractCvodeCell* UterineRegionCellFactory3d::CreateCardiacCellForTissueNode(
   Node<3>* pNode) {
-  // double x = pNode->rGetLocation()[0];
-  // double y = pNode->rGetLocation()[1];
+  double x = pNode->rGetLocation()[0];
+  double y = pNode->rGetLocation()[1];
   double z = pNode->rGetLocation()[2];
 
-  unsigned region = FindRegion(z);
+  unsigned region = FindRegion(x, y, z);
   boost::shared_ptr<UterineRegionStimulus> stimulus;
 
   switch (region) {
@@ -93,14 +93,47 @@ AbstractCvodeCell* UterineRegionCellFactory3d::CreateCardiacCellForTissueNode(
 }
 
 
-unsigned UterineRegionCellFactory3d::FindRegion(double z) {
-  unsigned region = 0;  // Default to no region
-  if (z <= 45.0 && z >= 35.0) {
-    region = 1;
-  } else if (z <= 30.0 && z >= 25.0) {
-    region = 2;
-  } else if (z <= 25.0 && z >= 20.0) {
-    region = 3;
+unsigned UterineRegionCellFactory3d::FindRegion(double x, double y, double z) {
+  unsigned region(0);  // Default to no region
+
+  region = IsInLeft(x, y, z);
+  region = IsInRight(x, y, z);
+
+  return region;
+}
+
+
+unsigned UterineRegionCellFactory3d::IsInLeft(double x, double y, double z) {
+  unsigned region = 0;
+
+  if (x <= mpXStimLeft[1] && x >= mpXStimLeft[0] &&
+      y <= mpYStimLeft[1] && y >= mpYStimLeft[0]) {
+    // In the correct x-y plane for stimulus
+    if (z <= mpZStimLeft[0][1] && z >= mpZStimLeft[0][0]) {
+      region = 1;  // In the ovaries stimulus region
+    } else if (z <= mpZStimLeft[1][1] && z >= mpZStimLeft[1][0]) {
+      region = 2;  // In the centre stimulus region
+    } else if (z <= mpZStimLeft[2][1] && z >= mpZStimLeft[2][0]) {
+      region = 3;  // In the cervical stimulus region
+    }
+  }
+  return region;
+}
+
+
+unsigned UterineRegionCellFactory3d::IsInRight(double x, double y, double z) {
+  unsigned region = 0;
+
+  if (x <= mpXStimRight[1] && x >= mpXStimRight[0] &&
+      y <= mpYStimRight[1] && y >= mpYStimRight[0]) {
+    // In the correct x-y plane for stimulus
+    if (z <= mpZStimRight[0][1] && z >= mpZStimRight[0][0]) {
+      region = 1;  // In the ovaries stimulus region
+    } else if (z <= mpZStimRight[1][1] && z >= mpZStimRight[1][0]) {
+      region = 2;  // In the centre stimulus region
+    } else if (z <= mpZStimRight[2][1] && z >= mpZStimRight[2][0]) {
+      region = 3;  // In the cervical stimulus region
+    }
   }
   return region;
 }

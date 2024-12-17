@@ -25,7 +25,9 @@ class UterineRegionCellFactory3d : public AbstractUterineCellFactory3d {
  public:
   UterineRegionCellFactory3d();
   AbstractCvodeCell* CreateCardiacCellForTissueNode(Node<3>* pNode);
-  unsigned FindRegion(double z);
+  unsigned FindRegion(double x, double y, double z);
+  unsigned IsInLeft(double x, double y, double z);
+  unsigned IsInRight(double x, double y, double z);
   void ReadParams(std::string general_param_file);
   void ReadCellParams(std::string cell_param_file);
   void ReadMeshParams(std::string mesh_param_file, std::string horn);
