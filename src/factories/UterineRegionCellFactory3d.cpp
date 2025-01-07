@@ -97,7 +97,11 @@ unsigned UterineRegionCellFactory3d::FindRegion(double x, double y, double z) {
   unsigned region(0);  // Default to no region
 
   region = IsInLeft(x, y, z);
-  region = IsInRight(x, y, z);
+  if (region == 0) {  // Check right region only if not in left
+    region = IsInRight(x, y, z);
+  } else {
+    return region;
+  }
 
   return region;
 }
