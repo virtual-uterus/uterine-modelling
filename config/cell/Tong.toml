@@ -1,10 +1,10 @@
 # Cell properties
 capacitance = 1.0 # uF/cm2
-conductivities_2d = [0.013, 0.013] # x, y
+conductivities_2d = [0.0175, 0.0175] # x, y
 conductivities_3d = [250.0, 250.0, 250.0] # x, y, z
 
 # Stimulus
-magnitude = -1.1e3 # uA/cm2
+magnitude = -1.435e3 # uA/cm2
 period = 0.1 # ms
 duration = 2000.0 # ms
 start_time = 1000.0 # ms
@@ -13,12 +13,12 @@ cell_id = 3
 
 # Cell parameters
 [parameters]
-   gna = 0.125 # 0.0 range 0.028 - 0.125
-   gkq1 = 0.00 # 0.0032 range 0 - 0.0472
-   gkq4 = 0.00 # 0.024 range 0 - 0.0208
-   gkq5 = 0.00 # 0.016 range 0 - 0.036
+   gna = 0.0 # 0.0 range 0.028 - 0.125
+   gkq1 = 0.0032 # 0.0032 range 0 - 0.0472
+   gkq4 = 0.024 # 0.024 range 0 - 0.0208
+   gkq5 = 0.016 # 0.016 range 0 - 0.036
    gherg = 0.08 # 0.08 range 0 - 0.176
    beta = 0.015 # 0.015
-   gk1 = 0.5 # 0.24
-   gcal = 0.7 # 0.60
+   gk1 = 0.24 # 0.24
+   gcal = 0.6 # 0.60
    gcat = 0.058 # 0.058

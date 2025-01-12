@@ -1,8 +1,8 @@
-slow_wave = false
+slow_wave = true
 initial_conditions = [-1.0, 0.0]
 start_time = 0.0
-end_time = 100.0
-timestep = 0.01
+end_time = 1.0
+timestep = 0.1
 sampling_step = 0.1
 
 [FHNSlowWave]

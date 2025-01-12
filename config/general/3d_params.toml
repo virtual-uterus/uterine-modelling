@@ -1,8 +1,8 @@
 # General parameters
-save_dir = "monodomain_3d"
-mesh_name = "uterus_scaffold_mid_res"
-mesh_dir = "/mesh/uterus/"
-stimulus_type = "regular"
+save_dir = "monodomain_3d/diestrus"
+mesh_name = "uterus_scaffold_2"
+mesh_dir = "/mesh/uterus/scaffolds/"  # Must end with /
+stimulus_type = "region"
 
 # Stimulus parameters
 x_stim_start = -500.1
@@ -20,4 +20,4 @@ print_timestep = 2.0
 
 # Cell parameters
 cell_type = "Roesler"
-estrus = "metestrus"
+estrus = "diestrus"

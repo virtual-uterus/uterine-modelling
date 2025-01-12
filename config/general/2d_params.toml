@@ -1,6 +1,6 @@
 # General parameters
 save_dir = "monodomain_2d"
-mesh_name = "2D_0_to_1mm_200_elements"
+mesh_name = "test_mesh_3"
 mesh_dir = "/mesh/test/data/"
 stimulus_type = "simple"
 

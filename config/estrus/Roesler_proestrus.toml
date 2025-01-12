@@ -1,20 +1,21 @@
 # Cell properties
 capacitance = 1.0 # uF/cm2
 conductivities_2d = [0.0, 0.0] 
-conductivities_3d = [1000.0, 1000.0, 1000.0] 
+conductivities_3d = [236.7, 236.7, 236.7]
 
 # Stimulus
 magnitude = -0.41e3
 period = 59.0e3 # ms
 duration = 10.0e3 # ms
 start_time = 1.0e3 # ms
+region_p = [0.54, 0.29, 0.17]  # ova, cen, cvx
 cell_id = 4
 
 # Cell parameters
 [parameters]
    gna = 0.0625 # 0.0625
    gkv43 = 0.95 # P: 0.95, E: 2.5, M: 2.04, D: 1.155
-   gkca = 2.4 # 2.4
+   gkca = 3.0 # 2.4
    gcal = 0.6 # 0.6
    gcat = 0.058 # 0.058
    E2 = 100.0 # P: 100, E: 40, M: 49, D: 90
