@@ -4,7 +4,7 @@ conductivities_2d = [0.0, 0.0]
 conductivities_3d = [236.7, 236.7, 236.7]
 
 # Stimulus
-magnitude = -0.35e3
+magnitude = -0.46e3
 period = 71.0e3 # ms
 duration = 10.0e3 # ms
 start_time = 1.0e3 # ms
