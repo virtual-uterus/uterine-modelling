@@ -22,7 +22,7 @@ Chaste/ (top-level directory)
 |
 |-- src/ (source code directory)
 |   |-- projects/
-|       |--uterus-modelling/ (this project)
+|       |--uterine-modelling/ (this project)
 |          |-- src/
 |          |-- include/
 |          |-- config/
@@ -31,8 +31,8 @@ Chaste/ (top-level directory)
 |              |-- chaste-simulation
 |-- lib/ (build directory)
 |-- testoutput/ (results directory)
-|-- config/ (cp from uterus-modelling)
-|-- scripts/ (cp from uterus-modelling)
+|-- config/ (cp from uterine-modelling)
+|-- scripts/ (cp from uterine-modelling)
 ```
 
 Clone the project in the projects folder of the Chaste source code directory.
@@ -40,7 +40,7 @@ Clone the project in the projects folder of the Chaste source code directory.
 <a id="edits"></a>
 ### Edits
 
-Copy the **config** and **scripts** folder from the _uterus-modelling_ project to the Chaste top-level directory and create the **testoutput** folder (refer to the [directory tree](#tree)).
+Copy the **config** and **scripts** folder from the _uterine-modelling_ project to the Chaste top-level directory and create the **testoutput** folder (refer to the [directory tree](#tree)).
 
 The project uses environment variables that need to be updated in order to run the project. Open the **chaste-env** script in a text editor and change the **CHASTE_DIR** variable to be the path from **/** to the Chaste top-level directory. Make sure that the **CHASTE_SOURCE_DIR** and **CHASTE_BUILD_DIR** variables are using the correct names of the source code and build directory, respectively.
 
@@ -61,7 +61,7 @@ source ${HOME}/path_to_Chaste/Chaste/scripts/chaste-env
 
 <a id="build"></a>
 ### Ready to build
-Run the **setup_project.py** script in the _uterus-modelling_ folder in the source code directory (refer to the [directory tree](#tree)) and answer the prompted questions. This step only needs to be performed for the first build and can be skipped if rebuilding the project.
+Run the **setup_project.py** script in the _uterine-modelling_ folder in the source code directory (refer to the [directory tree](#tree)) and answer the prompted questions. This step only needs to be performed for the first build and can be skipped if rebuilding the project.
  
 **Note:** this project only uses cardiac Chaste.
 
@@ -71,7 +71,7 @@ In the Chaste build folder run the following command to update the CMakeLists fo
 $ cmake .
 ```
 
-Navigate to the _uterus-modelling_ folder in the build directory (refer to the [directory tree](#tree)) and run the following command to build the project:
+Navigate to the _uterine-modelling_ folder in the build directory (refer to the [directory tree](#tree)) and run the following command to build the project:
 
 ```
 $ cmake --build .
@@ -85,7 +85,7 @@ Source the **chaste-env** script in the scripts folder in the Chaste top-level d
 $ source chaste-env
 ```
 
-In the _uterus-modelling_ folder in the build directory (refer to the [directory tree](#tree)) run the tests and make sure that they all pass:
+In the _uterine-modelling_ folder in the build directory (refer to the [directory tree](#tree)) run the tests and make sure that they all pass:
 
 ```
 $ ctest 
@@ -94,7 +94,7 @@ $ ctest
 <a id="config"></a>
 ## Configuration files
 
-The project uses [TOML](https://toml.io/en/) configuration files to edit simulation and cell parameters. An example of configuration files for the different simulations and each available cell type are found in the **config** folder of the _uterus-modelling_ folder in the source code directory (refer to the [directory tree](#tree)). 
+The project uses [TOML](https://toml.io/en/) configuration files to edit simulation and cell parameters. An example of configuration files for the different simulations and each available cell type are found in the **config** folder of the _uterine-modelling_ folder in the source code directory (refer to the [directory tree](#tree)). 
 
 **Note:** the configuration files used during the simulations are located in the **config** folder of the Chaste top-level directory. 
 
@@ -154,15 +154,15 @@ This section details the steps for editing the code.
 
 To add a new cell to the project follow these steps:
 1. Ensure that the new cell model has the correct annotation by following the code generation from CellML [guide](https://chaste.cs.ox.ac.uk/trac/wiki/ChasteGuides/CodeGenerationFromCellML). 
-2. Place the annotated CellML file for the desired cell in the **src** folder located in the _uterus-modelling_ folder in the source code directory (refer to the [directory tree](#tree)). 
-3. Add a case for the new _cell_id_ in the switch statement of the *CreateCardiacCellForTissueNode* functions (see [code snippet](#code) for details) in the following files in the **src** folder located in the _uterus-modelling_ folder in the source code directory (refer to the [directory tree](#tree)):
+2. Place the annotated CellML file for the desired cell in the **src** folder located in the _uterine-modelling_ folder in the source code directory (refer to the [directory tree](#tree)). 
+3. Add a case for the new _cell_id_ in the switch statement of the *CreateCardiacCellForTissueNode* functions (see [code snippet](#code) for details) in the following files in the **src** folder located in the _uterine-modelling_ folder in the source code directory (refer to the [directory tree](#tree)):
 	- **AbstractUterineCellFactory.cpp**
 	- **AbstractUterineCellFactory3d.cpp**
 	- **UterineRegularCellFactory.cpp**
 	- **UterineRegularCellFactory3d.cpp**
 	- **UterineSimpleCellFactory.cpp**
 	- **UterineSimpleCellFactory3d.cpp**
-4. Add the `#include` statement for the new cell before the `namespace` declaration (see [include statement](#include) for details) in the following files in the **include** folder located in the _uterus-modelling_ folder in the source code directory (refer to the [directory tree](#tree)):
+4. Add the `#include` statement for the new cell before the `namespace` declaration (see [include statement](#include) for details) in the following files in the **include** folder located in the _uterine-modelling_ folder in the source code directory (refer to the [directory tree](#tree)):
 	- **AbstractUterineCellFactory.hpp**
 	- **AbstractUterineCellFactory3d.hpp**
 5. Rebuild the project (see [Ready to build](#build) section for more details). 
@@ -195,7 +195,7 @@ where NAME is replaced with the new cell name.
 <a id="add-test"></a>
 ### Adding a test
 
-All of the tests for the project reside in the **test** folder located in the _uterus-modelling_ folder in the source code directory. 
+All of the tests for the project reside in the **test** folder located in the _uterine-modelling_ folder in the source code directory. 
 
 **Note:** if adding a new cell model it is recommended to write a new test for that particular cell, based on the previous cell tests. 
 
