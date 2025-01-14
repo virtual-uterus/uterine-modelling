@@ -8,7 +8,7 @@ magnitude = -0.7e3
 period = 59.0e3 # ms
 duration = 10.0e3 # ms
 start_time = 1.0e3 # ms
-region_p = [0.54, 0.29, 0.17]  # ova, cen, cvx
+region_p = [0.37, 0.46, 0.17]  # ova, cen, cvx
 cell_id = 4
 
 # Cell parameters
