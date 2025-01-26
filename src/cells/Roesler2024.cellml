@@ -342,7 +342,7 @@
         <variable name="R" public_interface="out" units="joule_per_kelvin_per_kilomole"/>
         <variable name="frdy" public_interface="out" units="coulomb_per_mole"/>
         <variable name="temp" public_interface="out" units="kelvin"/>
-        <variable cmeta:id="membrane_capacitance" initial_value="1.0" name="Cm" units="uF_per_cm2"/>
+        <variable cmeta:id="membrane_capacitance" initial_value="1.3" name="Cm" units="uF_per_cm2"/>
         <variable cmeta:id="gna" initial_value="0.0625" name="gna" public_interface="out" units="nS_per_pF"/>
         <variable cmeta:id="gcal" initial_value="0.4" name="gcal" public_interface="out" units="nS_per_pF"/>
         <variable name="ecal" public_interface="out" units="mV"/>
