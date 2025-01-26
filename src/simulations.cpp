@@ -105,7 +105,7 @@ void simulation_2d() {
   HeartConfig::Instance()->SetIntracellularConductivities(Create_c_vector(
     conductivities[0], conductivities[1]));
 
-  // HeartConfig::Instance()->SetSurfaceAreaToVolumeRatio(1400); // 1/cm
+  HeartConfig::Instance()->SetSurfaceAreaToVolumeRatio(7420);  // 1/cm
   HeartConfig::Instance()->SetCapacitance(capacitance);  // uF/cm^2
 
   HeartConfig::Instance()->SetOdePdeAndPrintingTimeSteps(ode_timestep,
@@ -236,7 +236,7 @@ void simulation_3d() {
   HeartConfig::Instance()->SetIntracellularConductivities(Create_c_vector(
     conductivities[0], conductivities[1], conductivities[2]));
 
-  HeartConfig::Instance()->SetSurfaceAreaToVolumeRatio(1400);  // 1/cm
+  HeartConfig::Instance()->SetSurfaceAreaToVolumeRatio(7420);  // 1/cm
   HeartConfig::Instance()->SetCapacitance(capacitance);  // uF/cm^2
 
   HeartConfig::Instance()->SetOdePdeAndPrintingTimeSteps(ode_timestep,
