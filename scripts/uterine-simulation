@@ -12,7 +12,6 @@ fi
 
 # Move to the app directory and run the simulation
 cd ${CHASTE_BUILD_DIR}/projects/uterine-modelling
-./apps/main $1
 
 # Get the config file based on dimension
 if [[ $1 -eq 2 ]]; then
@@ -27,7 +26,9 @@ CELL_TYPE=$(grep "cell_type =" $CONFIG | cut -d '"' -f 2)
 SAVE_DIR=$(grep "save_dir =" $CONFIG | cut -d '"' -f 2)
 STIMULUS=$(grep "stimulus_type =" $CONFIG | cut -d '"' -f 2)
 BASE_DIR=${CHASTE_TEST_OUTPUT}/${CELL_TYPE}/${SAVE_DIR}
-#
+
+./apps/main $1
+
 # Move to the log folder to rename the log file
 cd ${BASE_DIR}/log
 NB_FILES=$(printf "%0.3d" $(ls | wc -l))
