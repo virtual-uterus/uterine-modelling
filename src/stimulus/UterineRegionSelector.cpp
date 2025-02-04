@@ -15,10 +15,10 @@ double UterineRegionSelector::GetStimulus(double time) {
 
 unsigned UterineRegionSelector::SelectRegion() {
     // Generate a random number between 0 and 1
-    static std::mt19937 rng(std::random_device{}()); // Random number generator
+    static std::mt19937 mt(58);  // Random number generator
     std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-    double rand_val = dist(rng);
+    double rand_val = dist(mt);
 
     if (rand_val < mpOvariesProb) {
       return 1;  // Ovaries region
