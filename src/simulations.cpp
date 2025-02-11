@@ -287,13 +287,13 @@ void simulation_3d() {
   log_stream << "  mesh: " << mesh_name << std::endl;
   log_stream << "  capacitance: " << capacitance << " uF/cm2" << std::endl;
   if (orthotropic) {
-    log_stream << "fibre conductivity = " << conductivities[0] << std::endl;
-    log_stream << "sheet conductivity = " << conductivities[1] << std::endl;
-    log_stream << "normal conductivity = " << conductivities[2] << std::endl;
+    log_stream << "  fibre conductivity = " << conductivities[0] << std::endl;
+    log_stream << "  sheet conductivity = " << conductivities[1] << std::endl;
+    log_stream << "  normal conductivity = " << conductivities[2] << std::endl;
   } else {  // If not orthotropic
-    log_stream << "x axis conductivity = " << conductivities[0] << std::endl;
-    log_stream << "y axis conductivity = " << conductivities[1] << std::endl;
-    log_stream << "z axis conductivity = " << conductivities[2] << std::endl;
+    log_stream << "  x axis conductivity = " << conductivities[0] << std::endl;
+    log_stream << "  y axis conductivity = " << conductivities[1] << std::endl;
+    log_stream << "  z axis conductivity = " << conductivities[2] << std::endl;
   }
 
   log_stream << "Simulation parameters" << std::endl;
