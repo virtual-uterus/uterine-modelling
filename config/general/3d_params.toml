@@ -1,16 +1,17 @@
 # General parameters
-save_dir = "monodomain_3d/diestrus"
-mesh_name = "uterus_scaffold_2"
+save_dir = "monodomain_3d/test"
+mesh_name = "uterus_scaffold_norm_3"
 mesh_dir = "/mesh/uterus/scaffolds/"  # Must end with /
-stimulus_type = "region"
+stimulus_type = "simple"
+orthotropic = false
 
 # Stimulus parameters
-x_stim_start = -500.1
-x_stim_end = 500.1
-y_stim_start = -500.0
-y_stim_end = 500.0
-z_stim_start = 30.0
-z_stim_end = 45.0
+x_stim_start = -1.0
+x_stim_end = 1.0
+y_stim_start = -1.0
+y_stim_end = 1.0
+z_stim_start = 0.80
+z_stim_end = 1.0
 
 # Time paramters in millisec
 sim_duration = 15.0e3
