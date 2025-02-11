@@ -165,6 +165,7 @@ void simulation_3d() {
   const double pde_timestep = toml::find<double>(sys_params, "pde_timestep");
   const double print_timestep = toml::find<double>(sys_params,
     "print_timestep");
+  const bool orthotropic = toml::find<bool>(sys_params, "orthotropic");
 
   const std::string mesh_dir = getenv("CHASTE_SOURCE_DIR") +
     toml::find<std::string>(sys_params, "mesh_dir");
@@ -191,10 +192,20 @@ void simulation_3d() {
   }
 
   const auto cell_params = toml::parse(cell_param_file);
+  std::vector<double> conductivities;
 
   // Cell parameters
-  auto conductivities = toml::find<std::vector<double>>(
-    cell_params, "conductivities_3d");
+  if (orthotropic) {
+    // If orthotropic extract the correct conductivities
+    conductivities = toml::find<std::vector<double>>(
+      cell_params, "ortho_conductivities");
+    HeartConfig::Instance()->SetMeshFileName(mesh_dir + mesh_name,
+                                             cp::media_type::Orthotropic);
+  } else {  // Otherwise extract x, y, z conductivities
+    conductivities = toml::find<std::vector<double>>(
+      cell_params, "conductivities_3d");
+    HeartConfig::Instance()->SetMeshFileName(mesh_dir + mesh_name);
+  }
   const double capacitance = toml::find<double>(cell_params, "capacitance");
 
   std::string default_ionic_model = cell_type + "I";
@@ -207,7 +218,6 @@ void simulation_3d() {
     output_file_handler.GetOutputDirectoryFullPath() + "log.log";
 
   HeartConfig::Instance()->SetSimulationDuration(sim_duration);  // ms
-  HeartConfig::Instance()->SetMeshFileName(mesh_dir + mesh_name);
   HeartConfig::Instance()->SetOutputDirectory(save_path);
   HeartConfig::Instance()->SetOutputFilenamePrefix("results");
 
@@ -249,9 +259,16 @@ void simulation_3d() {
   std::cout << "\nStimulus type: " << stimulus_type << std::endl;
   std::cout << "\nuSMC cell factory parameters:\n" << std::endl;
   factory->PrintParams();
-  std::cout << "x axis conductivity = " << conductivities[0] << std::endl;
-  std::cout << "y axis conductivity = " << conductivities[1] << std::endl;
-  std::cout << "z axis conductivity = " << conductivities[2] << std::endl;
+
+  if (orthotropic) {
+    std::cout << "fibre conductivity = " << conductivities[0] << std::endl;
+    std::cout << "sheet conductivity = " << conductivities[1] << std::endl;
+    std::cout << "normal conductivity = " << conductivities[2] << std::endl;
+  } else {  // If not orthotropic
+    std::cout << "x axis conductivity = " << conductivities[0] << std::endl;
+    std::cout << "y axis conductivity = " << conductivities[1] << std::endl;
+    std::cout << "z axis conductivity = " << conductivities[2] << std::endl;
+  }
 
   std::cout << std::endl;
 
@@ -269,9 +286,15 @@ void simulation_3d() {
   log_stream << "  cell type: " <<  cell_type << std::endl;
   log_stream << "  mesh: " << mesh_name << std::endl;
   log_stream << "  capacitance: " << capacitance << " uF/cm2" << std::endl;
-  log_stream << "  conductivity x axis: " << conductivities[0] << std::endl;
-  log_stream << "  conductivity y axis: " << conductivities[1] << std::endl;
-  log_stream << "  conductivity z axis: " << conductivities[2] << std::endl;
+  if (orthotropic) {
+    log_stream << "fibre conductivity = " << conductivities[0] << std::endl;
+    log_stream << "sheet conductivity = " << conductivities[1] << std::endl;
+    log_stream << "normal conductivity = " << conductivities[2] << std::endl;
+  } else {  // If not orthotropic
+    log_stream << "x axis conductivity = " << conductivities[0] << std::endl;
+    log_stream << "y axis conductivity = " << conductivities[1] << std::endl;
+    log_stream << "z axis conductivity = " << conductivities[2] << std::endl;
+  }
 
   log_stream << "Simulation parameters" << std::endl;
   log_stream << "  duration: " << sim_duration << " ms" << std::endl;
