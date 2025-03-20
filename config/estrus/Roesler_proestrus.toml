@@ -1,15 +1,16 @@
 # Cell properties
 capacitance = 1.3 # uF/cm2
 conductivities_2d = [0.0, 0.0] 
-conductivities_3d = [0.17, 0.17, 0.17] 
-ortho_conductivities = [0.8, 0.08, 0.08]
+conductivities_3d = [0.42, 0.42, 0.42] 
+ortho_conductivities = [0.42, 0.042, 0.042]
 
 # Stimulus
-magnitude = -4.0e3
+magnitude = -3.86e3
 period = 59.0e3 # ms
 duration = 10.0e3 # ms
 start_time = 1.0e3 # ms
 region_p = [0.37, 0.46, 0.17]  # ova, cen, cvx
+
 cell_id = 4
 
 # Cell parameters

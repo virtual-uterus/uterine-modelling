@@ -1,6 +1,6 @@
 # General parameters
 save_dir = "monodomain_2d"
-mesh_name = "test_mesh_3"
+mesh_name = "mesh_2"
 mesh_dir = "/mesh/test/data/"
 stimulus_type = "simple"
 
@@ -18,4 +18,4 @@ print_timestep = 1.0
 
 # Cell parameters
 cell_type = "Roesler"
-estrus = "estrus"
+estrus = "diestrus"
