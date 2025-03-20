@@ -1,0 +1,39 @@
+[left]  # Left horn
+  # x and y set to include entire horn for every region
+  x_start=-2.01
+  x_end=-1.20
+  y_start=-1.44
+  y_end=-0.749
+
+[left.cervical]  # Cervical end
+  z_start=0.401
+  z_end=0.601
+
+[left.centre]  # Centre of horn
+  z_start=1.13
+  z_end=1.33
+
+[left.ovaries]  # Ovarian end
+  z_start=1.864
+  z_end=2.06
+
+[right]  # Right horn
+  # x and y set to include entire horn for every region
+  x_start=-1.20
+  x_end=-0.672
+  y_start=-1.42
+  y_end=-0.749
+
+[right.cervical]  # Cervical end
+  z_start=0.401
+  z_end=0.601
+
+[right.centre]  # Centre of horn
+  z_start=1.13
+  z_end=1.33
+
+[right.ovaries]  # Ovarian end
+  z_start=1.86
+  z_end=2.6
+
+

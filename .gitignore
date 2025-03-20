@@ -1,6 +1,10 @@
 build/
 *.swp
-CMakeLists.txt
 CMakeFiles/
-CMakeCache.txt
 *.backup
+
+# Ignore Python stuff
+python/__pycache__
+python/symprobe/__pycache__
+python/symprobe.egg-info
+python/tests/__pycache__

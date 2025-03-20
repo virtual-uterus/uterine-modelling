@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# usage: estrus-simulation <dim>
+# Runs the Chaste simulation for each stage of the estrus cycle
+# using realistic meshes
+
+# Check arguments
+if [[ $# -ne 1 ]]; then
+  echo "Error: missing simulation dimension"
+  echo "usage: estrus-simulation <dim>"
+  exit
+fi
+
+# Get the config file based on dimension
+if [[ $1 -eq 2 ]]; then
+  CONFIG=${CHASTE_MODELLING_CONFIG_DIR}general/2d_params.toml
+
+elif [[ $1 -eq 3 ]]; then
+  CONFIG=${CHASTE_MODELLING_CONFIG_DIR}general/3d_params.toml
+fi
+
+# Define the stages of the estrus cycle
+ESTRUS_STAGES=("proestrus" "estrus" "metestrus" "diestrus")
+MESH_NB=("AWA026" "AWA033" "AWB008" "AWB003")
+
+# Loop through each stage and run simulation
+for i in "${!ESTRUS_STAGES[@]}"
+do
+    STAGE="${ESTRUS_STAGES[i]}"
+    MESH="${MESH_NB[i]}"
+
+    # Modify the configuration file
+    sed -i "s/mesh_name = \"\(.*\)\"/mesh_name = \"${MESH}_${STAGE}_mesh\"/" ${CONFIG}
+    sed -i "s/estrus = \"\(.*\)\"/estrus = \"$STAGE\"/" ${CONFIG}
+
+    # Run Chaste simulation command (replace with your actual command)
+    echo "Running simulation for stage: $STAGE"
+    uterine-simulation $1
+done
+

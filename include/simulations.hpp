@@ -1,21 +1,20 @@
-#ifndef SIMULATIONS_HPP
-#define SIMULATIONS_HPP
+#ifndef INCLUDE_SIMULATIONS_HPP_
+#define INCLUDE_SIMULATIONS_HPP_
 
 #include <iostream>
 #include "Exception.hpp"
 #include "PetscException.hpp"
 #include "OutputFileHandler.hpp"
-#include "FHNOdeSystem.hpp"
-#include "UterineSimpleCellFactory.hpp"
-#include "UterineRegularCellFactory.hpp"
-#include "UterineZeroCellFactory.hpp"
-#include "UterineSimpleCellFactory3d.hpp"
-#include "UterineRegularCellFactory3d.hpp"
-#include "UterineZeroCellFactory3d.hpp"
 
-void simulation_0d();
+#include "factories/UterineSimpleCellFactory.hpp"
+#include "factories/UterineRegularCellFactory.hpp"
+#include "factories/UterineZeroCellFactory.hpp"
+#include "factories/UterineSimpleCellFactory3d.hpp"
+#include "factories/UterineRegularCellFactory3d.hpp"
+#include "factories/UterineRegionCellFactory3d.hpp"
+#include "factories/UterineZeroCellFactory3d.hpp"
+
 void simulation_2d();
 void simulation_3d();
 
-#endif // SIMULATIONS_HPP
-
+#endif  // INCLUDE_SIMULATIONS_HPP_

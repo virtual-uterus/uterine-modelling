@@ -11,22 +11,23 @@ if [[ $# -ne 1 ]]; then
 fi
 
 # Move to the app directory and run the simulation
-cd ${CHASTE_BUILD_DIR}/projects/uterus-modelling
-./apps/main $1
+cd ${CHASTE_BUILD_DIR}/projects/uterine-modelling
 
 # Get the config file based on dimension
 if [[ $1 -eq 2 ]]; then
-	CONFIG=${CHASTE_MODELLING_CONFIG_DIR}2d_params.toml
+	CONFIG=${CHASTE_MODELLING_CONFIG_DIR}general/2d_params.toml
 
 elif [[ $1 -eq 3 ]]; then
-	CONFIG=${CHASTE_MODELLING_CONFIG_DIR}3d_params.toml
+	CONFIG=${CHASTE_MODELLING_CONFIG_DIR}general/3d_params.toml
 fi
 
 # Get the name details
 CELL_TYPE=$(grep "cell_type =" $CONFIG | cut -d '"' -f 2)
 SAVE_DIR=$(grep "save_dir =" $CONFIG | cut -d '"' -f 2)
 STIMULUS=$(grep "stimulus_type =" $CONFIG | cut -d '"' -f 2)
-BASE_DIR=${CHASTE_TEST_OUTPUT}/${SAVE_DIR}/${CELL_TYPE}
+BASE_DIR=${CHASTE_TEST_OUTPUT}/${CELL_TYPE}/${SAVE_DIR}
+
+./apps/main $1
 
 # Move to the log folder to rename the log file
 cd ${BASE_DIR}/log
@@ -42,5 +43,5 @@ if [ ! -d "${BASE_DIR}/results" ]; then
 fi
 
 # Annotate the data for viewing
-SIM_RES_NAME="simulation_${NB_FILES}_res.vtu"
+SIM_RES_NAME="simulation_${NB_FILES}.vtu"
 python3 ${CHASTE_SOURCE_DIR}/python/utils/AddVtuTimeAnnotations.py vtk_output/results.vtu ${BASE_DIR}/results/${SIM_RES_NAME}

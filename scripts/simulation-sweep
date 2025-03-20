@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Runs the simulation-sweep.py script
+
+python3 /home/mroe734/Documents/phd/symprobe/scripts/simulation-sweep.py $@
