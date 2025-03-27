@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<model cmeta:id="Roesler2023" name="Roesler2023" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+<model cmeta:id="Roesler2024" name="Roesler2024" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
     <!-- units-->
     <units name="msec">
         <unit prefix="milli" units="second"/>
@@ -76,28 +76,48 @@
     <component name="environment">
         <variable name="time" public_interface="out" units="msec"/>
     </component>
+    <!--def comp{stimulus_protocol} stimulus_protocol as
+    var I_stim: pA_per_pF {pub: out};
+    var time: msec {pub: in};
+    var stim_start: msec {init: 1000};
+    var stim_duration: msec {init: 10000};
+    var stim_current: pA_per_pF {init: -0.41};
+
+    // P -0.41, E: -0.41, M: -0.35, D: -0.2;
+
+    I_stim ={stimulus_calculation} sel
+        case (time > stim_start) and (time < stim_start+stim_duration):
+            stim_current;
+        otherwise:
+            0.0{pA_per_pF};
+    endsel;
+enddef;-->
     <component cmeta:id="stimulus_protocol" name="stimulus_protocol">
         <variable name="I_stim" public_interface="out" units="pA_per_pF"/>
         <variable name="time" public_interface="in" units="msec"/>
-        <variable initial_value="2000" name="stim_start" units="msec"/>
-        <variable initial_value="2000" name="stim_duration" units="msec"/>
-        <variable initial_value="-0.5" name="stim_current" units="pA_per_pF"/>
+        <variable initial_value="1000" name="stim_start" units="msec"/>
+        <variable initial_value="46500" name="stim_interval" units="msec"/>
+        <variable initial_value="10000" name="stim_duration" units="msec"/>
+        <variable initial_value="-0.3" name="stim_current" units="pA_per_pF"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply id="stimulus_calculation">
                 <eq/>
                 <ci>I_stim</ci>
                 <piecewise>
                     <piece>
+                        <cn cellml:units="pA_per_pF">0.0</cn>
+                        <apply>
+                            <lt/>
+                            <ci>time</ci>
+                            <ci>stim_start</ci>
+                        </apply>
+                    </piece>
+                    <piece>
                         <ci>stim_current</ci>
                         <apply>
-                            <and/>
+                            <lt/>
                             <apply>
-                                <gt/>
-                                <ci>time</ci>
-                                <ci>stim_start</ci>
-                            </apply>
-                            <apply>
-                                <lt/>
+                                <minus/>
                                 <ci>time</ci>
                                 <apply>
                                     <plus/>
@@ -105,6 +125,23 @@
                                     <ci>stim_duration</ci>
                                 </apply>
                             </apply>
+                            <cn cellml:units="msec">0</cn>
+                        </apply>
+                    </piece>
+                    <piece>
+                        <ci>stim_current</ci>
+                        <apply>
+                            <lt/>
+                            <apply>
+                                <rem/>
+                                <ci>time</ci>
+                                <apply>
+                                    <plus/>
+                                    <ci>stim_interval</ci>
+                                    <ci>stim_duration</ci>
+                                </apply>
+                            </apply>
+                            <ci>stim_duration</ci>
                         </apply>
                     </piece>
                     <otherwise>
@@ -132,9 +169,9 @@
         <variable name="ib" public_interface="in" units="pA_per_pF"/>
         <variable name="icl" public_interface="in" units="pA_per_pF"/>
         <variable cmeta:id="P4" initial_value="14" name="P4" public_interface="out" units="nM_per_L"/>
-        <!-- Progesterone levels during estrus ME 28; DE 15; PRO 30; E 14;-->
-        <variable cmeta:id="E2" initial_value="45" name="E2" public_interface="out" units="nM_per_L"/>
-        <!-- Estradiol levels during estrus ME 43; DE 74; PRO 85; E 45;-->
+        <!-- Progesterone levels during estrus P: 37, E: 14, M: 25, D:10;-->
+        <variable cmeta:id="E2" initial_value="40" name="E2" public_interface="out" units="nM_per_L"/>
+        <!-- Estradiol levels during estrus P: 100, E: 40, M: 49, D:90;-->
         <variable initial_value="53" name="P4_max" public_interface="out" units="nM_per_L"/>
         <variable initial_value="140" name="E2_max" public_interface="out" units="nM_per_L"/>
         <variable name="mod_E2" public_interface="out" units="dimensionless"/>
@@ -337,21 +374,19 @@
         <variable cmeta:id="beta" name="buff" public_interface="out" units="dimensionless"/>
         <variable name="AV" public_interface="out" units="cm2_per_uL"/>
         <variable name="zca" public_interface="out" units="dimensionless"/>
-        <variable name="zna" public_interface="out" units="dimensionless"/>
-        <variable name="zk" public_interface="out" units="dimensionless"/>
         <variable name="R" public_interface="out" units="joule_per_kelvin_per_kilomole"/>
         <variable name="frdy" public_interface="out" units="coulomb_per_mole"/>
         <variable name="temp" public_interface="out" units="kelvin"/>
         <variable cmeta:id="membrane_capacitance" initial_value="1.3" name="Cm" units="uF_per_cm2"/>
         <variable cmeta:id="gna" initial_value="0.0625" name="gna" public_interface="out" units="nS_per_pF"/>
-        <variable cmeta:id="gcal" initial_value="0.4" name="gcal" public_interface="out" units="nS_per_pF"/>
+        <variable cmeta:id="gcal" initial_value="0.6" name="gcal" public_interface="out" units="nS_per_pF"/>
         <variable name="ecal" public_interface="out" units="mV"/>
         <variable name="kmca" public_interface="out" units="mM"/>
         <variable cmeta:id="gcat" initial_value="0.058" name="gcat" public_interface="out" units="nS_per_pF"/>
         <variable name="ecat" public_interface="out" units="mV"/>
         <variable cmeta:id="gkca" initial_value="2.4" name="gkca" public_interface="out" units="nS_per_pF"/>
         <variable cmeta:id="gb" initial_value="0.004" name="gb" public_interface="out" units="nS_per_pF"/>
-        <variable cmeta:id="gkv43" initial_value="1.9" name="gkv43" public_interface="out" units="nS_per_pF"/>
+        <variable cmeta:id="gkv43" initial_value="2.65" name="gkv43" public_interface="out" units="nS_per_pF"/>
         <variable cmeta:id="gbka" initial_value="0.2" name="gbka" public_interface="out" units="dimensionless"/>
         <variable cmeta:id="gbkab" initial_value="0.1" name="gbkab" public_interface="out" units="dimensionless"/>
         <variable cmeta:id="gcl" initial_value="0.1875" name="gcl" public_interface="out" units="nS_per_pF"/>
@@ -437,22 +472,12 @@
             <apply>
                 <eq/>
                 <ci>AV</ci>
-                <cn cellml:units="cm2_per_uL">4.0</cn>
+                <cn cellml:units="cm2_per_uL">7.42</cn>
             </apply>
             <apply>
                 <eq/>
                 <ci>zca</ci>
                 <cn cellml:units="dimensionless">2.0</cn>
-            </apply>
-            <apply>
-                <eq/>
-                <ci>zna</ci>
-                <cn cellml:units="dimensionless">1.0</cn>
-            </apply>
-            <apply>
-                <eq/>
-                <ci>zk</ci>
-                <cn cellml:units="dimensionless">1.0</cn>
             </apply>
             <apply>
                 <eq/>
