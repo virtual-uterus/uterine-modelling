@@ -61,9 +61,9 @@ int main(int argc, char *argv[]) {
     // you clean up PETSc before quitting.
     try {
     if (argc < 2) {
-      // Default to 0d simulation
+      // Default to 2d simulation
       std::cout << "Default simulation" << std::endl;
-      simulation_0d();
+      simulation_2d();
     } else {
       std::istringstream string_stream(argv[1]);
       int dim;
@@ -72,23 +72,19 @@ int main(int argc, char *argv[]) {
         // Check if input is an integer
         const std::string err_msg = "Input is not an integer";
         const std::string err_filename = "main.cpp";
-        unsigned line_number = 83;
+        unsigned line_number = 77;
 
         throw Exception(err_msg, err_filename, line_number);
       } else if (!string_stream.eof()) {
         // Check that the input is just an integer
         const std::string err_msg = "Trailing characters after input";
         const std::string err_filename = "main.cpp";
-        unsigned line_number = 93;
+        unsigned line_number = 84;
 
         throw Exception(err_msg, err_filename, line_number);
       }
 
       switch (dim) {
-        case 0:
-          simulation_0d();
-          break;
-
         case 2:
           simulation_2d();
           break;
@@ -100,7 +96,7 @@ int main(int argc, char *argv[]) {
         default:
           const std::string err_msg = "Invalid dimension";
           const std::string err_filename = "main.cpp";
-          unsigned line_number = 115;
+          unsigned line_number = 101;
 
           throw Exception(err_msg, err_filename, line_number);
           break;
