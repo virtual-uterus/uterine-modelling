@@ -49,13 +49,13 @@
         <unit exponent="2" prefix="centi" units="meter"/>
         <unit exponent="-1" prefix="micro" units="liter"/>
     </units>
-    <units name="nS_per_pF">
-        <unit prefix="nano" units="siemens"/>
-        <unit exponent="-1" prefix="pico" units="farad"/>
+    <units name="mS_per_cm2">
+        <unit prefix="milli" units="siemens"/>
+        <unit exponent="-2" prefix="centi" units="meter"/>
     </units>
-    <units name="pA_per_pF">
-        <unit prefix="pico" units="ampere"/>
-        <unit exponent="-1" prefix="pico" units="farad"/>
+    <units name="uA_per_cm2">
+        <unit prefix="micro" units="ampere"/>
+        <unit exponent="-2" prefix="centi" units="meter"/>
     </units>
     <units name="nM">
         <unit prefix="nano" units="mole"/>
@@ -78,44 +78,69 @@
     </component>
     <!-- Model - membrane-->
     <component name="membrane">
-        <variable initial_value="0" name="I_hold" public_interface="none" units="pA_per_pF"/>
-        <variable initial_value="-0.25" name="I_test" public_interface="none" units="pA_per_pF"/>
-        <variable initial_value="1000" name="test_start" public_interface="none" units="msec"/>
-        <variable initial_value="11000" name="test_end" public_interface="none" units="msec"/>
-        <variable cmeta:id="membrane_stimulus_current" name="I_stim" units="pA_per_pF"/>
+        <variable initial_value="0" name="I_hold" public_interface="none" units="uA_per_cm2"/>
+        <variable initial_value="-0.25" name="I_test" public_interface="none" units="uA_per_cm2"/>
+        <variable initial_value="1000" name="stim_start" units="msec"/>
+        <variable initial_value="46500" name="stim_interval" units="msec"/>
+        <variable initial_value="10000" name="stim_duration" units="msec"/>
+        <variable cmeta:id="membrane_stimulus_current" name="I_stim" units="uA_per_cm2"/>
         <variable name="time" public_interface="in" units="msec"/>
-        <variable name="I_tot" units="pA_per_pF"/>
-        <variable name="I_Ca_tot" public_interface="in" units="pA_per_pF"/>
-        <variable name="I_NS_tot" public_interface="in" units="pA_per_pF"/>
-        <variable name="I_K_tot" public_interface="in" units="pA_per_pF"/>
+        <variable name="I_tot" units="uA_per_cm2"/>
+        <variable name="I_Ca_tot" public_interface="in" units="uA_per_cm2"/>
+        <variable name="I_NS_tot" public_interface="in" units="uA_per_cm2"/>
+        <variable name="I_K_tot" public_interface="in" units="uA_per_cm2"/>
         <variable cmeta:id="membrane_voltage" initial_value="-53.90915441282156" name="v" public_interface="out" units="mV"/>
         <variable name="Cm" public_interface="in" units="uF_per_cm2"/>
-        <variable name="ina" public_interface="in" units="pA_per_pF"/>
-        <variable name="ib" public_interface="in" units="pA_per_pF"/>
-        <variable name="icl" public_interface="in" units="pA_per_pF"/>
+        <variable name="ina" public_interface="in" units="uA_per_cm2"/>
+        <variable name="ib" public_interface="in" units="uA_per_cm2"/>
+        <variable name="icl" public_interface="in" units="uA_per_cm2"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
+            <apply id="stimulus_calculation">
                 <eq/>
                 <ci>I_stim</ci>
                 <piecewise>
                     <piece>
+                        <cn cellml:units="uA_per_cm2">0.0</cn>
+                        <apply>
+                            <lt/>
+                            <ci>time</ci>
+                            <ci>stim_start</ci>
+                        </apply>
+                    </piece>
+                    <piece>
                         <ci>I_test</ci>
                         <apply>
-                            <and/>
+                            <lt/>
                             <apply>
-                                <gt/>
+                                <minus/>
                                 <ci>time</ci>
-                                <ci>test_start</ci>
+                                <apply>
+                                    <plus/>
+                                    <ci>stim_start</ci>
+                                    <ci>stim_duration</ci>
+                                </apply>
                             </apply>
+                            <cn cellml:units="msec">0</cn>
+                        </apply>
+                    </piece>
+                    <piece>
+                        <ci>I_test</ci>
+                        <apply>
+                            <lt/>
                             <apply>
-                                <lt/>
+                                <rem/>
                                 <ci>time</ci>
-                                <ci>test_end</ci>
+                                <apply>
+                                    <plus/>
+                                    <ci>stim_interval</ci>
+                                    <ci>stim_duration</ci>
+                                </apply>
                             </apply>
+                            <ci>stim_duration</ci>
                         </apply>
                     </piece>
                     <otherwise>
-                        <ci>I_hold</ci>
+                        <cn cellml:units="uA_per_cm2">0.0</cn>
                     </otherwise>
                 </piecewise>
             </apply>
@@ -142,12 +167,16 @@
                     <ci>v</ci>
                 </apply>
                 <apply>
-                    <minus/>
+                    <divide/>
                     <apply>
-                        <plus/>
-                        <ci>I_tot</ci>
-                        <ci>I_stim</ci>
+                        <minus/>
+                        <apply>
+                            <plus/>
+                            <ci>I_tot</ci>
+                            <ci>I_stim</ci>
+                        </apply>
                     </apply>
+                    <ci>Cm</ci>
                 </apply>
             </apply>
         </math>
@@ -169,8 +198,8 @@
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="jnaca" public_interface="in" units="mM_per_msec"/>
         <variable name="jpmca" public_interface="in" units="mM_per_msec"/>
-        <variable name="I_Ca_tot" public_interface="in" units="pA_per_pF"/>
-        <variable name="insca" public_interface="in" units="pA_per_pF"/>
+        <variable name="I_Ca_tot" public_interface="in" units="uA_per_cm2"/>
+        <variable name="insca" public_interface="in" units="uA_per_cm2"/>
         <variable name="buff" public_interface="in" units="dimensionless"/>
         <variable name="AV" public_interface="in" units="cm2_per_uL"/>
         <variable name="zca" public_interface="in" units="dimensionless"/>
@@ -300,19 +329,19 @@
         <variable name="frdy" public_interface="out" units="coulomb_per_mole"/>
         <variable name="temp" public_interface="out" units="kelvin"/>
         <variable cmeta:id="membrane_capacitance" initial_value="1.0" name="Cm" units="uF_per_cm2"/>
-        <variable cmeta:id="gna" initial_value="0.0895" name="gna" public_interface="out" units="nS_per_pF"/>
-        <variable cmeta:id="gcal" initial_value="0.6" name="gcal" public_interface="out" units="nS_per_pF"/>
+        <variable cmeta:id="gna" initial_value="0.0895" name="gna" public_interface="out" units="mS_per_cm2"/>
+        <variable cmeta:id="gcal" initial_value="0.6" name="gcal" public_interface="out" units="mS_per_cm2"/>
         <variable name="ecal" public_interface="out" units="mV"/>
         <variable name="kmca" public_interface="out" units="mM"/>
-        <variable cmeta:id="gcat" initial_value="0.058" name="gcat" public_interface="out" units="nS_per_pF"/>
+        <variable cmeta:id="gcat" initial_value="0.058" name="gcat" public_interface="out" units="mS_per_cm2"/>
         <variable name="ecat" public_interface="out" units="mV"/>
-        <variable cmeta:id="gkca" initial_value="0.8" name="gkca" public_interface="out" units="nS_per_pF"/>
-        <variable cmeta:id="gb" initial_value="0.004" name="gb" public_interface="out" units="nS_per_pF"/>
-        <variable cmeta:id="gkv43" initial_value="0.7" name="gkv43" public_interface="out" units="nS_per_pF"/>
+        <variable cmeta:id="gkca" initial_value="0.8" name="gkca" public_interface="out" units="mS_per_cm2"/>
+        <variable cmeta:id="gb" initial_value="0.004" name="gb" public_interface="out" units="mS_per_cm2"/>
+        <variable cmeta:id="gkv43" initial_value="0.7" name="gkv43" public_interface="out" units="mS_per_cm2"/>
         <variable cmeta:id="gbka" initial_value="0.2" name="gbka" public_interface="out" units="dimensionless"/>
         <variable cmeta:id="gbkab" initial_value="0.1" name="gbkab" public_interface="out" units="dimensionless"/>
-        <variable cmeta:id="gcl" initial_value="0.1875" name="gcl" public_interface="out" units="nS_per_pF"/>
-        <variable cmeta:id="gns" initial_value="0.0123" name="gns" public_interface="out" units="nS_per_pF"/>
+        <variable cmeta:id="gcl" initial_value="0.1875" name="gcl" public_interface="out" units="mS_per_cm2"/>
+        <variable cmeta:id="gns" initial_value="0.0123" name="gns" public_interface="out" units="mS_per_cm2"/>
         <variable name="PnsK" public_interface="out" units="dimensionless"/>
         <variable name="PnsNa" public_interface="out" units="dimensionless"/>
         <variable name="PnsCa" public_interface="out" units="dimensionless"/>
@@ -868,11 +897,11 @@
         <variable name="hss" units="dimensionless"/>
         <variable name="htc" units="msec"/>
         <variable initial_value="0.404599170710196" name="h" public_interface="none" units="dimensionless"/>
-        <variable name="ina" public_interface="out" units="pA_per_pF"/>
+        <variable name="ina" public_interface="out" units="uA_per_cm2"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
         <variable name="ena" public_interface="in" units="mV"/>
-        <variable name="gna" public_interface="in" units="nS_per_pF"/>
+        <variable name="gna" public_interface="in" units="mS_per_cm2"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -1008,17 +1037,17 @@
     </connection>
     <!-- Model - currents -->
     <component name="Ca_currents">
-        <variable name="I_Ca_tot" public_interface="out" units="pA_per_pF"/>
+        <variable name="I_Ca_tot" public_interface="out" units="uA_per_cm2"/>
         <variable name="time" private_interface="out" public_interface="in" units="msec"/>
         <variable name="v" private_interface="out" public_interface="in" units="mV"/>
-        <variable name="ical" private_interface="in" units="pA_per_pF"/>
-        <variable name="icat" private_interface="in" units="pA_per_pF"/>
+        <variable name="ical" private_interface="in" units="uA_per_cm2"/>
+        <variable name="icat" private_interface="in" units="uA_per_cm2"/>
         <variable name="cai" private_interface="out" public_interface="in" units="mM"/>
         <variable name="ecal" private_interface="out" public_interface="in" units="mV"/>
-        <variable name="gcal" private_interface="out" public_interface="in" units="nS_per_pF"/>
+        <variable name="gcal" private_interface="out" public_interface="in" units="mS_per_cm2"/>
         <variable name="kmca" private_interface="out" public_interface="in" units="mM"/>
         <variable name="ecat" private_interface="out" public_interface="in" units="mV"/>
-        <variable name="gcat" private_interface="out" public_interface="in" units="nS_per_pF"/>
+        <variable name="gcat" private_interface="out" public_interface="in" units="mS_per_cm2"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -1059,12 +1088,12 @@
         <variable name="fca" units="dimensionless"/>
         <variable name="f2tc" units="msec"/>
         <variable initial_value="0.9065967263076083" name="f2" public_interface="none" units="dimensionless"/>
-        <variable name="ical" public_interface="out" units="pA_per_pF"/>
+        <variable name="ical" public_interface="out" units="uA_per_cm2"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
         <variable name="cai" public_interface="in" units="mM"/>
         <variable name="ecal" public_interface="in" units="mV"/>
-        <variable name="gcal" public_interface="in" units="nS_per_pF"/>
+        <variable name="gcal" public_interface="in" units="mS_per_cm2"/>
         <variable name="kmca" public_interface="in" units="mM"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
@@ -1257,11 +1286,11 @@
     <component name="I_CaT">
         <variable name="bss" units="dimensionless"/>
         <variable name="gss" units="dimensionless"/>
-        <variable name="icat" public_interface="out" units="pA_per_pF"/>
+        <variable name="icat" public_interface="out" units="uA_per_cm2"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
         <variable name="ecat" public_interface="in" units="mV"/>
-        <variable name="gcat" public_interface="in" units="nS_per_pF"/>
+        <variable name="gcat" public_interface="in" units="mS_per_cm2"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -1346,10 +1375,10 @@
     </connection>
     <!-- Model - currents-->
     <component name="I_b">
-        <variable name="ib" public_interface="out" units="pA_per_pF"/>
+        <variable name="ib" public_interface="out" units="uA_per_cm2"/>
         <variable name="v" public_interface="in" units="mV"/>
         <variable name="ek" public_interface="in" units="mV"/>
-        <variable name="gb" public_interface="in" units="nS_per_pF"/>
+        <variable name="gb" public_interface="in" units="mS_per_cm2"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -1378,21 +1407,21 @@
     </connection>
     <!-- Model - currents-->
     <component name="K_currents">
-        <variable name="I_K_tot" public_interface="out" units="pA_per_pF"/>
+        <variable name="I_K_tot" public_interface="out" units="uA_per_cm2"/>
         <variable name="v" private_interface="out" public_interface="in" units="mV"/>
         <variable name="time" private_interface="out" public_interface="in" units="msec"/>
-        <variable name="iBKab" private_interface="in" units="pA_per_pF"/>
-        <variable name="iBKa" private_interface="in" units="pA_per_pF"/>
-        <variable name="ikv43" private_interface="in" units="pA_per_pF"/>
+        <variable name="iBKab" private_interface="in" units="uA_per_cm2"/>
+        <variable name="iBKa" private_interface="in" units="uA_per_cm2"/>
+        <variable name="ikv43" private_interface="in" units="uA_per_cm2"/>
         <variable name="cai" private_interface="out" public_interface="in" units="mM"/>
         <variable name="ek" private_interface="out" public_interface="in" units="mV"/>
-        <variable name="gkca" private_interface="out" public_interface="in" units="nS_per_pF"/>
+        <variable name="gkca" private_interface="out" public_interface="in" units="mS_per_cm2"/>
         <variable name="gbka" private_interface="out" public_interface="in" units="dimensionless"/>
         <variable name="R" private_interface="out" public_interface="in" units="joule_per_kelvin_per_kilomole"/>
         <variable name="frdy" private_interface="out" public_interface="in" units="coulomb_per_mole"/>
         <variable name="temp" private_interface="out" public_interface="in" units="kelvin"/>
         <variable name="gbkab" private_interface="out" public_interface="in" units="dimensionless"/>
-        <variable name="gkv43" private_interface="out" public_interface="in" units="nS_per_pF"/>
+        <variable name="gkv43" private_interface="out" public_interface="in" units="mS_per_cm2"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -1440,11 +1469,11 @@
         <variable initial_value="0.2060363247740295" name="q" public_interface="none" units="dimensionless"/>
         <variable initial_value="0.1922244113609531" name="r1" public_interface="none" units="dimensionless"/>
         <variable initial_value="0.1932803618375963" name="r2" public_interface="none" units="dimensionless"/>
-        <variable name="ikv43" public_interface="out" units="pA_per_pF"/>
+        <variable name="ikv43" public_interface="out" units="uA_per_cm2"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
         <variable name="ek" public_interface="in" units="mV"/>
-        <variable name="gkv43" public_interface="in" units="nS_per_pF"/>
+        <variable name="gkv43" public_interface="in" units="mS_per_cm2"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -1676,12 +1705,12 @@
         <variable name="xass_vh" units="mV"/>
         <variable initial_value="1000.0" name="conversion" public_interface="none" units="mM_to_M"/>
         <variable name="xass" units="dimensionless"/>
-        <variable name="iBKa" public_interface="out" units="pA_per_pF"/>
+        <variable name="iBKa" public_interface="out" units="uA_per_cm2"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
         <variable name="cai" public_interface="in" units="mM"/>
         <variable name="ek" public_interface="in" units="mV"/>
-        <variable name="gkca" public_interface="in" units="nS_per_pF"/>
+        <variable name="gkca" public_interface="in" units="mS_per_cm2"/>
         <variable name="gbka" public_interface="in" units="dimensionless"/>
         <variable name="R" public_interface="in" units="joule_per_kelvin_per_kilomole"/>
         <variable name="frdy" public_interface="in" units="coulomb_per_mole"/>
@@ -1852,11 +1881,11 @@
         <variable name="xabss_vh" units="mV"/>
         <variable initial_value="1000.0" name="conversion" public_interface="none" units="mM_to_M"/>
         <variable name="xabss" units="dimensionless"/>
-        <variable name="iBKab" public_interface="out" units="pA_per_pF"/>
+        <variable name="iBKab" public_interface="out" units="uA_per_cm2"/>
         <variable name="v" public_interface="in" units="mV"/>
         <variable name="cai" public_interface="in" units="mM"/>
         <variable name="ek" public_interface="in" units="mV"/>
-        <variable name="gkca" public_interface="in" units="nS_per_pF"/>
+        <variable name="gkca" public_interface="in" units="mS_per_cm2"/>
         <variable name="gbkab" public_interface="in" units="dimensionless"/>
         <variable name="R" public_interface="in" units="joule_per_kelvin_per_kilomole"/>
         <variable name="frdy" public_interface="in" units="coulomb_per_mole"/>
@@ -2027,12 +2056,12 @@
         <variable name="K1cl" units="mM"/>
         <variable name="K2cl" units="dimensionless"/>
         <variable initial_value="0.0003764413740731269" name="c" public_interface="none" units="dimensionless"/>
-        <variable name="icl" public_interface="out" units="pA_per_pF"/>
+        <variable name="icl" public_interface="out" units="uA_per_cm2"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
         <variable name="cai" public_interface="in" units="mM"/>
         <variable name="ecl" public_interface="in" units="mV"/>
-        <variable name="gcl" public_interface="in" units="nS_per_pF"/>
+        <variable name="gcl" public_interface="in" units="mS_per_cm2"/>
         <variable name="vFRT" public_interface="in" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
@@ -2216,14 +2245,14 @@
     <component name="NS_currents">
         <variable name="fmg" private_interface="out" units="dimensionless"/>
         <variable initial_value="1e-8" name="tinyamount" private_interface="out" units="mM"/>
-        <variable name="I_NS_tot" public_interface="out" units="pA_per_pF"/>
-        <variable name="insna" private_interface="in" units="pA_per_pF"/>
-        <variable name="insca" private_interface="in" public_interface="out" units="pA_per_pF"/>
-        <variable name="insk" private_interface="in" units="pA_per_pF"/>
+        <variable name="I_NS_tot" public_interface="out" units="uA_per_cm2"/>
+        <variable name="insna" private_interface="in" units="uA_per_cm2"/>
+        <variable name="insca" private_interface="in" public_interface="out" units="uA_per_cm2"/>
+        <variable name="insk" private_interface="in" units="uA_per_cm2"/>
         <variable name="v" private_interface="out" public_interface="in" units="mV"/>
         <variable name="enscc" private_interface="out" public_interface="in" units="mV"/>
         <variable name="mgo" public_interface="in" units="mM"/>
-        <variable name="gns" private_interface="out" public_interface="in" units="nS_per_pF"/>
+        <variable name="gns" private_interface="out" public_interface="in" units="mS_per_cm2"/>
         <variable name="gnsNa" private_interface="out" public_interface="in" units="dimensionless"/>
         <variable name="nao" private_interface="out" public_interface="in" units="mM"/>
         <variable name="ko" private_interface="out" public_interface="in" units="mM"/>
@@ -2292,9 +2321,9 @@
         <variable name="nao" public_interface="in" units="mM"/>
         <variable name="gs_nao" units="dimensionless"/>
         <variable name="gnsNa" public_interface="in" units="dimensionless"/>
-        <variable name="gns" public_interface="in" units="nS_per_pF"/>
+        <variable name="gns" public_interface="in" units="mS_per_cm2"/>
         <variable name="enscc" public_interface="in" units="mV"/>
-        <variable name="insna" public_interface="out" units="pA_per_pF"/>
+        <variable name="insna" public_interface="out" units="uA_per_cm2"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -2365,9 +2394,9 @@
         <variable name="ko" public_interface="in" units="mM"/>
         <variable name="gs_ko" units="dimensionless"/>
         <variable name="gnsK" public_interface="in" units="dimensionless"/>
-        <variable name="gns" public_interface="in" units="nS_per_pF"/>
+        <variable name="gns" public_interface="in" units="mS_per_cm2"/>
         <variable name="enscc" public_interface="in" units="mV"/>
-        <variable name="insk" public_interface="out" units="pA_per_pF"/>
+        <variable name="insk" public_interface="out" units="uA_per_cm2"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -2438,9 +2467,9 @@
         <variable name="cao" public_interface="in" units="mM"/>
         <variable name="gs_cao" units="dimensionless"/>
         <variable name="gnsCa" public_interface="in" units="dimensionless"/>
-        <variable name="gns" public_interface="in" units="nS_per_pF"/>
+        <variable name="gns" public_interface="in" units="mS_per_cm2"/>
         <variable name="enscc" public_interface="in" units="mV"/>
-        <variable name="insca" public_interface="out" units="pA_per_pF"/>
+        <variable name="insca" public_interface="out" units="uA_per_cm2"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
