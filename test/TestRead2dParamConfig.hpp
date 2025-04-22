@@ -6,7 +6,7 @@
  * and closing it at the end.  (If you never run come in parallel then it is safe to replace PetscSetupAndFinalize.hpp with FakePetscSetup.hpp)
  */
 #include "PetscSetupAndFinalize.hpp"
-#include "AbstractUterineCellFactory.hpp"
+#include "../include/factories/AbstractUterineCellFactory.hpp"
 
 /**
  * @file

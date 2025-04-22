@@ -3,7 +3,7 @@
 
 #include <cxxtest/TestSuite.h>
 #include "PetscSetupAndFinalize.hpp"
-#include "UterineSimpleCellFactory3d.hpp"
+#include "../include/factories/UterineSimpleCellFactory3d.hpp"
 
 class TestUterineSimpleCellFactory3d : public CxxTest::TestSuite
 {
