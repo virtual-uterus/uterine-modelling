@@ -9,6 +9,11 @@
 #include "Means2023Cvode.hpp"
 #include "Tong2014Cvode.hpp"
 #include "Roesler2024Cvode.hpp"
+#include <random>
+#include <algorithm>
+#include <vector>
+#include <cmath>
+
 
 namespace USMC_3D_SYSTEM_CONSTANTS {
 const std::string CONFIG_DIR = getenv("CHASTE_MODELLING_CONFIG_DIR");

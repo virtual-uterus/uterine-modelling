@@ -31,13 +31,6 @@ AbstractCvodeCell* AbstractUterineCellFactory3d::CreateCardiacCellForTissueNode(
 
     case 4:
       cell = new CellRoesler2024FromCellMLCvode(mpSolver, mpZeroStimulus);
-
-      for (auto it=mpCell_parameters.begin();
-          it != mpCell_parameters.end();
-          ++it) {
-            if (it->first == "g_p") {
-              // Generate a random number between 0 and 1
-      }
       break;
 
     default:
@@ -111,8 +104,22 @@ void AbstractUterineCellFactory3d::SetCellParams(AbstractCvodeCell* cell) {
     for (auto it=mpCell_parameters.begin();
         it != mpCell_parameters.end();
         ++it) {
-      cell->SetParameter(it->first, it->second);
-    }
+          if (it->first == "g_p") {
+            // Generate a random number between 0 and 1
+            std::random_device rd;
+            std::mt19937 mt(rd());  // Random number generator
+            std::uniform_real_distribution<double> dist(0.0, 1.0);
+
+            double rand_val = dist(mt);
+            if (rand_val < 0.9) {
+              cell->SetParameter(it->first, 0.0);
+            } else {
+              cell->SetParameter(it->first, it->second);
+            }
+          } else {
+            cell->SetParameter(it->first, it->second);
+          }
+        }
   }
 }
 
