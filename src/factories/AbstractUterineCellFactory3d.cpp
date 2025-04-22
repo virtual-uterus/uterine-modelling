@@ -23,22 +23,10 @@ AbstractCvodeCell* AbstractUterineCellFactory3d::CreateCardiacCellForTissueNode(
 
     case 2:
       cell = new CellMeans2023FromCellMLCvode(mpSolver, mpZeroStimulus);
-
-      for (auto it=mpCell_parameters.begin();
-          it != mpCell_parameters.end();
-          ++it) {
-        cell->SetParameter(it->first, it->second);
-      }
       break;
 
     case 3:
       cell = new CellTong2014FromCellMLCvode(mpSolver, mpZeroStimulus);
-
-      for (auto it=mpCell_parameters.begin();
-          it != mpCell_parameters.end();
-          ++it) {
-        cell->SetParameter(it->first, it->second);
-      }
       break;
 
     case 4:
@@ -47,13 +35,17 @@ AbstractCvodeCell* AbstractUterineCellFactory3d::CreateCardiacCellForTissueNode(
       for (auto it=mpCell_parameters.begin();
           it != mpCell_parameters.end();
           ++it) {
-        cell->SetParameter(it->first, it->second);
+            if (it->first == "g_p") {
+              // Generate a random number between 0 and 1
       }
       break;
 
     default:
       cell = new CellHodgkinHuxley1952FromCellMLCvode(mpSolver,
         mpZeroStimulus);
+
+    // Set parameters for the cell
+    SetCellParams(cell);
   }
 
   return cell;
@@ -113,6 +105,16 @@ void AbstractUterineCellFactory3d::ReadCellParams(std::string cell_param_file) {
   }
 }
 
+
+void AbstractUterineCellFactory3d::SetCellParams(AbstractCvodeCell* cell) {
+  if (mpCell_id > 1) {
+    for (auto it=mpCell_parameters.begin();
+        it != mpCell_parameters.end();
+        ++it) {
+      cell->SetParameter(it->first, it->second);
+    }
+  }
+}
 
 void AbstractUterineCellFactory3d::PrintParams() {
   std::cout << "mpCell_type = " << mpCell_type << std::endl;

@@ -28,6 +28,7 @@ class AbstractUterineCellFactory3d : public AbstractCardiacCellFactory<3> {
   AbstractCvodeCell* CreateCardiacCellForTissueNode(Node<3>* pNode);
   std::string GetCellType();
   std::string GetCellParamFile();
+  void SetCellParams(AbstractCvodeCell* cell);
   virtual void ReadParams(std::string general_param_file);
   virtual void ReadCellParams(std::string cell_param_file);
   virtual void PrintParams();
