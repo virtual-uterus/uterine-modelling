@@ -20,13 +20,13 @@ AbstractUterineCellFactoryTemplate<DIM>::AbstractUterineCellFactoryTemplate() :
 template <int DIM>
 AbstractCvodeCell* AbstractUterineCellFactoryTemplate<DIM>::CreateCardiacCellForTissueNode(
   Node<DIM>* pNode) {
-  AbstractCvodeCell* cell;
+  AbstractCvodeCell* cell(nullptr);
   
   // Initialise cell with ZeroStimulus
-  InitCell(cell, false);
+  this->InitCell(cell, this->mpZeroStimulus);
 
   // Set parameters for the cell
-  SetCellParams(cell);
+  this->SetCellParams(cell);
 
   return cell;
 }
@@ -117,33 +117,28 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetCellParams(AbstractCvodeCell* c
 
 
 template <int DIM>
-void AbstractUterineCellFactoryTemplate<DIM>::InitCell(AbstractCvodeCell* cell, bool stim_flag) {
-
-  auto stim_type = this->mpZeroStimulus;  // Default is ZeroStimulus
-  if (stim_flag) {
-    stim_type = this->mpStimulus;
-  }
-
+void AbstractUterineCellFactoryTemplate<DIM>::InitCell(AbstractCvodeCell*& cell,
+                                                       boost::shared_ptr<AbstractStimulusFunction> stim) {
   switch (mpCell_id) {
     case 0:
       cell = new CellHodgkinHuxley1952FromCellMLCvode(this->mpSolver,
-        stim_type);
+        stim);
       break;
 
     case 1:
-      cell = new CellChayKeizer1983FromCellMLCvode(this->mpSolver, stim_type);
+      cell = new CellChayKeizer1983FromCellMLCvode(this->mpSolver, stim);
       break;
 
     case 2:
-      cell = new CellMeans2023FromCellMLCvode(this->mpSolver, stim_type);
+      cell = new CellMeans2023FromCellMLCvode(this->mpSolver, stim);
       break;
 
     case 3:
-      cell = new CellTong2014FromCellMLCvode(this->mpSolver, stim_type);
+      cell = new CellTong2014FromCellMLCvode(this->mpSolver, stim);
       break;
 
     case 4:
-      cell = new CellRoesler2024FromCellMLCvode(this->mpSolver, stim_type);
+      cell = new CellRoesler2024FromCellMLCvode(this->mpSolver, stim);
       break;
 
     default:

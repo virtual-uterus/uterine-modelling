@@ -1,45 +1,45 @@
-#include "../../include/factories/UterineSimpleCellFactory.hpp"
+#include "../../include/factories/UterineRegularCellFactory.hpp"
 #include "Exception.hpp"
 
 template <int DIM>
-UterineSimpleCellFactory<DIM>::UterineSimpleCellFactory() :
+UterineRegularCellFactory<DIM>::UterineRegularCellFactory() :
   AbstractUterineCellFactoryTemplate<DIM>(),
-  mpStimulus(new SimpleStimulus(0.0, 0.0)) {
-  ReadCellParams(AbstractUterineCellFactoryTemplate<DIM>::GetCellParamFile());
+  mpStimulus(new RegularStimulus(0.0, 0.0, 0.1, 0.0)) {
+  ReadCellParams(this->GetCellParamFile());
 }
 
 
 template <int DIM>
-AbstractCvodeCell* UterineSimpleCellFactory<DIM>::CreateCardiacCellForTissueNode(
+AbstractCvodeCell* UterineRegularCellFactory<DIM>::CreateCardiacCellForTissueNode(
   Node<DIM>* pNode) {
   double x = pNode->rGetLocation()[0];
   double y = pNode->rGetLocation()[1];
   double z;
 
   if (DIM == 3) {
-    double z = pNode->rGetLocation()[2];
+    z = pNode->rGetLocation()[2];
   }
 
   AbstractCvodeCell* cell;
 
   if (x >= mpX_stim_start && x <= mpX_stim_end &&
       y >= mpY_stim_start && y <= mpY_stim_end) {
-    if (DIM == 3 && z >= mpZ_stim_start && z <= mpZ_stim_end || DIM == 2) {
-      AbstractUterineCellFactoryTemplate<DIM>::InitCell(cell, true);
-      AbstractUterineCellFactoryTemplate<DIM>::SetCellParams(cell);
+    if ((DIM == 3 && z >= mpZ_stim_start && z <= mpZ_stim_end) || (DIM == 2)) {
+      this->InitCell(cell, this->mpStimulus);
+      this->SetCellParams(cell);
     }
     return cell;
 
   } else {
     /* The other cells have zero stimuli. */
-    return AbstractUterineCellFactoryTemplate<DIM>::CreateCardiacCellForTissueNode(pNode);
+    return this->CreateCardiacCellForTissueNode(pNode);
   }
 }
 
 
 template <int DIM>
-void UterineSimpleCellFactory<DIM>::ReadParams(std::string general_param_file) {
-  AbstractUterineCellFactoryTemplate<DIM>::ReadParams(general_param_file);
+void UterineRegularCellFactory<DIM>::ReadParams(std::string general_param_file) {
+  this->ReadParams(general_param_file);
 
   std::string general_param_path = USMC_SYSTEM_CONSTANTS::CONFIG_DIR +
     general_param_file;
@@ -62,21 +62,22 @@ void UterineSimpleCellFactory<DIM>::ReadParams(std::string general_param_file) {
 
 
 template <int DIM>
-void UterineSimpleCellFactory<DIM>::ReadCellParams(std::string cell_param_file) {
+void UterineRegularCellFactory<DIM>::ReadCellParams(std::string cell_param_file) {
   std::string cell_param_path = USMC_SYSTEM_CONSTANTS::CONFIG_DIR +
     cell_param_file;
   const auto cell_params = toml::parse(cell_param_path);
 
   // Stimulus parameters
   mpStimulus->SetMagnitude(toml::find<double>(cell_params, "magnitude"));
+  mpStimulus->SetPeriod(toml::find<double>(cell_params, "period"));
   mpStimulus->SetDuration(toml::find<double>(cell_params, "duration"));
   mpStimulus->SetStartTime(toml::find<double>(cell_params, "start_time"));
 }
 
 
 template <int DIM>
-void UterineSimpleCellFactory<DIM>::PrintParams() {
-  AbstractUterineCellFactoryTemplate<DIM>::PrintParams();
+void UterineRegularCellFactory<DIM>::PrintParams() {
+  this->PrintParams();
   std::cout << "mpX_stim_start = " << mpX_stim_start << "\n";
   std::cout << "mpX_stim_end = " << mpX_stim_end << "\n";
   std::cout << "mpY_stim_start = " << mpY_stim_start << "\n";
@@ -90,6 +91,7 @@ void UterineSimpleCellFactory<DIM>::PrintParams() {
   std::cout << "mpStimulus magnitude = "
     << mpStimulus->GetMagnitude()
     << std::endl;
+  std::cout << "mpStimulus period = " << mpStimulus->GetPeriod() << std::endl;
   std::cout << "mpStimulus duration = "
     << mpStimulus->GetDuration()
     << std::endl;
@@ -98,14 +100,14 @@ void UterineSimpleCellFactory<DIM>::PrintParams() {
 
 
 template <int DIM>
-void UterineSimpleCellFactory<DIM>::WriteLogInfo(std::string log_file) {
-  AbstractUterineCellFactoryTemplate<DIM>::WriteLogInfo(log_file);
+void UterineRegularCellFactory<DIM>::WriteLogInfo(std::string log_file) {
+  this->WriteLogInfo(log_file);
 
   std::ofstream log_stream;
   log_stream.open(log_file, ios::app);  // Open log file in append mode
 
   log_stream << "Stimulus parameters" << std::endl;
-  log_stream << "  type: simple" << std::endl;
+  log_stream << "  type: regular" << std::endl;
   log_stream << "  start time: "
     << mpStimulus->GetStartTime()
     << " ms"
@@ -118,6 +120,7 @@ void UterineSimpleCellFactory<DIM>::WriteLogInfo(std::string log_file) {
     << mpStimulus->GetMagnitude()
     << " uA/cm2"
     << std::endl;
+  log_stream << "  period: " << mpStimulus->GetPeriod() << " ms" << std::endl;
   log_stream << "  stimulated region: " << mpX_stim_start << " <= x <= ";
   log_stream << mpX_stim_end << "   " << mpY_stim_start << " <= y <= ";
 

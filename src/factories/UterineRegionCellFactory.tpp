@@ -12,9 +12,8 @@ UterineRegionCellFactory<DIM>::UterineRegionCellFactory() :
     0.0, 0.0, 1.0, 0.0, selector);
   mpCervicalStimulus = boost::make_shared<UterineRegionStimulus>(
     0.0, 0.0, 1.0, 0.0, selector);
-  ReadCellParams(AbstractUterineCellFactoryTemplate<DIM>::GetCellParamFile());
+  ReadCellParams(this->GetCellParamFile());
 }
-
 
 template <int DIM>
 AbstractCvodeCell* UterineRegionCellFactory<DIM>::CreateCardiacCellForTissueNode(
@@ -37,7 +36,7 @@ AbstractCvodeCell* UterineRegionCellFactory<DIM>::CreateCardiacCellForTissueNode
       stimulus = mpCervicalStimulus;
       break;
     default:
-      return AbstractUterineCellFactoryTemplate<DIM>::CreateCardiacCellForTissueNode(
+      return this->CreateCardiacCellForTissueNode(
         pNode);
   }
 
@@ -45,52 +44,9 @@ AbstractCvodeCell* UterineRegionCellFactory<DIM>::CreateCardiacCellForTissueNode
 
   AbstractCvodeCell* cell;
 
-  switch (this->mpCell_id) {
-    case 0:
-      cell = new CellHodgkinHuxley1952FromCellMLCvode(this->mpSolver,
-        stimulus);
-      break;
-
-    case 1:
-      cell = new CellChayKeizer1983FromCellMLCvode(this->mpSolver, stimulus);
-      break;
-
-    case 2:
-      cell = new CellMeans2023FromCellMLCvode(this->mpSolver, stimulus);
-
-      for (auto it=this->mpCellParameters.begin();
-        it != this->mpCellParameters.end();
-        ++it) {
-        cell->SetParameter(it->first, it->second);
-      }
-      break;
-
-    case 3:
-      cell = new CellTong2014FromCellMLCvode(this->mpSolver, stimulus);
-
-      for (auto it=this->mpCellParameters.begin();
-        it != this->mpCellParameters.end();
-        ++it) {
-        cell->SetParameter(it->first, it->second);
-      }
-      break;
-
-    case 4:
-      cell = new CellRoesler2024FromCellMLCvode(this->mpSolver, stimulus);
-
-      for (auto it=this->mpCellParameters.begin();
-        it != this->mpCellParameters.end();
-        ++it) {
-        cell->SetParameter(it->first, it->second);
-      }
-      break;
-
-    default:
-      cell = new CellHodgkinHuxley1952FromCellMLCvode(this->mpSolver,
-        stimulus);
-    }
-
-    return cell;
+  this->InitCell(cell, stimulus);
+  this->SetCellParams(cell);
+  return cell;
 }
 
 
@@ -149,7 +105,7 @@ unsigned UterineRegionCellFactory<DIM>::IsInRight(double x, double y, double z) 
 
 template <int DIM>
 void UterineRegionCellFactory<DIM>::ReadParams(std::string general_param_file) {
-  AbstractUterineCellFactoryTemplate<DIM>::ReadParams(general_param_file);
+  this->ReadParams(general_param_file);
 
   // Read region stimulus specific parameters
   std::string general_param_path = USMC_SYSTEM_CONSTANTS::CONFIG_DIR +
@@ -281,7 +237,7 @@ void UterineRegionCellFactory<DIM>::SetStimulusParams(
 
 template <int DIM>
 void UterineRegionCellFactory<DIM>::PrintParams() {
-  AbstractUterineCellFactoryTemplate<DIM>::PrintParams();
+  this->PrintParams();
   std::cout << "stimulus magnitude = "
     << mpOvariesStimulus->GetMagnitude()
     << std::endl;
@@ -318,7 +274,7 @@ void UterineRegionCellFactory<DIM>::PrintParams() {
 
 template <int DIM>
 void UterineRegionCellFactory<DIM>::WriteLogInfo(std::string log_file) {
-  AbstractUterineCellFactoryTemplate<DIM>::WriteLogInfo(log_file);
+  this->WriteLogInfo(log_file);
 
   std::ofstream log_stream;
   log_stream.open(log_file, ios::app);  // Open log file in append mode
