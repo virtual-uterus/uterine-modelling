@@ -1,8 +1,9 @@
-#include "../../include/factories/UterineRegionCellFactory3d.hpp"
+#include "../../include/factories/UterineRegionCellFactory.hpp"
 #include "Exception.hpp"
 
-UterineRegionCellFactory3d::UterineRegionCellFactory3d() :
-  AbstractUterineCellFactory3d() {
+template <int DIM>
+UterineRegionCellFactory<DIM>::UterineRegionCellFactory() :
+  AbstractUterineCellFactoryTemplate<DIM>() {
   boost::shared_ptr<UterineRegionSelector> selector(
     new UterineRegionSelector());
   mpOvariesStimulus = boost::make_shared<UterineRegionStimulus>(
@@ -11,13 +12,13 @@ UterineRegionCellFactory3d::UterineRegionCellFactory3d() :
     0.0, 0.0, 1.0, 0.0, selector);
   mpCervicalStimulus = boost::make_shared<UterineRegionStimulus>(
     0.0, 0.0, 1.0, 0.0, selector);
-  ReadParams(USMC_3D_SYSTEM_CONSTANTS::GENERAL_PARAM_FILE);
-  ReadCellParams(AbstractUterineCellFactory3d::GetCellParamFile());
+  ReadCellParams(AbstractUterineCellFactoryTemplate<DIM>::GetCellParamFile());
 }
 
 
-AbstractCvodeCell* UterineRegionCellFactory3d::CreateCardiacCellForTissueNode(
-  Node<3>* pNode) {
+template <int DIM>
+AbstractCvodeCell* UterineRegionCellFactory<DIM>::CreateCardiacCellForTissueNode(
+  Node<DIM>* pNode) {
   double x = pNode->rGetLocation()[0];
   double y = pNode->rGetLocation()[1];
   double z = pNode->rGetLocation()[2];
@@ -36,7 +37,7 @@ AbstractCvodeCell* UterineRegionCellFactory3d::CreateCardiacCellForTissueNode(
       stimulus = mpCervicalStimulus;
       break;
     default:
-      return AbstractUterineCellFactory3d::CreateCardiacCellForTissueNode(
+      return AbstractUterineCellFactoryTemplate<DIM>::CreateCardiacCellForTissueNode(
         pNode);
   }
 
@@ -44,48 +45,48 @@ AbstractCvodeCell* UterineRegionCellFactory3d::CreateCardiacCellForTissueNode(
 
   AbstractCvodeCell* cell;
 
-  switch (mpCell_id) {
+  switch (this->mpCell_id) {
     case 0:
-      cell = new CellHodgkinHuxley1952FromCellMLCvode(mpSolver,
+      cell = new CellHodgkinHuxley1952FromCellMLCvode(this->mpSolver,
         stimulus);
       break;
 
     case 1:
-      cell = new CellChayKeizer1983FromCellMLCvode(mpSolver, stimulus);
+      cell = new CellChayKeizer1983FromCellMLCvode(this->mpSolver, stimulus);
       break;
 
     case 2:
-      cell = new CellMeans2023FromCellMLCvode(mpSolver, stimulus);
+      cell = new CellMeans2023FromCellMLCvode(this->mpSolver, stimulus);
 
-      for (auto it=mpCell_parameters.begin();
-        it != mpCell_parameters.end();
+      for (auto it=this->mpCellParameters.begin();
+        it != this->mpCellParameters.end();
         ++it) {
         cell->SetParameter(it->first, it->second);
       }
       break;
 
     case 3:
-      cell = new CellTong2014FromCellMLCvode(mpSolver, stimulus);
+      cell = new CellTong2014FromCellMLCvode(this->mpSolver, stimulus);
 
-      for (auto it=mpCell_parameters.begin();
-        it != mpCell_parameters.end();
+      for (auto it=this->mpCellParameters.begin();
+        it != this->mpCellParameters.end();
         ++it) {
         cell->SetParameter(it->first, it->second);
       }
       break;
 
     case 4:
-      cell = new CellRoesler2024FromCellMLCvode(mpSolver, stimulus);
+      cell = new CellRoesler2024FromCellMLCvode(this->mpSolver, stimulus);
 
-      for (auto it=mpCell_parameters.begin();
-        it != mpCell_parameters.end();
+      for (auto it=this->mpCellParameters.begin();
+        it != this->mpCellParameters.end();
         ++it) {
         cell->SetParameter(it->first, it->second);
       }
       break;
 
     default:
-      cell = new CellHodgkinHuxley1952FromCellMLCvode(mpSolver,
+      cell = new CellHodgkinHuxley1952FromCellMLCvode(this->mpSolver,
         stimulus);
     }
 
@@ -93,7 +94,8 @@ AbstractCvodeCell* UterineRegionCellFactory3d::CreateCardiacCellForTissueNode(
 }
 
 
-unsigned UterineRegionCellFactory3d::FindRegion(double x, double y, double z) {
+template <int DIM>
+unsigned UterineRegionCellFactory<DIM>::FindRegion(double x, double y, double z) {
   unsigned region(0);  // Default to no region
 
   region = IsInLeft(x, y, z);
@@ -107,7 +109,8 @@ unsigned UterineRegionCellFactory3d::FindRegion(double x, double y, double z) {
 }
 
 
-unsigned UterineRegionCellFactory3d::IsInLeft(double x, double y, double z) {
+template <int DIM>
+unsigned UterineRegionCellFactory<DIM>::IsInLeft(double x, double y, double z) {
   unsigned region = 0;
 
   if (x <= mpXStimLeft[1] && x >= mpXStimLeft[0] &&
@@ -125,7 +128,8 @@ unsigned UterineRegionCellFactory3d::IsInLeft(double x, double y, double z) {
 }
 
 
-unsigned UterineRegionCellFactory3d::IsInRight(double x, double y, double z) {
+template <int DIM>
+unsigned UterineRegionCellFactory<DIM>::IsInRight(double x, double y, double z) {
   unsigned region = 0;
 
   if (x <= mpXStimRight[1] && x >= mpXStimRight[0] &&
@@ -143,11 +147,12 @@ unsigned UterineRegionCellFactory3d::IsInRight(double x, double y, double z) {
 }
 
 
-void UterineRegionCellFactory3d::ReadParams(std::string general_param_file) {
-  AbstractUterineCellFactory3d::ReadParams(general_param_file);
+template <int DIM>
+void UterineRegionCellFactory<DIM>::ReadParams(std::string general_param_file) {
+  AbstractUterineCellFactoryTemplate<DIM>::ReadParams(general_param_file);
 
   // Read region stimulus specific parameters
-  std::string general_param_path = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
+  std::string general_param_path = USMC_SYSTEM_CONSTANTS::CONFIG_DIR +
     general_param_file;
   const auto params = toml::parse(general_param_path);
   std::string mesh_name = toml::find<std::string>(
@@ -161,8 +166,9 @@ void UterineRegionCellFactory3d::ReadParams(std::string general_param_file) {
 }
 
 
-void UterineRegionCellFactory3d::ReadCellParams(std::string cell_param_file) {
-  std::string cell_param_path = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
+template <int DIM>
+void UterineRegionCellFactory<DIM>::ReadCellParams(std::string cell_param_file) {
+  std::string cell_param_path = USMC_SYSTEM_CONSTANTS::CONFIG_DIR +
     cell_param_file;
   const auto cell_params = toml::parse(cell_param_path);
 
@@ -182,9 +188,10 @@ void UterineRegionCellFactory3d::ReadCellParams(std::string cell_param_file) {
 }
 
 
-void UterineRegionCellFactory3d::ReadMeshParams(
+template <int DIM>
+void UterineRegionCellFactory<DIM>::ReadMeshParams(
   std::string mesh_param_file, std::string horn) {
-  std::string mesh_param_path = USMC_3D_SYSTEM_CONSTANTS::CONFIG_DIR +
+  std::string mesh_param_path = USMC_SYSTEM_CONSTANTS::CONFIG_DIR +
     mesh_param_file;
   auto mesh_params = toml::parse(mesh_param_path);
 
@@ -250,13 +257,14 @@ void UterineRegionCellFactory3d::ReadMeshParams(
         {z_start_cev, z_end_cev}
       };
     } else {
-      throw Exception("Incorrect horn", "UterineRegionCellFactory3d.cpp", 196);
+      throw Exception("Incorrect horn", "UterineRegionCellFactory<DIM>.cpp", 196);
     }
   }
 }
 
 
-void UterineRegionCellFactory3d::SetStimulusParams(
+template <int DIM>
+void UterineRegionCellFactory<DIM>::SetStimulusParams(
     boost::shared_ptr<UterineRegionStimulus> stimulus,
     double magnitude,
     double period,
@@ -271,8 +279,9 @@ void UterineRegionCellFactory3d::SetStimulusParams(
 }
 
 
-void UterineRegionCellFactory3d::PrintParams() {
-  AbstractUterineCellFactory3d::PrintParams();
+template <int DIM>
+void UterineRegionCellFactory<DIM>::PrintParams() {
+  AbstractUterineCellFactoryTemplate<DIM>::PrintParams();
   std::cout << "stimulus magnitude = "
     << mpOvariesStimulus->GetMagnitude()
     << std::endl;
@@ -307,8 +316,9 @@ void UterineRegionCellFactory3d::PrintParams() {
 }
 
 
-void UterineRegionCellFactory3d::WriteLogInfo(std::string log_file) {
-  AbstractUterineCellFactory3d::WriteLogInfo(log_file);
+template <int DIM>
+void UterineRegionCellFactory<DIM>::WriteLogInfo(std::string log_file) {
+  AbstractUterineCellFactoryTemplate<DIM>::WriteLogInfo(log_file);
 
   std::ofstream log_stream;
   log_stream.open(log_file, ios::app);  // Open log file in append mode

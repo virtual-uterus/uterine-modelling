@@ -37,11 +37,13 @@ class AbstractUterineCellFactoryTemplate : public AbstractCardiacCellFactory<DIM
   std::string GetCellType();
   std::string GetCellParamFile();
   void SetCellParams(AbstractCvodeCell* cell);
-  void InitCell(AbstractCvodeCell* cell, bool stim_flag);
+  void InitCell(AbstractCvodeCell*& cell,
+                boost::shared_ptr<AbstractStimulusFunction> stimulus);
   virtual void ReadParams(std::string general_param_file);
   virtual void ReadCellParams(std::string cell_param_file);
   virtual void PrintParams();
   virtual void WriteLogInfo(std::string log_file);
 };
 
+#include "../../src/factories/AbstractUterineCellFactoryTemplate.tpp"
 #endif  // INCLUDE_FACTORIES_ABSTRACTUTERINECELLFACTORYTEMPLATE_HPP_

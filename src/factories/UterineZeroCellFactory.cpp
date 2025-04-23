@@ -1,37 +1,42 @@
 #include "../../include/factories/UterineZeroCellFactory.hpp"
 #include "Exception.hpp"
 
-UterineZeroCellFactory::UterineZeroCellFactory() : 
-  AbstractUterineCellFactory(),
+template <int DIM>
+UterineZeroCellFactory<DIM>::UterineZeroCellFactory() : 
+  AbstractUterineCellFactoryTemplate<DIM>(),
   mpStimulus(new ZeroStimulus()) {
-  ReadParams(USMC_2D_SYSTEM_CONSTANTS::GENERAL_PARAM_FILE);
-  ReadCellParams(AbstractUterineCellFactory::GetCellParamFile());
+  ReadCellParams(AbstractUterineCellFactoryTemplate<DIM>::GetCellParamFile());
 }
 
 
-AbstractCvodeCell* UterineZeroCellFactory::CreateCardiacCellForTissueNode(
-  Node<2>* pNode) {
-  return AbstractUterineCellFactory::CreateCardiacCellForTissueNode(pNode);
+template <int DIM>
+AbstractCvodeCell* UterineZeroCellFactory<DIM>::CreateCardiacCellForTissueNode(
+  Node<DIM>* pNode) {
+  return AbstractUterineCellFactoryTemplate<DIM>::CreateCardiacCellForTissueNode(pNode);
 }
 
 
-void UterineZeroCellFactory::ReadParams(std::string general_param_file) {
-  AbstractUterineCellFactory::ReadParams(general_param_file);
+template <int DIM>
+void UterineZeroCellFactory<DIM>::ReadParams(std::string general_param_file) {
+  AbstractUterineCellFactoryTemplate<DIM>::ReadParams(general_param_file);
 }
 
 
-void UterineZeroCellFactory::ReadCellParams(std::string cell_param_file) {
-  AbstractUterineCellFactory::ReadCellParams(cell_param_file);
+template <int DIM>
+void UterineZeroCellFactory<DIM>::ReadCellParams(std::string cell_param_file) {
+  AbstractUterineCellFactoryTemplate<DIM>::ReadCellParams(cell_param_file);
 }
 
 
-void UterineZeroCellFactory::PrintParams() {
-  AbstractUterineCellFactory::PrintParams();
+template <int DIM>
+void UterineZeroCellFactory<DIM>::PrintParams() {
+  AbstractUterineCellFactoryTemplate<DIM>::PrintParams();
 }
 
 
-void UterineZeroCellFactory::WriteLogInfo(std::string log_file) {
-  AbstractUterineCellFactory::WriteLogInfo(log_file);
+template <int DIM>
+void UterineZeroCellFactory<DIM>::WriteLogInfo(std::string log_file) {
+  AbstractUterineCellFactoryTemplate<DIM>::WriteLogInfo(log_file);
 
   std::ofstream log_stream;
   log_stream.open(log_file, ios::app);  // Open log file in append mode
