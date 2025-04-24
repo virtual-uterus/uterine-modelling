@@ -22,6 +22,8 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
         case 0:
           factory = new UterineZeroCellFactory<2>;
           TS_ASSERT(factory != nullptr)
+
+          std::cout << "Zero Cell Factory" << std::endl;
           cell_type = factory->GetCellType();
           save_dir = "MonodomainTest/" + cell_type + "/zero_2d";
           break;
@@ -29,6 +31,8 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
         case 1:
           factory = new UterineSimpleCellFactory<2>;
           TS_ASSERT(factory != nullptr)
+
+          std::cout << "Simple Cell Factory" << std::endl;
           cell_type = factory->GetCellType();
           save_dir = "MonodomainTest/" + cell_type + "/simple_2d";
           break;
@@ -36,6 +40,8 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
         case 2:
           factory = new UterineRegularCellFactory<2>;
           TS_ASSERT(factory != nullptr)
+
+          std::cout << "Regular Cell Factory" << std::endl;
           cell_type = factory->GetCellType();
           save_dir = "MonodomainTest/" + cell_type + "/regular_2d";
           break;
@@ -43,6 +49,8 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
         default:
           factory = new UterineZeroCellFactory<2>;
           TS_ASSERT(factory != nullptr)
+
+          std::cout << "Zero Cell Factory (default case)" << std::endl;
           cell_type = factory->GetCellType();
           save_dir = "MonodomainTest/" + cell_type + "/zero_2d";
           break;
