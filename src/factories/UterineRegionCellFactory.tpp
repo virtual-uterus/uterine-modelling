@@ -4,15 +4,27 @@
 template <int DIM>
 UterineRegionCellFactory<DIM>::UterineRegionCellFactory() :
   AbstractUterineCellFactoryTemplate<DIM>() {
-  boost::shared_ptr<UterineRegionSelector> selector(
-    new UterineRegionSelector());
-  mpOvariesStimulus = boost::make_shared<UterineRegionStimulus>(
-    0.0, 0.0, 1.0, 0.0, selector);
-  mpCentreStimulus = boost::make_shared<UterineRegionStimulus>(
-    0.0, 0.0, 1.0, 0.0, selector);
-  mpCervicalStimulus = boost::make_shared<UterineRegionStimulus>(
-    0.0, 0.0, 1.0, 0.0, selector);
-  ReadCellParams(this->GetCellParamFile());
+    boost::shared_ptr<UterineRegionSelector> selector(
+      new UterineRegionSelector());
+    mpOvariesStimulus = boost::make_shared<UterineRegionStimulus>(
+      0.0, 0.0, 1.0, 0.0, selector);
+    mpCentreStimulus = boost::make_shared<UterineRegionStimulus>(
+      0.0, 0.0, 1.0, 0.0, selector);
+    mpCervicalStimulus = boost::make_shared<UterineRegionStimulus>(
+      0.0, 0.0, 1.0, 0.0, selector);
+
+    if (DIM == 2) {
+      this->ReadParams(USMC_SYSTEM_CONSTANTS::GENERAL_2D_PARAM_FILE);
+    } else if (DIM == 3) {
+      this->ReadParams(USMC_SYSTEM_CONSTANTS::GENERAL_3D_PARAM_FILE);
+    } else {
+      const std::string err_msg = "Invalid dimension";
+      const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
+      unsigned line_number = 23;
+      throw Exception(err_msg, err_filename, line_number);
+    }
+
+    this->ReadCellParams(this->GetCellParamFile());
 }
 
 template <int DIM>
