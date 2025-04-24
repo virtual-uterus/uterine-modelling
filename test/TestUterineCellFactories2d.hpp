@@ -13,18 +13,6 @@
 class TestUterineCellFactories : public CxxTest::TestSuite {
  public:
   void TestUterineCellFactoriesClass() {
-    // Modify CONFIG_DIR for testing purposes
-    const char* CONFIG_DIR = getenv(
-      "CHASTE_MODELLING_CONFIG_DIR");  // Save the old path
-
-    if (CONFIG_DIR != nullptr) {
-      std::string new_config_dir = std::string(CONFIG_DIR) + "test/";
-      setenv("CHASTE_MODELLING_CONFIG_DIR", new_config_dir.c_str(), 1);
-    } else {
-      throw std::runtime_error(
-        "CHASTE_MODELLING_CONFIG_DIR environment variable not set.");
-    }
-
     AbstractUterineCellFactoryTemplate<2>* factory(nullptr);
     std::string cell_type;
     std::string save_dir;
@@ -93,9 +81,6 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
       }
 
     delete factory;
-
-    // Reset CONFIG_DIR
-    setenv("CHASTE_MODELLING_CONFIG_DIR", CONFIG_DIR, 1);
   }
 };
 
