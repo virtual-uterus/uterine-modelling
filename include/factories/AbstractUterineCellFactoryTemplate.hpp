@@ -33,6 +33,7 @@ class AbstractUterineCellFactoryTemplate : public AbstractCardiacCellFactory<DIM
 
  public:
   AbstractUterineCellFactoryTemplate();
+  virtual ~AbstractUterineCellFactoryTemplate();
   AbstractCvodeCell* CreateCardiacCellForTissueNode(Node<DIM>* pNode);
   std::string GetCellType();
   std::string GetCellParamFile();

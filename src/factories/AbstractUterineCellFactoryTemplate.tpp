@@ -17,6 +17,11 @@ AbstractUterineCellFactoryTemplate<DIM>::AbstractUterineCellFactoryTemplate() :
 }
 
 
+template<int DIM>
+AbstractUterineCellFactoryTemplate<DIM>::~AbstractUterineCellFactoryTemplate() {
+}
+
+
 template <int DIM>
 AbstractCvodeCell* AbstractUterineCellFactoryTemplate<DIM>::CreateCardiacCellForTissueNode(
   Node<DIM>* pNode) {
