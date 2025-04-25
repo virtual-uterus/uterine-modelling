@@ -65,7 +65,7 @@ void AbstractUterineCellFactoryTemplate<DIM>::ReadParams(std::string general_par
 
   mpCell_type = toml::find<std::string>(params, "cell_type");
 
-  if (mpCell_type == std::string("Roesler")) {
+  if ((mpCell_type == std::string("Roesler")) || (mpCell_type == std::string("RoeslerP"))) {
     // Get the estrus phase as well
     mpEstrus = toml::find<std::string>(params, "estrus");
   } else {
@@ -101,7 +101,7 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetCellParams(AbstractCvodeCell* c
     for (auto it=mpCell_parameters.begin();
         it != mpCell_parameters.end();
         ++it) {
-          if (it->first == "g_p") {
+          if (it->first == "g_p") {  // If the parameters has a passive cell
             // Generate a random number between 0 and 1
             std::random_device rd;
             std::mt19937 mt(rd());  // Random number generator
@@ -144,6 +144,10 @@ void AbstractUterineCellFactoryTemplate<DIM>::InitCell(AbstractCvodeCell*& cell,
 
     case 4:
       cell = new CellRoesler2024FromCellMLCvode(this->mpSolver, stim);
+      break;
+
+    case 5:
+      cell = new CellRoesler2024PFromCellMLCvode(this->mpSolver, stim);
       break;
 
     default:
