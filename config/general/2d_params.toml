@@ -1,8 +1,9 @@
 # General parameters
 save_dir = "monodomain_2d"
-mesh_name = "mesh_2"
+mesh_name = "2D_0_to_1mm_800_elements"
 mesh_dir = "/mesh/test/data/"
 stimulus_type = "simple"
+orthotropic = false
 
 # Stimulus parameters
 x_stim_start = -0.1
