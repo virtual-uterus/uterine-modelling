@@ -76,29 +76,13 @@
     <component name="environment">
         <variable name="time" public_interface="out" units="msec"/>
     </component>
-    <!--def comp{stimulus_protocol} stimulus_protocol as
-    var I_stim: uA_per_cm2 {pub: out};
-    var time: msec {pub: in};
-    var stim_start: msec {init: 1000};
-    var stim_duration: msec {init: 10000};
-    var stim_current: uA_per_cm2 {init: -0.41};
-
-    // P -0.41, E: -0.41, M: -0.35, D: -0.2;
-
-    I_stim ={stimulus_calculation} sel
-        case (time > stim_start) and (time < stim_start+stim_duration):
-            stim_current;
-        otherwise:
-            0.0{uA_per_cm2};
-    endsel;
-enddef;-->
     <component cmeta:id="stimulus_protocol" name="stimulus_protocol">
         <variable name="I_stim" public_interface="out" units="uA_per_cm2"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable initial_value="1000" name="stim_start" units="msec"/>
         <variable initial_value="46500" name="stim_interval" units="msec"/>
         <variable initial_value="10000" name="stim_duration" units="msec"/>
-        <variable initial_value="-0.39" name="stim_current" units="uA_per_cm2"/>
+        <variable initial_value="-0.30" name="stim_current" units="uA_per_cm2"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply id="stimulus_calculation">
                 <eq/>
@@ -163,7 +147,6 @@ enddef;-->
         <variable name="I_Ca_tot" public_interface="in" units="uA_per_cm2"/>
         <variable name="I_NS_tot" public_interface="in" units="uA_per_cm2"/>
         <variable name="I_K_tot" public_interface="in" units="uA_per_cm2"/>
-        <variable name="I_p" public_interface="in" units="uA_per_cm2"/>
         <variable cmeta:id="membrane_voltage" initial_value="-53.90915441282156" name="v" public_interface="out" units="mV"/>
         <variable name="Cm" public_interface="in" units="uF_per_cm2"/>
         <variable name="ina" public_interface="in" units="uA_per_cm2"/>
@@ -200,17 +183,13 @@ enddef;-->
                 <eq/>
                 <ci>I_tot</ci>
                 <apply>
-                    <times/>
-                    <cn cellml:units="dimensionless">1.3</cn>
-                    <apply>
-                        <plus/>
-                        <ci>ina</ci>
-                        <ci>icl</ci>
-                        <ci>ib</ci>
-                        <ci>I_Ca_tot</ci>
-                        <ci>I_NS_tot</ci>
-                        <ci>I_K_tot</ci>
-                    </apply>
+                    <plus/>
+                    <ci>ina</ci>
+                    <ci>icl</ci>
+                    <ci>ib</ci>
+                    <ci>I_Ca_tot</ci>
+                    <ci>I_NS_tot</ci>
+                    <ci>I_K_tot</ci>
                 </apply>
             </apply>
             <apply>
@@ -229,7 +208,7 @@ enddef;-->
                         <apply>
                             <plus/>
                             <ci>I_tot</ci>
-                            <ci>I_p</ci>
+                            <ci>I_stim</ci>
                         </apply>
                     </apply>
                     <ci>Cm</ci>
@@ -247,76 +226,8 @@ enddef;-->
         <map_variables variable_1="v" variable_2="v"/>
     </connection>
     <connection>
-        <map_components component_1="membrane" component_2="passive"/>
-        <map_variables variable_1="I_p" variable_2="I_p"/>
-    </connection>
-    <connection>
         <map_components component_1="membrane" component_2="stimulus_protocol"/>
         <map_variables variable_1="I_stim" variable_2="I_stim"/>
-    </connection>
-    <!-- Model - Passive-->
-    <component name="passive">
-        <variable name="time" public_interface="in" units="msec"/>
-        <variable name="v" public_interface="in" units="mV"/>
-        <variable name="Cm" public_interface="in" units="uF_per_cm2"/>
-        <variable initial_value="-58" name="v_p" public_interface="out" units="mV"/>
-        <variable name="I_p" public_interface="out" units="uA_per_cm2"/>
-        <variable cmeta:id="g_p" initial_value="0.017" name="g_p" public_interface="out" units="mS_per_cm2">
-        <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-            <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#g_p">
-                <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
-            </rdf:Description>
-        </rdf:RDF>
-        </variable>
-<variable initial_value="0.2" name="g_r" public_interface="out" units="mS_per_cm2"/>
-        <variable initial_value="-58" name="v_pr" public_interface="out" units="mV"/>
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-                <eq/>
-                <ci>I_p</ci>
-                <apply>
-                    <times/>
-                    <ci>g_p</ci>
-                    <apply>
-                        <minus/>
-                        <ci>v_p</ci>
-                        <ci>v</ci>
-                    </apply>
-                </apply>
-            </apply>
-            <apply>
-                <eq/>
-                <apply>
-                    <diff/>
-                    <bvar>
-                        <ci>time</ci>
-                    </bvar>
-                    <ci>v_p</ci>
-                </apply>
-                <apply>
-                    <plus/>
-                    <apply>
-                        <times/>
-                        <ci>g_r</ci>
-                        <apply>
-                            <minus/>
-                            <ci>v_pr</ci>
-                            <ci>v_p</ci>
-                        </apply>
-                    </apply>
-                    <ci>I_p</ci>
-                </apply>
-            </apply>
-        </math>
-    </component>
-    <connection>
-        <map_components component_1="passive" component_2="environment"/>
-        <map_variables variable_1="time" variable_2="time"/>
-    </connection>
-    <connection>
-        <map_components component_1="passive" component_2="parameters"/>
-        <map_variables variable_1="Cm" variable_2="Cm"/>
-        <map_variables variable_1="v" variable_2="v"/>
     </connection>
     <!-- Model - Cai variable-->
     <component name="Ca_Concentrations">
