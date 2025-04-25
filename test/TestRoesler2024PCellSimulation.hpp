@@ -5,7 +5,7 @@
 #include "AbstractCvodeCell.hpp"
 #include "CellProperties.hpp"
 #include "EulerIvpOdeSolver.hpp"
-#include "SimpleStimulus.hpp"
+#include "ZeroStimulus.hpp"
 #include "Roesler2024PCvode.hpp"
 #include "SteadyStateRunner.hpp"
 #include "FakePetscSetup.hpp"
@@ -14,7 +14,7 @@ class TestRoesler2024PCellSimulation : public CxxTest::TestSuite {
  public:
   void TestRoesler2024PCellSimulationClass() {
     #ifdef CHASTE_CVODE
-      boost::shared_ptr<SimpleStimulus> p_stimulus(
+      boost::shared_ptr<ZeroStimulus> p_stimulus(
         new ZeroStimulus());
       boost::shared_ptr<AbstractIvpOdeSolver> p_solver;
       boost::shared_ptr<AbstractCvodeCell> p_model(
