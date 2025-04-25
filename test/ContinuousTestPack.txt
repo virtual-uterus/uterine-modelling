@@ -1,12 +1,8 @@
-TestRead2dParamConfig.hpp
-TestRead3dParamConfig.hpp
-TestUterineSimpleCellFactory.hpp
-TestUterineRegularCellFactory.hpp
-TestUterineZeroCellFactory.hpp
+TestReadParamConfig.hpp
 TestChayKeizer1983CellSimulation.hpp
-TestMeans2023CellSimulation.hpp
 TestTong2014CellSimulation.hpp
+TestMeans2023CellSimulation.hpp
 TestRoesler2024CellSimulation.hpp
-TestUterineSimpleCellFactory3d.hpp
-TestUterineRegularCellFactory3d.hpp
-TestUterineZeroCellFactory3d.hpp
+TestRoesler2024PCellSimulation.hpp
+TestUterineCellFactories2d.hpp
+TestUterineCellFactories3d.hpp

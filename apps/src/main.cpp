@@ -49,7 +49,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "PetscTools.hpp"
 #include "PetscException.hpp"
 
-#include "../../include/simulations.hpp"
+#include "../../include/simulation.hpp"
 
 int main(int argc, char *argv[]) {
     // This sets up PETSc and prints out copyright information, etc.
@@ -60,50 +60,41 @@ int main(int argc, char *argv[]) {
     // You should put all the main code within a try-catch, to ensure that
     // you clean up PETSc before quitting.
     try {
-    if (argc < 2) {
-      // Default to 2d simulation
-      std::cout << "Default simulation" << std::endl;
-      simulation_2d();
-    } else {
-      std::istringstream string_stream(argv[1]);
-      int dim;
+      if (argc < 2) {
+        // Default to 2d simulation
+        std::cout << "Default simulation" << std::endl;
+        run_simulation(2);
+      } else {
+        std::istringstream string_stream(argv[1]);
+        int dim;
 
-      if (!(string_stream >> dim)) {
-        // Check if input is an integer
-        const std::string err_msg = "Input is not an integer";
-        const std::string err_filename = "main.cpp";
-        unsigned line_number = 77;
+        if (!(string_stream >> dim)) {
+          // Check if input is an integer
+          const std::string err_msg = "Input is not an integer";
+          const std::string err_filename = "main.cpp";
+          unsigned line_number = 77;
 
-        throw Exception(err_msg, err_filename, line_number);
-      } else if (!string_stream.eof()) {
-        // Check that the input is just an integer
-        const std::string err_msg = "Trailing characters after input";
-        const std::string err_filename = "main.cpp";
-        unsigned line_number = 84;
+          throw Exception(err_msg, err_filename, line_number);
+        } else if (!string_stream.eof()) {
+          // Check that the input is just an integer
+          const std::string err_msg = "Trailing characters after input";
+          const std::string err_filename = "main.cpp";
+          unsigned line_number = 84;
 
-        throw Exception(err_msg, err_filename, line_number);
-      }
+          throw Exception(err_msg, err_filename, line_number);
+        }
 
-      switch (dim) {
-        case 2:
-          simulation_2d();
-          break;
-
-        case 3:
-          simulation_3d();
-          break;
-
-        default:
+        if (dim != 2 && dim != 3) {
           const std::string err_msg = "Invalid dimension";
           const std::string err_filename = "main.cpp";
           unsigned line_number = 101;
 
           throw Exception(err_msg, err_filename, line_number);
-          break;
+        } else {
+          run_simulation(dim);
+        }
       }
     }
-  }
-
     catch (const Exception& e) {
         ExecutableSupport::PrintError(e.GetMessage());
         exit_code = ExecutableSupport::EXIT_ERROR;

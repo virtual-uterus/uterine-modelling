@@ -76,77 +76,14 @@
     <component name="environment">
         <variable name="time" public_interface="out" units="msec"/>
     </component>
-    <component cmeta:id="stimulus_protocol" name="stimulus_protocol">
-        <variable name="I_stim" public_interface="out" units="uA_per_cm2"/>
-        <variable name="time" public_interface="in" units="msec"/>
-        <variable initial_value="1000" name="stim_start" units="msec"/>
-        <variable initial_value="46500" name="stim_interval" units="msec"/>
-        <variable initial_value="10000" name="stim_duration" units="msec"/>
-        <variable initial_value="-0.30" name="stim_current" units="uA_per_cm2"/>
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply id="stimulus_calculation">
-                <eq/>
-                <ci>I_stim</ci>
-                <piecewise>
-                    <piece>
-                        <cn cellml:units="uA_per_cm2">0.0</cn>
-                        <apply>
-                            <lt/>
-                            <ci>time</ci>
-                            <ci>stim_start</ci>
-                        </apply>
-                    </piece>
-                    <piece>
-                        <ci>stim_current</ci>
-                        <apply>
-                            <lt/>
-                            <apply>
-                                <minus/>
-                                <ci>time</ci>
-                                <apply>
-                                    <plus/>
-                                    <ci>stim_start</ci>
-                                    <ci>stim_duration</ci>
-                                </apply>
-                            </apply>
-                            <cn cellml:units="msec">0</cn>
-                        </apply>
-                    </piece>
-                    <piece>
-                        <ci>stim_current</ci>
-                        <apply>
-                            <lt/>
-                            <apply>
-                                <rem/>
-                                <ci>time</ci>
-                                <apply>
-                                    <plus/>
-                                    <ci>stim_interval</ci>
-                                    <ci>stim_duration</ci>
-                                </apply>
-                            </apply>
-                            <ci>stim_duration</ci>
-                        </apply>
-                    </piece>
-                    <otherwise>
-                        <cn cellml:units="uA_per_cm2">0.0</cn>
-                    </otherwise>
-                </piecewise>
-            </apply>
-        </math>
-    </component>
-    <connection>
-        <map_components component_1="stimulus_protocol" component_2="environment"/>
-        <map_variables variable_1="time" variable_2="time"/>
-    </connection>
     <!-- Model - membrane-->
     <component name="membrane">
-        <variable cmeta:id="membrane_stimulus_current" name="I_stim" public_interface="in" units="uA_per_cm2"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="I_tot" units="uA_per_cm2"/>
         <variable name="I_Ca_tot" public_interface="in" units="uA_per_cm2"/>
         <variable name="I_NS_tot" public_interface="in" units="uA_per_cm2"/>
         <variable name="I_K_tot" public_interface="in" units="uA_per_cm2"/>
+        <variable name="I_p" public_interface="in" units="uA_per_cm2"/>
         <variable cmeta:id="membrane_voltage" initial_value="-53.90915441282156" name="v" public_interface="out" units="mV"/>
         <variable name="Cm" public_interface="in" units="uF_per_cm2"/>
         <variable name="ina" public_interface="in" units="uA_per_cm2"/>
@@ -208,7 +145,7 @@
                         <apply>
                             <plus/>
                             <ci>I_tot</ci>
-                            <ci>I_stim</ci>
+                            <ci>I_p</ci>
                         </apply>
                     </apply>
                     <ci>Cm</ci>
@@ -226,8 +163,66 @@
         <map_variables variable_1="v" variable_2="v"/>
     </connection>
     <connection>
-        <map_components component_1="membrane" component_2="stimulus_protocol"/>
-        <map_variables variable_1="I_stim" variable_2="I_stim"/>
+        <map_components component_1="membrane" component_2="passive"/>
+        <map_variables variable_1="I_p" variable_2="I_p"/>
+    </connection>
+    <!-- Model - Passive-->
+    <component name="passive">
+        <variable name="time" public_interface="in" units="msec"/>
+        <variable name="v" public_interface="in" units="mV"/>
+        <variable name="Cm" public_interface="in" units="uF_per_cm2"/>
+        <variable initial_value="-58" name="v_p" public_interface="out" units="mV"/>
+        <variable name="I_p" public_interface="out" units="uA_per_cm2"/>
+        <variable cmeta:id="g_p" initial_value="0.013" name="g_p" public_interface="out" units="mS_per_cm2"/>
+        <variable initial_value="0.1" name="g_r" public_interface="out" units="mS_per_cm2"/>
+        <variable initial_value="-58" name="v_pr" public_interface="out" units="mV"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>I_p</ci>
+                <apply>
+                    <times/>
+                    <ci>g_p</ci>
+                    <apply>
+                        <minus/>
+                        <ci>v_p</ci>
+                        <ci>v</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
+                    <ci>v_p</ci>
+                </apply>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <times/>
+                        <ci>g_r</ci>
+                        <apply>
+                            <minus/>
+                            <ci>v_pr</ci>
+                            <ci>v_p</ci>
+                        </apply>
+                    </apply>
+                    <ci>I_p</ci>
+                </apply>
+            </apply>
+        </math>
+    </component>
+    <connection>
+        <map_components component_1="passive" component_2="environment"/>
+        <map_variables variable_1="time" variable_2="time"/>
+    </connection>
+    <connection>
+        <map_components component_1="passive" component_2="parameters"/>
+        <map_variables variable_1="Cm" variable_2="Cm"/>
+        <map_variables variable_1="v" variable_2="v"/>
     </connection>
     <!-- Model - Cai variable-->
     <component name="Ca_Concentrations">
@@ -2946,8 +2941,8 @@
         </component_ref>
     </group>
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#membrane_stimulus_current">
-            <bqbiol:is xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" rdf:resource="https://chaste.comlab.ox.ac.uk/cellml/ns/oxford-metadata#membrane_stimulus_current" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#g_p">
+            <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
         </rdf:Description>
     </rdf:RDF>
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
