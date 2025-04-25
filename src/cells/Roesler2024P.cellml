@@ -171,7 +171,7 @@
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
         <variable name="Cm" public_interface="in" units="uF_per_cm2"/>
-        <variable initial_value="-59" name="v_p" public_interface="out" units="mV"/>
+        <variable initial_value="-58" name="v_p" public_interface="out" units="mV"/>
         <variable name="I_p" public_interface="out" units="uA_per_cm2"/>
         <variable cmeta:id="g_p" initial_value="0.013" name="g_p" public_interface="out" units="mS_per_cm2"/>
         <variable initial_value="0.1" name="g_r" public_interface="out" units="mS_per_cm2"/>
