@@ -33,7 +33,7 @@ void run_simulation(const int dim) {
 
   std::string cell_param_file = "";
 
-  if (cell_type == std::string("Roesler")) {
+  if (cell_type == std::string("Roesler") || cell_type == std::string("RoeslerP")) {
     // Get the estrus phase as well
     const std::string estrus_phase = toml::find<std::string>(sys_params,
       "estrus");
