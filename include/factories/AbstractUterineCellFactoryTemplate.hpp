@@ -14,6 +14,7 @@
 #include "Means2023Cvode.hpp"
 #include "Tong2014Cvode.hpp"
 #include "Roesler2024Cvode.hpp"
+#include "Roesler2024PCvode.hpp"
 
 
 namespace USMC_SYSTEM_CONSTANTS {
