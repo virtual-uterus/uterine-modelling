@@ -95,8 +95,11 @@ void run_simulation(const int dim) {
 
   // Print information on the simulation to screen
   std::cout << "Running " << dim << "D simulation..." << std::endl;
-
-  std::cout << "\nStimulus type: " << stimulus_type << std::endl;
+  std::cout << "System information" << std::endl;
+  std::cout << "  cell type: " <<  cell_type << std::endl;
+  std::cout << "  mesh: " << mesh_name << std::endl;
+  std::cout << "  stimulus type: " << stimulus_type << std::endl;
+  std::cout << "  duration: " << sim_duration << " ms" << std::endl;
 
   // Write to log file
   std::ofstream log_stream;
