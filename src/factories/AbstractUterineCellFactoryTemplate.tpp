@@ -150,10 +150,14 @@ void AbstractUterineCellFactoryTemplate<DIM>::InitCell(AbstractCvodeCell*& cell,
       cell = new CellRoesler2024PFromCellMLCvode(this->mpSolver, stim);
       break;
 
+    case 6:
+      cell = new CellMeans2023PFromCellMLCvode(this->mpSolver, stim);
+      break;
+
     default:
       const std::string err_msg = "Invalid cell type";
       const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
-      unsigned line_number = 153;
+      unsigned line_number = 160;
       throw Exception(err_msg, err_filename, line_number);
   }
 }

@@ -12,6 +12,7 @@
 #include "HodgkinHuxley1952Cvode.hpp"
 #include "ChayKeizer1983Cvode.hpp"
 #include "Means2023Cvode.hpp"
+#include "Means2023PCvode.hpp"
 #include "Tong2014Cvode.hpp"
 #include "Roesler2024Cvode.hpp"
 #include "Roesler2024PCvode.hpp"
