@@ -133,7 +133,7 @@ void run_simulation(const int dim) {
   if (dim == 2) {
     simulation_2d(stimulus_type, log_path);
   } else if (dim == 3) {
-    simulation_3d(stimulus_type, log_path);
+    simulation_3d(stimulus_type, cell_type, log_path);
   } else {
     const std::string err_msg = "Invalid dimension";
     const std::string err_filename = "main.cpp";
@@ -177,7 +177,8 @@ void simulation_2d(std::string stimulus_type, std::string log_path) {
 }
 
 
-void simulation_3d(std::string stimulus_type, std::string log_path) {
+void simulation_3d(std::string stimulus_type, std::string cell_type,
+                   std::string log_path) {
   constexpr int DIM = 3;
 
   AbstractUterineCellFactoryTemplate<DIM> *factory = NULL;
@@ -199,11 +200,13 @@ void simulation_3d(std::string stimulus_type, std::string log_path) {
   }
   factory->WriteLogInfo(log_path);
 
-  // Export passive cell potential and conductivities
-  std::vector<std::string> output_variables;
-  output_variables.push_back("v_p");
-  output_variables.push_back("g_p");
-  HeartConfig::Instance()->SetOutputVariables(output_variables);
+  // Export passive cell potential and conductivities if passive cell
+  if (cell_type[cell_type.length() -1] == 'P') {
+    std::vector<std::string> output_variables;
+    output_variables.push_back("v_p");
+    output_variables.push_back("g_p");
+    HeartConfig::Instance()->SetOutputVariables(output_variables);
+  }
 
   MonodomainProblem<DIM> monodomain_problem(factory);
 
