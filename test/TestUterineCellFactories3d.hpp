@@ -72,7 +72,7 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
       HeartConfig::Instance()->SetOutputDirectory(save_dir);
       HeartConfig::Instance()->SetSimulationDuration(5.0);  // ms
       HeartConfig::Instance()->SetMeshFileName(
-          "mesh/uterus/scaffolds/uterus_scaffold_scaled_3");
+          "mesh/uterus/test/tube_10mm");
       HeartConfig::Instance()->SetOutputFilenamePrefix("results");
       HeartConfig::Instance()->SetVisualizeWithVtk(true);
       HeartConfig::Instance()->SetIntracellularConductivities(
