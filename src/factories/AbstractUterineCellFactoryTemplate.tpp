@@ -26,12 +26,19 @@ template <int DIM>
 AbstractCvodeCell* AbstractUterineCellFactoryTemplate<DIM>::CreateCardiacCellForTissueNode(
   Node<DIM>* pNode) {
   AbstractCvodeCell* cell(nullptr);
-  
+  double z;
+
   // Initialise cell with ZeroStimulus
   this->InitCell(cell, this->mpZeroStimulus);
 
   // Set parameters for the cell
   this->SetCellParams(cell);
+
+  // Set passive cell parameters
+  if (DIM == 3) {
+    z = pNode->rGetLocation()[2];
+    this->SetPassiveParams(cell, z);
+  }
 
   return cell;
 }
@@ -92,31 +99,56 @@ void AbstractUterineCellFactoryTemplate<DIM>::ReadCellParams(std::string cell_pa
       cell_params,
       "parameters");
   }
+
+  if (cell_params.contains("passive")) {
+    mpPassive_parameters = toml::find<std::unordered_map<std::string, float>>(
+      cell_params,
+      "passive");
+  }
 }
 
 
 template <int DIM>
-void AbstractUterineCellFactoryTemplate<DIM>::SetCellParams(AbstractCvodeCell* cell) {
+void AbstractUterineCellFactoryTemplate<DIM>::SetCellParams(
+  AbstractCvodeCell* cell) {
   if (mpCell_id > 1) {
     for (auto it=mpCell_parameters.begin();
         it != mpCell_parameters.end();
         ++it) {
-          if (it->first == "g_p") {  // If the parameters has a passive cell
-            // Generate a random number between 0 and 1
-            std::random_device rd;
-            std::mt19937 mt(rd());  // Random number generator
-            std::uniform_real_distribution<double> dist(0.0, 1.0);
-
-            double rand_val = dist(mt);
-            if (rand_val < 0.9) {
-              cell->SetParameter(it->first, 0.0);
-            } else {
-              cell->SetParameter(it->first, it->second);
-            }
-          } else {
             cell->SetParameter(it->first, it->second);
+        }
+  }
+}
+
+
+template <int DIM>
+void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
+  AbstractCvodeCell* cell, double z) {
+  if (mpCell_id > 1) {
+    double slope;  // Slope of the gaussian
+    double centre;  // Centre of the gaussian
+    double baseline;  // Base value of g_p
+    double conductance_value;  // Calculated conductance value
+
+    for (auto it=mpPassive_parameters.begin();
+        it != mpPassive_parameters.end();
+        ++it) {
+          if (it->first == "g_p") {
+              baseline = it->second;
+          } else if (it->first == "slope") {
+              slope = it->second;
+          } else if (it->first == "centre") {
+              centre = it->second;
+          } else {
+              const std::string err_msg = "Invalid passive paramter";
+              const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
+              unsigned line_number = 145;
+              throw Exception(err_msg, err_filename, line_number);
           }
     }
+
+    conductance_value = baseline + std::exp(-slope*pow(z - centre, 2.0));
+    cell->SetParameter("g_p", conductance_value);
   }
 }
 
@@ -157,7 +189,7 @@ void AbstractUterineCellFactoryTemplate<DIM>::InitCell(AbstractCvodeCell*& cell,
     default:
       const std::string err_msg = "Invalid cell type";
       const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
-      unsigned line_number = 160;
+      unsigned line_number = 192;
       throw Exception(err_msg, err_filename, line_number);
   }
 }
