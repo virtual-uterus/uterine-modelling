@@ -216,6 +216,12 @@ void AbstractUterineCellFactoryTemplate<DIM>::WriteLogInfo(std::string log_file)
 
   for (auto it=mpCell_parameters.begin(); it != mpCell_parameters.end(); ++it) {
     log_stream << "  " << it->first << ": " << it->second << std::endl;
+  if (!mpPassive_parameters.empty()) {
+    log_stream << "Passive parameters \n";
+
+    for (auto it=mpPassive_parameters.begin(); it != mpPassive_parameters.end(); ++it) {
+      log_stream << "  " << it->first << ": " << it->second << std::endl;
+    }
   }
 
   log_stream.close();
