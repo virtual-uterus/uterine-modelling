@@ -35,7 +35,7 @@ AbstractCvodeCell* AbstractUterineCellFactoryTemplate<DIM>::CreateCardiacCellFor
   this->SetCellParams(cell);
 
   // Set passive cell parameters
-  if (DIM == 3) {
+  if (DIM == 3 && !mpPassive_parameters.empty()) {
     z = pNode->rGetLocation()[2];
     this->SetPassiveParams(cell, z);
   }
