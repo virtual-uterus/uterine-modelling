@@ -199,6 +199,12 @@ void simulation_3d(std::string stimulus_type, std::string log_path) {
   }
   factory->WriteLogInfo(log_path);
 
+  // Export passive cell potential and conductivities
+  std::vector<std::string> output_variables;
+  output_variables.push_back("v_p");
+  output_variables.push_back("g_p");
+  HeartConfig::Instance()->SetOutputVariables(output_variables);
+
   MonodomainProblem<DIM> monodomain_problem(factory);
 
   monodomain_problem.Initialise();
