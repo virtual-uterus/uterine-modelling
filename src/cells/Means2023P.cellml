@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<model cmeta:id="Means2022" name="Means2022" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+<model cmeta:id="Means2023P" name="Means2023P" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
     <!-- units-->
     <units name="msec">
         <unit prefix="milli" units="second"/>
@@ -78,49 +78,19 @@
     </component>
     <!-- Model - membrane-->
     <component name="membrane">
-        <variable initial_value="0" name="I_hold" public_interface="none" units="pA_per_pF"/>
-        <variable initial_value="-0.0" name="I_test" public_interface="none" units="pA_per_pF"/>
-        <variable initial_value="1000" name="test_start" public_interface="none" units="msec"/>
-        <variable initial_value="11000" name="test_end" public_interface="none" units="msec"/>
-        <variable cmeta:id="membrane_stimulus_current" name="I_stim" units="pA_per_pF"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="I_tot" units="pA_per_pF"/>
         <variable name="I_Ca_tot" public_interface="in" units="pA_per_pF"/>
         <variable name="I_NS_tot" public_interface="in" units="pA_per_pF"/>
         <variable name="I_K_tot" public_interface="in" units="pA_per_pF"/>
-        <variable cmeta:id="membrane_voltage" initial_value="-53.90915441282156" name="v" public_interface="out" units="mV"/>
-        <variable name="Cm" public_interface="in" units="uF_per_cm2"/>
+        <variable cmeta:id="membrane_voltage" initial_value="-36.8024674441334" name="v" public_interface="out" units="mV"/>
+        <variable cmeta:id="membrane_capacitance" name="Cm" public_interface="in" units="uF_per_cm2"/>
         <variable name="ina" public_interface="in" units="pA_per_pF"/>
         <variable name="ib" public_interface="in" units="pA_per_pF"/>
         <variable name="icl" public_interface="in" units="pA_per_pF"/>
         <!--passive coupling-->
         <variable name="I_couple" public_interface="in" units="pA_per_pF"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-                <eq/>
-                <ci>I_stim</ci>
-                <piecewise>
-                    <piece>
-                        <ci>I_test</ci>
-                        <apply>
-                            <and/>
-                            <apply>
-                                <gt/>
-                                <ci>time</ci>
-                                <ci>test_start</ci>
-                            </apply>
-                            <apply>
-                                <lt/>
-                                <ci>time</ci>
-                                <ci>test_end</ci>
-                            </apply>
-                        </apply>
-                    </piece>
-                    <otherwise>
-                        <ci>I_hold</ci>
-                    </otherwise>
-                </piecewise>
-            </apply>
             <apply>
                 <eq/>
                 <ci>I_tot</ci>
@@ -148,7 +118,6 @@
                     <apply>
                         <plus/>
                         <ci>I_tot</ci>
-                        <ci>I_stim</ci>
                         <ci>I_couple</ci>
                     </apply>
                 </apply>
@@ -167,7 +136,7 @@
     <!-- passive cell membrane volt-->
     <component name="passive_Vm">
         <!--var Cm: uF_per_cm2 {pub: in};-->
-        <variable initial_value="-20.0" name="pVm" public_interface="out" units="mV"/>
+        <variable cmeta:id="v_p" initial_value="-28.6223126364127" name="v_p" public_interface="out" units="mV"/>
         <!--dynamic passive membrane voltage
 var pVr: mV {init: -35.0, pub: out}; //resting passive membrane voltage (constant; Vp^r in Xu 2015)
 var pgr: nano_Siemens {init: 0.2, pub: out}; //passive leak conductance / recovery rate (constant, Gp^int Xu 2015)
@@ -175,7 +144,7 @@ var I_pleak: nanoA {pub: in};-->
         <variable name="I_pleak" public_interface="in" units="pA_per_pF"/>
         <variable name="I_couple" public_interface="in" units="pA_per_pF"/>
         <variable name="time" public_interface="in" units="msec"/>
-        <!--ode(pVm, time) = -I_pleak/Cm;-->
+        <!--ode(v_p, time) = -I_pleak/Cm;-->
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -184,7 +153,7 @@ var I_pleak: nanoA {pub: in};-->
                     <bvar>
                         <ci>time</ci>
                     </bvar>
-                    <ci>pVm</ci>
+                    <ci>v_p</ci>
                 </apply>
                 <apply>
                     <plus/>
@@ -199,7 +168,7 @@ var I_pleak: nanoA {pub: in};-->
     </component>
     <connection>
         <map_components component_1="passive_Vm" component_2="parameters"/>
-        <map_variables variable_1="pVm" variable_2="pVm"/>
+        <map_variables variable_1="v_p" variable_2="v_p"/>
         <!--vars Cm and Cm;-->
     </connection>
     <connection>
@@ -210,7 +179,7 @@ var I_pleak: nanoA {pub: in};-->
     <component name="Ca_Concentrations">
         <variable name="J_tot" units="mM_per_msec"/>
         <variable name="J_Ca_mem" units="mM_per_msec"/>
-        <variable initial_value="0.0001161881607214449" name="cai" public_interface="out" units="mM"/>
+        <variable initial_value="0.000371022487263719" name="cai" public_interface="out" units="mM"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="jnaca" public_interface="in" units="mM_per_msec"/>
         <variable name="jpmca" public_interface="in" units="mM_per_msec"/>
@@ -336,7 +305,7 @@ var I_pleak: nanoA {pub: in};-->
         <variable name="nao" public_interface="out" units="mM"/>
         <variable name="clo" public_interface="out" units="mM"/>
         <variable name="mgo" public_interface="out" units="mM"/>
-        <variable cmeta:id="beta" name="buff" public_interface="out" units="dimensionless"/>
+        <variable name="buff" public_interface="out" units="dimensionless"/>
         <variable name="AV" public_interface="out" units="cm2_per_uL"/>
         <variable name="zca" public_interface="out" units="dimensionless"/>
         <variable name="zna" public_interface="out" units="dimensionless"/>
@@ -344,7 +313,7 @@ var I_pleak: nanoA {pub: in};-->
         <variable name="R" public_interface="out" units="joule_per_kelvin_per_kilomole"/>
         <variable name="frdy" public_interface="out" units="coulomb_per_mole"/>
         <variable name="temp" public_interface="out" units="kelvin"/>
-        <variable cmeta:id="membrane_capacitance" initial_value="1.0" name="Cm" units="uF_per_cm2"/>
+        <variable initial_value="1" name="Cm" units="uF_per_cm2"/>
         <variable cmeta:id="gna" initial_value="0.0895" name="gna" public_interface="out" units="nS_per_pF"/>
         <!--below increased testing activation of usmc-->
         <!--var{gna} gna: nS_per_pF {init: 0.125, pub: out};-->
@@ -355,13 +324,13 @@ var{gna} gna: nS_per_pF {init: 0.04, pub: out};-->
         <variable name="kmca" public_interface="out" units="mM"/>
         <variable cmeta:id="gcat" initial_value="0.058" name="gcat" public_interface="out" units="nS_per_pF"/>
         <variable name="ecat" public_interface="out" units="mV"/>
-        <variable cmeta:id="gkca" initial_value="0.8" name="gkca" public_interface="out" units="nS_per_pF"/>
-        <variable cmeta:id="gb" initial_value="0.004" name="gb" public_interface="out" units="nS_per_pF"/>
+        <variable initial_value="0.8" name="gkca" public_interface="out" units="nS_per_pF"/>
+        <variable initial_value="0.004" name="gb" public_interface="out" units="nS_per_pF"/>
         <variable cmeta:id="gkv43" initial_value="0.7" name="gkv43" public_interface="out" units="nS_per_pF"/>
-        <variable cmeta:id="gbka" initial_value="0.2" name="gbka" public_interface="out" units="dimensionless"/>
-        <variable cmeta:id="gbkab" initial_value="0.1" name="gbkab" public_interface="out" units="dimensionless"/>
-        <variable cmeta:id="gcl" initial_value="0.1875" name="gcl" public_interface="out" units="nS_per_pF"/>
-        <variable cmeta:id="gns" initial_value="0.0123" name="gns" public_interface="out" units="nS_per_pF"/>
+        <variable initial_value="0.2" name="gbka" public_interface="out" units="dimensionless"/>
+        <variable initial_value="0.1" name="gbkab" public_interface="out" units="dimensionless"/>
+        <variable initial_value="0.1875" name="gcl" public_interface="out" units="nS_per_pF"/>
+        <variable initial_value="0.0123" name="gns" public_interface="out" units="nS_per_pF"/>
         <variable name="PnsK" public_interface="out" units="dimensionless"/>
         <variable name="PnsNa" public_interface="out" units="dimensionless"/>
         <variable name="PnsCa" public_interface="out" units="dimensionless"/>
@@ -395,15 +364,15 @@ var{gna} gna: nS_per_pF {init: 0.04, pub: out};-->
         <variable name="v" public_interface="in" units="mV"/>
         <variable name="cai" public_interface="in" units="mM"/>
         <!--passivecell parameters etc-->
-        <variable name="pVm" public_interface="in" units="mV"/>
+        <variable name="v_p" public_interface="in" units="mV"/>
         <!--dynamic passive membrane voltage-->
-        <variable initial_value="-20.0" name="pVr" public_interface="out" units="mV"/>
+        <variable initial_value="-20" name="pVr" public_interface="out" units="mV"/>
         <!--resting passive membrane voltage (constant; Vp^r in Xu 2015)
 var pgr: nano_Siemens {init: 0.2, pub: out}; //passive leak conductance / recovery rate (constant, Gp^int Xu 2015)-->
         <variable initial_value="0.0125" name="pgr" public_interface="out" units="nS_per_pF"/>
         <!--default value from Xu, 2015: 1.0 nS / 80 pF
 var pgr: nS_per_pF {init: 0.1, pub: out};-->
-        <variable cmeta:id="pgp" initial_value="0.025" name="pgp" public_interface="out" units="nS_per_pF"/>
+        <variable cmeta:id="g_p" initial_value="0.025" name="g_p" public_interface="out" units="nS_per_pF"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -802,9 +771,9 @@ var pgr: nS_per_pF {init: 0.1, pub: out};-->
     <component name="Ca_dependent_Force">
         <variable name="wss" units="dimensionless"/>
         <variable name="wtc" units="msec"/>
-        <variable initial_value="1e-6" name="conversion" public_interface="none" units="nM_to_mM"/>
+        <variable initial_value="1e-06" name="conversion" public_interface="none" units="nM_to_mM"/>
         <variable name="Force" units="uN"/>
-        <variable initial_value="0.2345238135343783" name="w" public_interface="none" units="dimensionless"/>
+        <variable initial_value="0.936330001603095" name="w" public_interface="none" units="dimensionless"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="cai" public_interface="in" units="mM"/>
         <variable name="Fmax" public_interface="in" units="uN"/>
@@ -926,7 +895,7 @@ var pgr: nS_per_pF {init: 0.1, pub: out};-->
         <variable name="mss" units="dimensionless"/>
         <variable name="hss" units="dimensionless"/>
         <variable name="htc" units="msec"/>
-        <variable initial_value="0.404599170710196" name="h" public_interface="none" units="dimensionless"/>
+        <variable initial_value="0.0594959692957891" name="h" public_interface="none" units="dimensionless"/>
         <variable name="ina" public_interface="out" units="pA_per_pF"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
@@ -1117,7 +1086,7 @@ var pgr: nS_per_pF {init: 0.1, pub: out};-->
         <variable name="fss" units="dimensionless"/>
         <variable name="fca" units="dimensionless"/>
         <variable name="f2tc" units="msec"/>
-        <variable initial_value="0.9065967263076083" name="f2" public_interface="none" units="dimensionless"/>
+        <variable initial_value="0.267097970071125" name="f2" public_interface="none" units="dimensionless"/>
         <variable name="ical" public_interface="out" units="pA_per_pF"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
@@ -1496,9 +1465,9 @@ var pgr: nS_per_pF {init: 0.1, pub: out};-->
         <variable name="qtc" units="msec"/>
         <variable name="r1tc" units="msec"/>
         <variable name="r2tc" units="msec"/>
-        <variable initial_value="0.2060363247740295" name="q" public_interface="none" units="dimensionless"/>
-        <variable initial_value="0.1922244113609531" name="r1" public_interface="none" units="dimensionless"/>
-        <variable initial_value="0.1932803618375963" name="r2" public_interface="none" units="dimensionless"/>
+        <variable initial_value="0.421893737164962" name="q" public_interface="none" units="dimensionless"/>
+        <variable initial_value="0.0313952770016399" name="r1" public_interface="none" units="dimensionless"/>
+        <variable initial_value="0.181395386386042" name="r2" public_interface="none" units="dimensionless"/>
         <variable name="ikv43" public_interface="out" units="pA_per_pF"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
@@ -1733,7 +1702,7 @@ var pgr: nS_per_pF {init: 0.1, pub: out};-->
     <component name="I_BKa">
         <variable name="xass_z" units="dimensionless"/>
         <variable name="xass_vh" units="mV"/>
-        <variable initial_value="1000.0" name="conversion" public_interface="none" units="mM_to_M"/>
+        <variable initial_value="1000" name="conversion" public_interface="none" units="mM_to_M"/>
         <variable name="xass" units="dimensionless"/>
         <variable name="iBKa" public_interface="out" units="pA_per_pF"/>
         <variable name="time" public_interface="in" units="msec"/>
@@ -1909,7 +1878,7 @@ var pgr: nS_per_pF {init: 0.1, pub: out};-->
     <component name="I_BKab">
         <variable name="xabss_z" units="dimensionless"/>
         <variable name="xabss_vh" units="mV"/>
-        <variable initial_value="1000.0" name="conversion" public_interface="none" units="mM_to_M"/>
+        <variable initial_value="1000" name="conversion" public_interface="none" units="mM_to_M"/>
         <variable name="xabss" units="dimensionless"/>
         <variable name="iBKab" public_interface="out" units="pA_per_pF"/>
         <variable name="v" public_interface="in" units="mV"/>
@@ -2085,7 +2054,7 @@ var pgr: nS_per_pF {init: 0.1, pub: out};-->
         <variable name="ctc" units="msec"/>
         <variable name="K1cl" units="mM"/>
         <variable name="K2cl" units="dimensionless"/>
-        <variable initial_value="0.0003764413740731269" name="c" public_interface="none" units="dimensionless"/>
+        <variable initial_value="0.0738054059273608" name="c" public_interface="none" units="dimensionless"/>
         <variable name="icl" public_interface="out" units="pA_per_pF"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
@@ -2274,7 +2243,7 @@ var pgr: nS_per_pF {init: 0.1, pub: out};-->
     <!-- Model - currents-->
     <component name="NS_currents">
         <variable name="fmg" private_interface="out" units="dimensionless"/>
-        <variable initial_value="1e-8" name="tinyamount" private_interface="out" units="mM"/>
+        <variable initial_value="1e-08" name="tinyamount" private_interface="out" units="mM"/>
         <variable name="I_NS_tot" public_interface="out" units="pA_per_pF"/>
         <variable name="insna" private_interface="in" units="pA_per_pF"/>
         <variable name="insca" private_interface="in" public_interface="out" units="pA_per_pF"/>
@@ -2863,7 +2832,7 @@ var pgr: nS_per_pF {init: 0.1, pub: out};-->
     </connection>
     <!-- Passive cell current-->
     <component name="passive_leak">
-        <variable name="pVm" public_interface="in" units="mV"/>
+        <variable name="v_p" public_interface="in" units="mV"/>
         <!--var I_pleak: nanoA {pub: out};-->
         <variable name="I_pleak" public_interface="out" units="pA_per_pF"/>
         <!--var pgr: nano_Siemens {pub: in};-->
@@ -2886,7 +2855,7 @@ I_leak = fake_act_var*Gp_int*(V - V_r);-->
                     <ci>pgr</ci>
                     <apply>
                         <minus/>
-                        <ci>pVm</ci>
+                        <ci>v_p</ci>
                         <ci>pVr</ci>
                     </apply>
                 </apply>
@@ -2898,7 +2867,7 @@ I_leak = fake_act_var*Gp_int*(V - V_r);-->
 enddef;-->
     <connection>
         <map_components component_1="passive_leak" component_2="passive_Vm"/>
-        <map_variables variable_1="pVm" variable_2="pVm"/>
+        <map_variables variable_1="v_p" variable_2="v_p"/>
         <map_variables variable_1="I_pleak" variable_2="I_pleak"/>
     </connection>
     <connection>
@@ -2908,21 +2877,21 @@ enddef;-->
     </connection>
     <!--passive-usmc coupling current-->
     <component name="passive_coupling">
-        <variable name="pVm" public_interface="in" units="mV"/>
+        <variable name="v_p" public_interface="in" units="mV"/>
         <variable name="v" public_interface="in" units="mV"/>
         <variable name="I_couple" public_interface="out" units="pA_per_pF"/>
-        <variable name="pgp" public_interface="in" units="nS_per_pF"/>
+        <variable name="g_p" public_interface="in" units="nS_per_pF"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
                 <ci>I_couple</ci>
                 <apply>
                     <times/>
-                    <ci>pgp</ci>
+                    <ci>g_p</ci>
                     <apply>
                         <minus/>
                         <ci>v</ci>
-                        <ci>pVm</ci>
+                        <ci>v_p</ci>
                     </apply>
                 </apply>
             </apply>
@@ -2930,12 +2899,12 @@ enddef;-->
     </component>
     <connection>
         <map_components component_1="passive_coupling" component_2="passive_Vm"/>
-        <map_variables variable_1="pVm" variable_2="pVm"/>
+        <map_variables variable_1="v_p" variable_2="v_p"/>
         <map_variables variable_1="I_couple" variable_2="I_couple"/>
     </connection>
     <connection>
         <map_components component_1="passive_coupling" component_2="parameters"/>
-        <map_variables variable_1="pgp" variable_2="pgp"/>
+        <map_variables variable_1="g_p" variable_2="g_p"/>
     </connection>
     <connection>
         <map_components component_1="passive_coupling" component_2="membrane"/>
@@ -2982,19 +2951,14 @@ enddef;-->
             <component_ref component="I_BKab"/>
         </component_ref>
     </group>
-    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#membrane_stimulus_current">
-            <bqbiol:is xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" rdf:resource="https://chaste.comlab.ox.ac.uk/cellml/ns/oxford-metadata#membrane_stimulus_current" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
-        </rdf:Description>
-    </rdf:RDF>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <rdf:Description rdf:about="#Means2023P">
+        <is-self-excitatory xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</is-self-excitatory>
+    </rdf:Description>
+</rdf:RDF>
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
         <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#membrane_voltage">
             <bqbiol:is xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" rdf:resource="https://chaste.comlab.ox.ac.uk/cellml/ns/oxford-metadata#membrane_voltage" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
-        </rdf:Description>
-    </rdf:RDF>
-    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#beta">
-            <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
         </rdf:Description>
     </rdf:RDF>
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -3023,8 +2987,13 @@ enddef;-->
         </rdf:Description>
     </rdf:RDF>
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#pgp">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#g_p">
             <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#v_p">
+            <derived-quantity xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</derived-quantity>
         </rdf:Description>
     </rdf:RDF>
 </model>
