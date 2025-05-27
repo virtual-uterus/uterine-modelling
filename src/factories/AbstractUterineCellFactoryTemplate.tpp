@@ -147,7 +147,7 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
           }
     }
 
-    conductance_value = baseline + std::exp(-slope*pow(z - centre, 2.0));
+    conductance_value = baseline + baseline*std::exp(-slope*pow(z - centre, 2.0));
     cell->SetParameter("g_p", conductance_value);
   }
 }
