@@ -5,7 +5,7 @@
 UterineConductivityModifier::UterineConductivtiyModifier() :
   AbstractConductivityModifier<3, 3>(),
   mSpecialMatrix(zero_matrix<double>(3, 3)), mCentre(0.0), mSlope(1.0),
-  mBaseline(0.0)  {
+  mBaseline(0.0), mAmplitude(1.0)  {
   // Initialise diagonal
   mSpecialMatrix(0, 0) = 1.0;
   mSpecialMatrix(1, 1) = 1.0;
@@ -14,10 +14,10 @@ UterineConductivityModifier::UterineConductivtiyModifier() :
 
 
 UterineConductivityModifier::UterineConductivtiyModifier(
-  double centre, double slope, double baseline) :
+  double centre, double slope, double baseline, double amplitude) :
   AbstractConductivityModifier<3, 3>(),
   mSpecialMatrix(zero_matrix<double>(3, 3)), mCentre(centre), mSlope(slope),
-  mBaseline(baseline)  {
+  mBaseline(baseline), mAmplitude(amplitude)  {
   // Initialise diagonal
   mSpecialMatrix(0, 0) = 1.0;
   mSpecialMatrix(1, 1) = 1.0;
@@ -40,8 +40,18 @@ c_matrix<double, 3, 3>& UterineConductivityModifier::rCalculateModifiedConductiv
   // Modify the current conductivity according to Gaussian distribution
   // along the diagonal save to the "working memory", and return.
   for ( unsigned i=0; i < 3; ++i ) {
-    double gaussian_modifier;  // Change this to be called from the mods file
-    mTensor(i, i) = elementIndex*rOriginalConductivity(i, i)*gaussian_modifier;
+    double modifier_value;
+
+    if (mType == linear) {
+      modifier_value = linear_distribution(cur_centroid(2),
+                                           rOriginalConductivity(i, i), mSlope,
+                                           mCentre);
+    } else if (mType == "gaussian") {
+      modifier_value = gaussian_distribution(cur_centroid(2),
+                                             rOriginalConductivity(i, i),
+                                             mSlope, mCentre, mAmplitude);
+    }
+    mTensor(i, i) = elementIndex*modifier_value;
   }
   return mTensor;
   }
