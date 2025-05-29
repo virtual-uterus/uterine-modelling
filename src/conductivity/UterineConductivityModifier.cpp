@@ -1,11 +1,10 @@
-#include "../../include/UterineConductivityModifier.hpp"
-#include "Exception.hpp"
+#include "../../include/conductivity/UterineConductivityModifier.hpp"
 
 
-UterineConductivityModifier::UterineConductivtiyModifier() :
+UterineConductivityModifier::UterineConductivityModifier() :
   AbstractConductivityModifier<3, 3>(),
   mSpecialMatrix(zero_matrix<double>(3, 3)), mCentre(0.0), mSlope(1.0),
-  mBaseline(0.0), mAmplitude(1.0)  {
+  mBaseline(0.0), mAmplitude(1.0), mType("linear"), mMesh(NULL)  {
   // Initialise diagonal
   mSpecialMatrix(0, 0) = 1.0;
   mSpecialMatrix(1, 1) = 1.0;
@@ -13,11 +12,12 @@ UterineConductivityModifier::UterineConductivtiyModifier() :
 }
 
 
-UterineConductivityModifier::UterineConductivtiyModifier(
-  double centre, double slope, double baseline, double amplitude) :
+UterineConductivityModifier::UterineConductivityModifier(
+  double centre, double slope, double baseline, double amplitude,
+  std::string type, AbstractTetrahedralMesh<3, 3>* mesh) :
   AbstractConductivityModifier<3, 3>(),
   mSpecialMatrix(zero_matrix<double>(3, 3)), mCentre(centre), mSlope(slope),
-  mBaseline(baseline), mAmplitude(amplitude)  {
+  mBaseline(baseline), mAmplitude(amplitude), mType(type), mMesh(mesh)  {
   // Initialise diagonal
   mSpecialMatrix(0, 0) = 1.0;
   mSpecialMatrix(1, 1) = 1.0;
@@ -34,15 +34,15 @@ c_matrix<double, 3, 3>& UterineConductivityModifier::rCalculateModifiedConductiv
   }
 
   // Get current element centroid to calculate position-based variations
-  Element<3, 3>* p_element = (p_mesh->GetElement(elementIndex));
-  c_vector<double, 3> cur_centroid = p_element->CalculateCentroid();
+  Element<3, 3>* element = (mMesh->GetElement(elementIndex));
+  c_vector<double, 3> cur_centroid = element->CalculateCentroid();
 
   // Modify the current conductivity according to Gaussian distribution
   // along the diagonal save to the "working memory", and return.
   for ( unsigned i=0; i < 3; ++i ) {
     double modifier_value;
 
-    if (mType == linear) {
+    if (mType == "linear") {
       modifier_value = linear_distribution(cur_centroid(2),
                                            rOriginalConductivity(i, i), mSlope,
                                            mCentre);
@@ -54,5 +54,4 @@ c_matrix<double, 3, 3>& UterineConductivityModifier::rCalculateModifiedConductiv
     mTensor(i, i) = elementIndex*modifier_value;
   }
   return mTensor;
-  }
 }

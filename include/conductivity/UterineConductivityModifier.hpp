@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "Exception.hpp"
+#include "AbstractTetrahedralMesh.hpp"
 #include "AbstractConductivityModifier.hpp"
 #include "distribution_fcts.hpp"
 
@@ -15,11 +16,15 @@ class UterineConductivityModifier : public AbstractConductivityModifier<3, 3> {
   double mSlope;
   double mBaseline;
   double mAmplitude;
+  std::string mType;
+  AbstractTetrahedralMesh<3, 3>* mMesh;
 
  public:
   UterineConductivityModifier();
   UterineConductivityModifier(double centre, double slope,
-                              double baseline, double amplitude);
+                              double baseline, double amplitude,
+                              std::string type,
+                              AbstractTetrahedralMesh<3, 3>* mesh);
   c_matrix<double, 3, 3>& rCalculateModifiedConductivityTensor(
     unsigned elementIndex,
     const c_matrix<double, 3, 3>& rOriginalConductivity,
