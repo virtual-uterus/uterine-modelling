@@ -152,7 +152,18 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
           }
     }
 
-    conductance_value = baseline + baseline*std::exp(-slope*pow(z - centre, 2.0));
+    if (type == "linear") {
+      conductance_value = linear_distribution(z, baseline, slope, centre);
+    } else if (type == "gaussian") {
+      conductance_value = gaussian_distribution(z, baseline, slope, centre,
+                                                amplitude);
+    } else {
+      const std::string err_msg = "Invalid distribution";
+      const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
+      unsigned line_number = 163;
+      throw Exception(err_msg, err_filename, line_number);
+    }
+
     cell->SetParameter("g_p", conductance_value);
   }
 }
