@@ -1,4 +1,5 @@
 TestReadParamConfig.hpp
+TestConductivityDistributions.hpp
 TestChayKeizer1983CellSimulation.hpp
 TestTong2014CellSimulation.hpp
 TestMeans2023CellSimulation.hpp
