@@ -12,7 +12,7 @@ UterineRegularCellFactory<DIM>::UterineRegularCellFactory() :
     } else {
       const std::string err_msg = "Invalid dimension";
       const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
-      unsigned line_number = 17;
+      unsigned line_number = 15;
       throw Exception(err_msg, err_filename, line_number);
     }
     this->ReadCellParams(AbstractUterineCellFactoryTemplate<DIM>::GetCellParamFile());
