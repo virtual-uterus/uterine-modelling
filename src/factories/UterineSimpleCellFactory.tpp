@@ -12,7 +12,7 @@ UterineSimpleCellFactory<DIM>::UterineSimpleCellFactory() :
       this->ReadParams(USMC_SYSTEM_CONSTANTS::GENERAL_3D_PARAM_FILE);
     } else {
       const std::string err_msg = "Invalid dimension";
-      const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
+      const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
       unsigned line_number = 17;
       throw Exception(err_msg, err_filename, line_number);
     }

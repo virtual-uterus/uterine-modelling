@@ -10,7 +10,7 @@ AbstractUterineCellFactoryTemplate<DIM>::AbstractUterineCellFactoryTemplate() :
       ReadParams(USMC_SYSTEM_CONSTANTS::GENERAL_3D_PARAM_FILE);
     } else {
       const std::string err_msg = "Invalid dimension";
-      const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
+      const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
       unsigned line_number = 15;
       throw Exception(err_msg, err_filename, line_number);
     }
@@ -149,7 +149,7 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
             amplitude = it->second;
           } else {
             const std::string err_msg = "Invalid passive paramter";
-            const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
+            const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
             unsigned line_number = 150;
             throw Exception(err_msg, err_filename, line_number);
           }
@@ -162,7 +162,7 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
                                                 amplitude);
     } else {
       const std::string err_msg = "Invalid distribution";
-      const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
+      const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
       unsigned line_number = 163;
       throw Exception(err_msg, err_filename, line_number);
     }
@@ -207,7 +207,7 @@ void AbstractUterineCellFactoryTemplate<DIM>::InitCell(AbstractCvodeCell*& cell,
 
     default:
       const std::string err_msg = "Invalid cell type";
-      const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
+      const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
       unsigned line_number = 208;
       throw Exception(err_msg, err_filename, line_number);
   }
