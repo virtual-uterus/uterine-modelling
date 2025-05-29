@@ -128,17 +128,22 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
     double slope;  // Slope of the gaussian
     double centre;  // Centre of the gaussian
     double baseline;  // Base value of g_p
+    std::string type;  // Type of distribution to use
     double conductance_value;  // Calculated conductance value
 
     for (auto it=mpPassive_parameters.begin();
         it != mpPassive_parameters.end();
         ++it) {
-          if (it->first == "g_p") {
-              baseline = it->second;
+          if (it->first == "type") {
+            type = it->second;   
+          } else if (it->first == "g_p") {
+            baseline = it->second;
           } else if (it->first == "slope") {
-              slope = it->second;
+            slope = it->second;
           } else if (it->first == "centre") {
-              centre = it->second;
+            centre = it->second;
+          } else if (it->first == "amplitude") {
+            centre = it->second;
           } else {
               const std::string err_msg = "Invalid passive paramter";
               const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
