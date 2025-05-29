@@ -6,7 +6,9 @@
 #include <vector>
 #include <cmath>
 #include <unordered_map>
+
 #include "../toml.hpp"
+#include "../conductivity/distribution_fcts.hpp"
 #include "MonodomainProblem.hpp"
 #include "ZeroStimulus.hpp"
 #include "HodgkinHuxley1952Cvode.hpp"
