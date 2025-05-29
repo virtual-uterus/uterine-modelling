@@ -101,9 +101,14 @@ void AbstractUterineCellFactoryTemplate<DIM>::ReadCellParams(std::string cell_pa
   }
 
   if (cell_params.contains("passive")) {
-    mpPassive_parameters = toml::find<std::unordered_map<std::string, float>>(
-      cell_params,
-      "passive");
+    for (const auto& [key, value] : toml::find<toml::value>(
+      cell_params, "passive").as_table()) {
+        if (value.is_floating()) {
+            mpPassive_parameters[key] = toml::get<double>(value);
+        } else if (key == "type") {
+            mpConductivity_dist = toml::get<std::string>(value);
+        }
+    }
   }
 }
 
@@ -129,15 +134,12 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
     double centre;  // Centre of the distribution
     double baseline;  // Base value of g_p
     double amplitude;  // Amplitude for the gaussian
-    std::string type;  // Type of distribution to use
     double conductance_value;  // Calculated conductance value
 
     for (auto it=mpPassive_parameters.begin();
         it != mpPassive_parameters.end();
         ++it) {
-          if (it->first == "type") {
-            type = it->second;   
-          } else if (it->first == "g_p") {
+          if (it->first == "g_p") {
             baseline = it->second;
           } else if (it->first == "slope") {
             slope = it->second;
@@ -153,9 +155,9 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
           }
     }
 
-    if (type == "linear") {
+    if (mpConductivity_dist == "linear") {
       conductance_value = linear_distribution(z, baseline, slope, centre);
-    } else if (type == "gaussian") {
+    } else if (mpConductivity_dist == "gaussian") {
       conductance_value = gaussian_distribution(z, baseline, slope, centre,
                                                 amplitude);
     } else {

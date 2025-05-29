@@ -29,7 +29,8 @@ constexpr char GENERAL_3D_PARAM_FILE[] = "general/3d_params.toml";
 template <int DIM>
 class AbstractUterineCellFactoryTemplate : public AbstractCardiacCellFactory<DIM> {
  protected:
-  std::string mpCell_type;
+  std::string mpCell_type;  // uSMC cell model type
+  std::string mpConductivity_dist;  // Conductivitiy distribution
   std::string mpEstrus;  // Estrus stage if specified
   std::unordered_map<std::string, float> mpCell_parameters;
   std::unordered_map<std::string, float> mpPassive_parameters;
