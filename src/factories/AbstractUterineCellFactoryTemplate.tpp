@@ -145,10 +145,10 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
           } else if (it->first == "amplitude") {
             centre = it->second;
           } else {
-              const std::string err_msg = "Invalid passive paramter";
-              const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
-              unsigned line_number = 145;
-              throw Exception(err_msg, err_filename, line_number);
+            const std::string err_msg = "Invalid passive paramter";
+            const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
+            unsigned line_number = 150;
+            throw Exception(err_msg, err_filename, line_number);
           }
     }
 
@@ -205,7 +205,7 @@ void AbstractUterineCellFactoryTemplate<DIM>::InitCell(AbstractCvodeCell*& cell,
     default:
       const std::string err_msg = "Invalid cell type";
       const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
-      unsigned line_number = 192;
+      unsigned line_number = 208;
       throw Exception(err_msg, err_filename, line_number);
   }
 }
