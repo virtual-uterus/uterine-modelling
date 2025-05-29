@@ -7,5 +7,5 @@ double linear_distribution(double z, double baseline, double slope,
 
 double gaussian_distribution(double z, double baseline, double slope,
                              double centre, double amplitude) {
-  return baseline + amplitude*std::exp(-slope*pow(z - centre, 2.0));
+  return baseline + amplitude*std::exp(-slope*std::pow(z - centre, 2.0));
 }

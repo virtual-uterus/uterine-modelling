@@ -2,6 +2,8 @@
 #define INCLUDE_CONDUCTIVITY_DISTRIBUTION_FCTS_HPP_
 
 #include <iostream>
+#include <cmath>
+
 #include "Exception.hpp"
 
 
