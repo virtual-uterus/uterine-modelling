@@ -125,9 +125,10 @@ template <int DIM>
 void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
   AbstractCvodeCell* cell, double z) {
   if (mpCell_id > 1) {
-    double slope;  // Slope of the gaussian
-    double centre;  // Centre of the gaussian
+    double slope;  // Slope of the distribution
+    double centre;  // Centre of the distribution
     double baseline;  // Base value of g_p
+    double amplitude;  // Amplitude for the gaussian
     std::string type;  // Type of distribution to use
     double conductance_value;  // Calculated conductance value
 
@@ -143,7 +144,7 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
           } else if (it->first == "centre") {
             centre = it->second;
           } else if (it->first == "amplitude") {
-            centre = it->second;
+            amplitude = it->second;
           } else {
             const std::string err_msg = "Invalid passive paramter";
             const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
