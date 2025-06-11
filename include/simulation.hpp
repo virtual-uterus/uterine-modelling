@@ -1,5 +1,5 @@
-#ifndef INCLUDE_SIMULATIONS_HPP_
-#define INCLUDE_SIMULATIONS_HPP_
+#ifndef INCLUDE_SIMULATION_HPP_
+#define INCLUDE_SIMULATION_HPP_
 
 #include <iostream>
 #include "Exception.hpp"
@@ -16,4 +16,4 @@ void simulation_2d(std::string stimulus_type, std::string log_path);
 void simulation_3d(std::string stimulus_type, std::string cell_type,
                    std::string log_path);
 
-#endif  // INCLUDE_SIMULATIONS_HPP_
+#endif  // INCLUDE_SIMULATION_HPP_
