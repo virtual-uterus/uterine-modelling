@@ -132,8 +132,10 @@ void run_simulation(const int dim) {
 
   if (dim == 2) {
     simulation_2d(stimulus_type, log_path);
+  } else if (dim == 3 && cell_type[cell_type.length() -1] == 'P') {
+    simulation_3d_passive(stimulus_type, cell_param_file, log_path);
   } else if (dim == 3) {
-    simulation_3d(stimulus_type, cell_type, log_path);
+    simulation_3d(stimulus_type, log_path);
   } else {
     const std::string err_msg = "Invalid dimension";
     const std::string err_filename = "main.cpp";
@@ -177,8 +179,8 @@ void simulation_2d(std::string stimulus_type, std::string log_path) {
 }
 
 
-void simulation_3d(std::string stimulus_type, std::string cell_type,
-                   std::string log_path) {
+void simulation_3d(std::string stimulus_type, std::string log_path) {
+  // Include passive cell params to input arguments
   constexpr int DIM = 3;
 
   AbstractUterineCellFactoryTemplate<DIM> *factory = NULL;
@@ -200,15 +202,63 @@ void simulation_3d(std::string stimulus_type, std::string cell_type,
   }
   factory->WriteLogInfo(log_path);
 
-  // Export passive cell potential and conductivities if passive cell
-  if (cell_type[cell_type.length() -1] == 'P') {
-    std::vector<std::string> output_variables;
-    output_variables.push_back("v_p");
-    output_variables.push_back("g_p");
-    HeartConfig::Instance()->SetOutputVariables(output_variables);
+  MonodomainProblem<DIM> monodomain_problem(factory);
+
+  monodomain_problem.Initialise();
+  monodomain_problem.Solve();
+}
+
+
+void simulation_3d_passive(std::string stimulus_type,
+                           std::string cell_param_file,
+                           std::string log_path) {
+  // Include passive cell params to input arguments
+  constexpr int DIM = 3;
+
+  AbstractUterineCellFactoryTemplate<DIM> *factory = NULL;
+
+  if (stimulus_type == "simple") {
+    factory = new UterineSimpleCellFactory<DIM>();
+  } else if (stimulus_type == "regular") {
+    factory = new UterineRegularCellFactory<DIM>();
+  } else if (stimulus_type == "region") {
+    factory = new UterineRegionCellFactory<DIM>();
+  } else if (stimulus_type == "zero") {
+    factory = new UterineZeroCellFactory<DIM>();
+  } else {
+    const std::string err_message = "Unrecognized stimulus type";
+    const std::string err_filename = "simulation.cpp";
+    unsigned line_number = 195;
+
+    throw Exception(err_message, err_filename, line_number);
   }
+  factory->WriteLogInfo(log_path);
 
   MonodomainProblem<DIM> monodomain_problem(factory);
+
+  // Export passive cell potential and conductivities if passive cell
+  // Set up tissue conductivity modifier if passive cell
+  std::vector<std::string> output_variables;
+  output_variables.push_back("v_p");
+  output_variables.push_back("g_p");
+  HeartConfig::Instance()->SetOutputVariables(output_variables);
+
+  // Get the parameters for the passive cell
+  const auto cell_params = toml::parse(cell_param_file);
+  const auto& passive_params = toml::find(cell_params, "passive");
+
+  UterineConductivityModifier modifier(  // Populate with passive cell params
+    toml::find<double>(passive_params, "centre"),
+    toml::find<double>(passive_params, "slope"),
+    toml::find<double>(passive_params, "g_p"),
+    toml::find<double>(passive_params, "amplitude"),
+    toml::find<std::string>(passive_params, "type"),
+    &monodomain_problem.rGetMesh());
+  MonodomainTissue<3>* tissue = monodomain_problem.GetMonodomainTissue();
+
+  tissue->SetConductivityModifier(&modifier);
+
+  // Write a function to save mesh with new conductivity values
 
   monodomain_problem.Initialise();
   monodomain_problem.Solve();
