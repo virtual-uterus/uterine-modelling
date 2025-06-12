@@ -217,11 +217,13 @@ void simulation_3d(std::string stimulus_type, std::string log_path) {
     const auto cell_params = toml::parse(USMC_SYSTEM_CONSTANTS::CONFIG_DIR +
                                          factory->GetCellParamFile());
     const auto& passive_params = toml::find(cell_params, "passive");
+    std::vector<double> conductivities = toml::find<std::vector<double>>(
+      cell_params, "conductivities_3d");
 
     UterineConductivityModifier modifier(  // Populate with passive cell params
       toml::find<double>(passive_params, "centre"),
       toml::find<double>(passive_params, "slope"),
-      toml::find<double>(passive_params, "g_p"),
+      conductivities[2],  // z value of conductivity
       toml::find<double>(passive_params, "amplitude"),
       toml::find<std::string>(passive_params, "type"),
       &monodomain_problem.rGetMesh());
