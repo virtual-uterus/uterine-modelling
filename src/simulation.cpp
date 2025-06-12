@@ -235,6 +235,7 @@ void simulation_3d_passive(std::string stimulus_type,
   factory->WriteLogInfo(log_path);
 
   MonodomainProblem<DIM> monodomain_problem(factory);
+  monodomain_problem.Initialise();
 
   // Export passive cell potential and conductivities if passive cell
   // Set up tissue conductivity modifier if passive cell
@@ -254,12 +255,11 @@ void simulation_3d_passive(std::string stimulus_type,
     toml::find<double>(passive_params, "amplitude"),
     toml::find<std::string>(passive_params, "type"),
     &monodomain_problem.rGetMesh());
+
   MonodomainTissue<3>* tissue = monodomain_problem.GetMonodomainTissue();
 
   tissue->SetConductivityModifier(&modifier);
 
   // Write a function to save mesh with new conductivity values
-
-  monodomain_problem.Initialise();
   monodomain_problem.Solve();
 }
