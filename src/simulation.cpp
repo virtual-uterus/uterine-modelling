@@ -137,7 +137,7 @@ void run_simulation(const int dim) {
   } else {
     const std::string err_msg = "Invalid dimension";
     const std::string err_filename = "main.cpp";
-    unsigned line_number = 110;
+    unsigned line_number = 140;
 
   throw Exception(err_msg, err_filename, line_number);
   }
@@ -163,7 +163,7 @@ void simulation_2d(std::string stimulus_type, std::string log_path) {
   } else {
     const std::string err_message = "Unrecognized stimulus type";
     const std::string err_filename = "simulation.cpp";
-    unsigned line_number = 163;
+    unsigned line_number = 166;
 
     throw Exception(err_message, err_filename, line_number);
   }
@@ -194,7 +194,7 @@ void simulation_3d(std::string stimulus_type, std::string log_path) {
   } else {
     const std::string err_message = "Unrecognized stimulus type";
     const std::string err_filename = "simulation.cpp";
-    unsigned line_number = 195;
+    unsigned line_number = 197;
 
     throw Exception(err_message, err_filename, line_number);
   }
