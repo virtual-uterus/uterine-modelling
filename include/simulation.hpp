@@ -15,8 +15,5 @@
 void run_simulation(const int dim);
 void simulation_2d(std::string stimulus_type, std::string log_path);
 void simulation_3d(std::string stimulus_type, std::string log_path);
-void simulation_3d_passive(std::string stimulus_type,
-                           std::string cell_param_file,
-                           std::string log_path);
 
 #endif  // INCLUDE_SIMULATION_HPP_

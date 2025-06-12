@@ -132,8 +132,6 @@ void run_simulation(const int dim) {
 
   if (dim == 2) {
     simulation_2d(stimulus_type, log_path);
-  } else if (dim == 3 && cell_type[cell_type.length() -1] == 'P') {
-    simulation_3d_passive(stimulus_type, cell_param_file, log_path);
   } else if (dim == 3) {
     simulation_3d(stimulus_type, log_path);
   } else {
@@ -205,61 +203,34 @@ void simulation_3d(std::string stimulus_type, std::string log_path) {
   MonodomainProblem<DIM> monodomain_problem(factory);
 
   monodomain_problem.Initialise();
-  monodomain_problem.Solve();
-}
+  std::string cell_type = factory->GetCellType();
 
+  if (cell_type[cell_type.length() -1] == 'P') {
+    // Export passive cell potential and conductivities if passive cell
+    // Set up tissue conductivity modifier if passive cell
+    std::vector<std::string> output_variables;
+    output_variables.push_back("v_p");
+    output_variables.push_back("g_p");
+    HeartConfig::Instance()->SetOutputVariables(output_variables);
 
-void simulation_3d_passive(std::string stimulus_type,
-                           std::string cell_param_file,
-                           std::string log_path) {
-  // Include passive cell params to input arguments
-  constexpr int DIM = 3;
+    // Get the parameters for the passive cell
+    const auto cell_params = toml::parse(USMC_SYSTEM_CONSTANTS::CONFIG_DIR +
+                                         factory->GetCellParamFile());
+    const auto& passive_params = toml::find(cell_params, "passive");
 
-  AbstractUterineCellFactoryTemplate<DIM> *factory = NULL;
+    UterineConductivityModifier modifier(  // Populate with passive cell params
+      toml::find<double>(passive_params, "centre"),
+      toml::find<double>(passive_params, "slope"),
+      toml::find<double>(passive_params, "g_p"),
+      toml::find<double>(passive_params, "amplitude"),
+      toml::find<std::string>(passive_params, "type"),
+      &monodomain_problem.rGetMesh());
 
-  if (stimulus_type == "simple") {
-    factory = new UterineSimpleCellFactory<DIM>();
-  } else if (stimulus_type == "regular") {
-    factory = new UterineRegularCellFactory<DIM>();
-  } else if (stimulus_type == "region") {
-    factory = new UterineRegionCellFactory<DIM>();
-  } else if (stimulus_type == "zero") {
-    factory = new UterineZeroCellFactory<DIM>();
-  } else {
-    const std::string err_message = "Unrecognized stimulus type";
-    const std::string err_filename = "simulation.cpp";
-    unsigned line_number = 195;
+    MonodomainTissue<3>* tissue = monodomain_problem.GetMonodomainTissue();
+    tissue->SetConductivityModifier(&modifier);
+    monodomain_problem.Solve();  // Need this here otherwise code breaks
 
-    throw Exception(err_message, err_filename, line_number);
+  } else {  // Need this here otherwise code breaks
+    monodomain_problem.Solve();
   }
-  factory->WriteLogInfo(log_path);
-
-  MonodomainProblem<DIM> monodomain_problem(factory);
-  monodomain_problem.Initialise();
-
-  // Export passive cell potential and conductivities if passive cell
-  // Set up tissue conductivity modifier if passive cell
-  std::vector<std::string> output_variables;
-  output_variables.push_back("v_p");
-  output_variables.push_back("g_p");
-  HeartConfig::Instance()->SetOutputVariables(output_variables);
-
-  // Get the parameters for the passive cell
-  const auto cell_params = toml::parse(cell_param_file);
-  const auto& passive_params = toml::find(cell_params, "passive");
-
-  UterineConductivityModifier modifier(  // Populate with passive cell params
-    toml::find<double>(passive_params, "centre"),
-    toml::find<double>(passive_params, "slope"),
-    toml::find<double>(passive_params, "g_p"),
-    toml::find<double>(passive_params, "amplitude"),
-    toml::find<std::string>(passive_params, "type"),
-    &monodomain_problem.rGetMesh());
-
-  MonodomainTissue<3>* tissue = monodomain_problem.GetMonodomainTissue();
-
-  tissue->SetConductivityModifier(&modifier);
-
-  // Write a function to save mesh with new conductivity values
-  monodomain_problem.Solve();
 }
