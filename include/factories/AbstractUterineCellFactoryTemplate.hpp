@@ -47,6 +47,8 @@ class AbstractUterineCellFactoryTemplate : public AbstractCardiacCellFactory<DIM
   void SetPassiveParams(AbstractCvodeCell* cell, double z);
   void InitCell(AbstractCvodeCell*& cell,
                 boost::shared_ptr<AbstractStimulusFunction> stimulus);
+  void SetCellType(std::string cell_type);
+  void SetEstrus(std::string estrus);
   virtual void ReadParams(std::string general_param_file);
   virtual void ReadCellParams(std::string cell_param_file);
   virtual void PrintParams();

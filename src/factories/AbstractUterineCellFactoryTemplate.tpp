@@ -249,3 +249,16 @@ void AbstractUterineCellFactoryTemplate<DIM>::WriteLogInfo(std::string log_file)
 
   log_stream.close();
 }
+
+
+// Setters
+template <int DIM>
+void AbstractUterineCellFactoryTemplate<DIM>::SetCellType(std::string cell_type) {
+  mpCell_type = cell_type;
+}
+
+
+template <int DIM>
+void AbstractUterineCellFactoryTemplate<DIM>::SetEstrus(std::string estrus) {
+  mpEstrus = estrus;
+}
