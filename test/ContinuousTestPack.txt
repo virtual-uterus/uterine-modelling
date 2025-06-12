@@ -1,5 +1,6 @@
 TestReadParamConfig.hpp
 TestConductivityDistributions.hpp
+TestMeshConductivityDistributions.hpp
 TestChayKeizer1983CellSimulation.hpp
 TestTong2014CellSimulation.hpp
 TestMeans2023CellSimulation.hpp
