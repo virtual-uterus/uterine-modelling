@@ -28,7 +28,7 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
           factory->SetCellType(cell_type);
           factory->SetEstrus(estrus);
           factory->ReadCellParams(factory->GetCellParamFile());
-          save_dir = "MonodomainTest/" + cell_type + "/zero_3d";
+          save_dir = "MonodomainTest/" + cell_type + "/estrus/zero_3d";
           break;
 
         case 1:
@@ -39,7 +39,7 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
           factory->SetCellType(cell_type);
           factory->SetEstrus(estrus);
           factory->ReadCellParams(factory->GetCellParamFile());
-          save_dir = "MonodomainTest/" + cell_type + "/simple_3d";
+          save_dir = "MonodomainTest/" + cell_type + "/estrus/simple_3d";
           break;
 
         case 3:
@@ -50,7 +50,7 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
           factory->SetCellType(cell_type);
           factory->SetEstrus(estrus);
           factory->ReadCellParams(factory->GetCellParamFile());
-          save_dir = "MonodomainTest/" + cell_type + "/regular_3d";
+          save_dir = "MonodomainTest/" + cell_type + "/estrus/regular_3d";
           break;
 
         case 4:
@@ -61,7 +61,7 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
           factory->SetCellType(cell_type);
           factory->SetEstrus(estrus);
           factory->ReadCellParams(factory->GetCellParamFile());
-          save_dir = "MonodomainTest/" + cell_type + "/region_3d";
+          save_dir = "MonodomainTest/" + cell_type + "/estrus/region_3d";
           break;
 
         default:
@@ -72,7 +72,7 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
           factory->SetCellType(cell_type);
           factory->SetEstrus(estrus);
           factory->ReadCellParams(factory->GetCellParamFile());
-          save_dir = "MonodomainTest/" + cell_type + "/zero_3d";
+          save_dir = "MonodomainTest/" + cell_type + "/estrus/zero_3d";
           break;
       }
 
