@@ -14,7 +14,7 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
  public:
   void TestUterineCellFactoriesClass() {
     AbstractUterineCellFactoryTemplate<3>* factory(nullptr);
-    std::string cell_type;
+    std::string cell_type = "Means";
     std::string save_dir;
 
     for (int i = 0; i < 4; ++i) {
@@ -24,7 +24,8 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
           TS_ASSERT(factory != nullptr)
 
           std::cout << "Zero Cell Factory" << std::endl;
-          cell_type = factory->GetCellType();
+          factory->SetCellType(cell_type);
+          factory->ReadCellParams(factory->GetCellParamFile());
           save_dir = "MonodomainTest/" + cell_type + "/zero_3d";
           break;
 
@@ -33,7 +34,8 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
           TS_ASSERT(factory != nullptr)
 
           std::cout << "Simple Cell Factory" << std::endl;
-          cell_type = factory->GetCellType();
+          factory->SetCellType(cell_type);
+          factory->ReadCellParams(factory->GetCellParamFile());
           save_dir = "MonodomainTest/" + cell_type + "/simple_3d";
           break;
 
@@ -42,7 +44,8 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
           TS_ASSERT(factory != nullptr)
 
           std::cout << "Regular Cell Factory" << std::endl;
-          cell_type = factory->GetCellType();
+          factory->SetCellType(cell_type);
+          factory->ReadCellParams(factory->GetCellParamFile());
           save_dir = "MonodomainTest/" + cell_type + "/regular_3d";
           break;
 
@@ -51,7 +54,8 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
           TS_ASSERT(factory != nullptr)
 
           std::cout << "Region Cell Factory" << std::endl;
-          cell_type = factory->GetCellType();
+          factory->SetCellType(cell_type);
+          factory->ReadCellParams(factory->GetCellParamFile());
           save_dir = "MonodomainTest/" + cell_type + "/region_3d";
           break;
 
@@ -60,7 +64,8 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
           TS_ASSERT(factory != nullptr)
 
           std::cout << "Zero Cell Factory (default case)" << std::endl;
-          cell_type = factory->GetCellType();
+          factory->SetCellType(cell_type);
+          factory->ReadCellParams(factory->GetCellParamFile());
           save_dir = "MonodomainTest/" + cell_type + "/zero_3d";
           break;
       }
