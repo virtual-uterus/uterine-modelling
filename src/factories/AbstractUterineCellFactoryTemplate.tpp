@@ -255,6 +255,10 @@ void AbstractUterineCellFactoryTemplate<DIM>::WriteLogInfo(std::string log_file)
 template <int DIM>
 void AbstractUterineCellFactoryTemplate<DIM>::SetCellType(std::string cell_type) {
   mpCell_type = cell_type;
+  if (DIM == 3 && cell_type[cell_type.length() -1] != 'P') {
+    // Clear passive parameters if not with a passive cell
+    mpPassive_parameters.clear();
+  }
 }
 
 
