@@ -29,6 +29,7 @@ class UterineConductivityModifier : public AbstractConductivityModifier<3, 3> {
     unsigned elementIndex,
     const c_matrix<double, 3, 3>& rOriginalConductivity,
     unsigned domainIndex);
+  AbstractTetrahedralMesh<3, 3>* GetMesh();
 };
 
 #endif  // INCLUDE_CONDUCTIVITY_UTERINECONDUCTIVITYMODIFIER_HPP_

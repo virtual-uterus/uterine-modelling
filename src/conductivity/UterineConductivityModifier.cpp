@@ -55,3 +55,9 @@ c_matrix<double, 3, 3>& UterineConductivityModifier::rCalculateModifiedConductiv
   }
   return mTensor;
 }
+
+
+// Getter
+AbstractTetrahedralMesh<3, 3>* UterineConductivityModifier::GetMesh() {
+  return mMesh;
+}
