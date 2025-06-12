@@ -8,3 +8,4 @@ TestRoesler2024CellSimulation.hpp
 TestRoesler2024PCellSimulation.hpp
 TestUterineCellFactories2d.hpp
 TestUterineCellFactories3d.hpp
+TestUterineCellFactories3dEstrus.hpp
