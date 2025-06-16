@@ -37,21 +37,18 @@ c_matrix<double, 3, 3>& UterineConductivityModifier::rCalculateModifiedConductiv
   Element<3, 3>* element = (mMesh->GetElement(elementIndex));
   c_vector<double, 3> cur_centroid = element->CalculateCentroid();
 
-  // Modify the current conductivity according to Gaussian distribution
+  // Modify the current conductivity
   // along the diagonal save to the "working memory", and return.
   for ( unsigned i=0; i < 3; ++i ) {
-    double modifier_value;
-
     if (mType == "linear") {
-      modifier_value = linear_distribution(cur_centroid(2),
+      mTensor(i, i) = linear_distribution(cur_centroid(2),
                                            rOriginalConductivity(i, i), mSlope,
                                            mCentre);
     } else if (mType == "gaussian") {
-      modifier_value = gaussian_distribution(cur_centroid(2),
+      mTensor(i, i) = gaussian_distribution(cur_centroid(2),
                                              rOriginalConductivity(i, i),
                                              mSlope, mCentre, mAmplitude);
     }
-    mTensor(i, i) = elementIndex*modifier_value;
   }
   return mTensor;
 }
