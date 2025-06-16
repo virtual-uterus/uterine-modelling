@@ -20,6 +20,7 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
     std::string save_dir = "MonodomainTest/" + cell_type +
       "/conductivity/zero_3d";
     std::vector<std::string> distributions{"linear", "gaussian"};
+    std::vector<double> conductivities{0.5, 0.5, 0.5};
 
     factory = new UterineZeroCellFactory<3>;
     TS_ASSERT(factory != nullptr)
@@ -32,16 +33,14 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
       MonodomainProblem<3> monodomain_problem(factory);
 
       HeartConfig::Instance()->SetOutputDirectory(save_dir);
-      HeartConfig::Instance()->SetSimulationDuration(5.0);  // ms
       HeartConfig::Instance()->SetMeshFileName(
           "mesh/uterus/test/tube_10mm");
       HeartConfig::Instance()->SetOutputFilenamePrefix("results");
       HeartConfig::Instance()->SetVisualizeWithVtk(true);
       HeartConfig::Instance()->SetIntracellularConductivities(
-          Create_c_vector(1.75, 0.19));
-      HeartConfig::Instance()->SetSurfaceAreaToVolumeRatio(1400);  // 1/cm
-      HeartConfig::Instance()->SetCapacitance(1.0);  // uF/cm^3
-      HeartConfig::Instance()->SetOdePdeAndPrintingTimeSteps(0.1, 0.1, 0.1);
+          Create_c_vector(conductivities[0],
+                          conductivities[1],
+                          conductivities[2]));
 
       monodomain_problem.Initialise();
 
@@ -50,10 +49,10 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
                                            factory->GetCellParamFile());
       const auto& passive_params = toml::find(cell_params, "passive");
 
-      UterineConductivityModifier modifier(  // Populate with passive cell params
+      UterineConductivityModifier modifier(  // Populate passive cell param
         toml::find<double>(passive_params, "centre"),
         toml::find<double>(passive_params, "slope"),
-        toml::find<double>(passive_params, "g_p"),
+        conductivities[2],
         toml::find<double>(passive_params, "amplitude"),
         distributions[i],
         &monodomain_problem.rGetMesh());
@@ -65,31 +64,25 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
       VtkMeshWriter<3, 3> modified_mesh(save_dir,
                                         distributions[i] + "_conductivity_mesh",
                                         false);
-      c_vector<double, 3> cur_conduct;
-      std::vector< c_vector<double,3> > mod_conductivities;
+      c_vector<double, 3> current_value;
+      std::vector< c_vector<double,3> > conductivity_values;
       AbstractTetrahedralMesh<3, 3>* mesh = modifier.GetMesh();
 
       for (AbstractTetrahedralMesh<3, 3>::ElementIterator elem_iter=mesh->GetElementIteratorBegin();
             elem_iter != mesh->GetElementIteratorEnd();
             ++elem_iter) {
-          unsigned index = elem_iter->GetIndex();
+        unsigned index = elem_iter->GetIndex();
 
-          cur_conduct[0] = tissue->rGetIntracellularConductivityTensor(
-            index)(0, 0);
-          cur_conduct[1] = tissue->rGetIntracellularConductivityTensor(
-            index)(1, 1);
-          cur_conduct[2] = tissue->rGetIntracellularConductivityTensor(
-            index)(2, 2);
-          mod_conductivities.push_back(cur_conduct);
-
-          if (index != 0) {
-            cur_conduct[0] /= index;
-            cur_conduct[1] /= index;
-            cur_conduct[2] /= index;
-          }
+        current_value[0] = tissue->rGetIntracellularConductivityTensor(
+          index)(0, 0);
+        current_value[1] = tissue->rGetIntracellularConductivityTensor(
+          index)(1, 1);
+        current_value[2] = tissue->rGetIntracellularConductivityTensor(
+          index)(2, 2);
+        conductivity_values.push_back(current_value);
       }
 
-      modified_mesh.AddCellData("Conductivity Modifier", mod_conductivities);
+      modified_mesh.AddCellData("Conductivity", conductivity_values);
       modified_mesh.WriteFilesUsingMesh(monodomain_problem.rGetMesh());
     }
   }
