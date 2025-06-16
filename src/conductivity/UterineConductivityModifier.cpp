@@ -6,9 +6,9 @@ UterineConductivityModifier::UterineConductivityModifier() :
   mSpecialMatrix(zero_matrix<double>(3, 3)), mCentre(0.0), mSlope(1.0),
   mBaseline(0.0), mAmplitude(1.0), mType("linear"), mMesh(NULL)  {
   // Initialise diagonal
-  mSpecialMatrix(0, 0) = 1.0;
-  mSpecialMatrix(1, 1) = 1.0;
-  mSpecialMatrix(2, 2) = 1.0;
+  mSpecialMatrix(0, 0) = mBaseline;
+  mSpecialMatrix(1, 1) = mBaseline;
+  mSpecialMatrix(2, 2) = mBaseline;
 }
 
 
@@ -19,9 +19,9 @@ UterineConductivityModifier::UterineConductivityModifier(
   mSpecialMatrix(zero_matrix<double>(3, 3)), mCentre(centre), mSlope(slope),
   mBaseline(baseline), mAmplitude(amplitude), mType(type), mMesh(mesh)  {
   // Initialise diagonal
-  mSpecialMatrix(0, 0) = 1.0;
-  mSpecialMatrix(1, 1) = 1.0;
-  mSpecialMatrix(2, 2) = 1.0;
+  mSpecialMatrix(0, 0) = mBaseline;
+  mSpecialMatrix(1, 1) = mBaseline;
+  mSpecialMatrix(2, 2) = mBaseline;
 }
 
 
