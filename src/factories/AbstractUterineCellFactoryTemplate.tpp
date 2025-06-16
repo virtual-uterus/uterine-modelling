@@ -10,8 +10,8 @@ AbstractUterineCellFactoryTemplate<DIM>::AbstractUterineCellFactoryTemplate() :
       ReadParams(USMC_SYSTEM_CONSTANTS::GENERAL_3D_PARAM_FILE);
     } else {
       const std::string err_msg = "Invalid dimension";
-      const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
-      unsigned line_number = 15;
+      const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
+      unsigned line_number = 14;
       throw Exception(err_msg, err_filename, line_number);
     }
 }
@@ -26,12 +26,19 @@ template <int DIM>
 AbstractCvodeCell* AbstractUterineCellFactoryTemplate<DIM>::CreateCardiacCellForTissueNode(
   Node<DIM>* pNode) {
   AbstractCvodeCell* cell(nullptr);
-  
+  double z;
+
   // Initialise cell with ZeroStimulus
   this->InitCell(cell, this->mpZeroStimulus);
 
   // Set parameters for the cell
   this->SetCellParams(cell);
+
+  // Set passive cell parameters
+  if (DIM == 3 && !mpPassive_parameters.empty()) {
+    z = pNode->rGetLocation()[2];
+    this->SetPassiveParams(cell, z);
+  }
 
   return cell;
 }
@@ -92,31 +99,75 @@ void AbstractUterineCellFactoryTemplate<DIM>::ReadCellParams(std::string cell_pa
       cell_params,
       "parameters");
   }
+
+  if (cell_params.contains("passive")) {
+    for (const auto& [key, value] : toml::find<toml::value>(
+      cell_params, "passive").as_table()) {
+        if (value.is_floating()) {
+            mpPassive_parameters[key] = toml::get<double>(value);
+        } else if (key == "type") {
+            mpConductivity_dist = toml::get<std::string>(value);
+        }
+    }
+  }
 }
 
 
 template <int DIM>
-void AbstractUterineCellFactoryTemplate<DIM>::SetCellParams(AbstractCvodeCell* cell) {
+void AbstractUterineCellFactoryTemplate<DIM>::SetCellParams(
+  AbstractCvodeCell* cell) {
   if (mpCell_id > 1) {
     for (auto it=mpCell_parameters.begin();
         it != mpCell_parameters.end();
         ++it) {
-          if (it->first == "g_p") {  // If the parameters has a passive cell
-            // Generate a random number between 0 and 1
-            std::random_device rd;
-            std::mt19937 mt(rd());  // Random number generator
-            std::uniform_real_distribution<double> dist(0.0, 1.0);
-
-            double rand_val = dist(mt);
-            if (rand_val < 0.9) {
-              cell->SetParameter(it->first, 0.0);
-            } else {
-              cell->SetParameter(it->first, it->second);
-            }
-          } else {
             cell->SetParameter(it->first, it->second);
+        }
+  }
+}
+
+
+template <int DIM>
+void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
+  AbstractCvodeCell* cell, double z) {
+  if (mpCell_id > 1) {
+    double slope;  // Slope of the distribution
+    double centre;  // Centre of the distribution
+    double baseline;  // Base value of g_p
+    double amplitude;  // Amplitude for the gaussian
+    double conductance_value;  // Calculated conductance value
+
+    for (auto it=mpPassive_parameters.begin();
+        it != mpPassive_parameters.end();
+        ++it) {
+          if (it->first == "g_p") {
+            baseline = it->second;
+          } else if (it->first == "slope") {
+            slope = it->second;
+          } else if (it->first == "centre") {
+            centre = it->second;
+          } else if (it->first == "amplitude") {
+            amplitude = it->second;
+          } else {
+            const std::string err_msg = "Invalid passive paramter";
+            const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
+            unsigned line_number = 153;
+            throw Exception(err_msg, err_filename, line_number);
           }
     }
+
+    if (mpConductivity_dist == "linear") {
+      conductance_value = linear_distribution(z, baseline, slope, centre);
+    } else if (mpConductivity_dist == "gaussian") {
+      conductance_value = gaussian_distribution(z, baseline, slope, centre,
+                                                amplitude);
+    } else {
+      const std::string err_msg = "Invalid distribution";
+      const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
+      unsigned line_number = 166;
+      throw Exception(err_msg, err_filename, line_number);
+    }
+
+    cell->SetParameter("g_p", conductance_value);
   }
 }
 
@@ -150,10 +201,14 @@ void AbstractUterineCellFactoryTemplate<DIM>::InitCell(AbstractCvodeCell*& cell,
       cell = new CellRoesler2024PFromCellMLCvode(this->mpSolver, stim);
       break;
 
+    case 6:
+      cell = new CellMeans2023PFromCellMLCvode(this->mpSolver, stim);
+      break;
+
     default:
       const std::string err_msg = "Invalid cell type";
-      const std::string err_filename = "AbstractUterineCellFactoryTemplate.cpp";
-      unsigned line_number = 153;
+      const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
+      unsigned line_number = 211;
       throw Exception(err_msg, err_filename, line_number);
   }
 }
@@ -176,11 +231,38 @@ void AbstractUterineCellFactoryTemplate<DIM>::WriteLogInfo(std::string log_file)
   std::ofstream log_stream;
   log_stream.open(log_file, ios::app);  // Open log file in append mode
 
-  log_stream << "Cell parameters \n";
+  if (!mpCell_parameters.empty()) {
+    log_stream << "Cell parameters \n";
 
-  for (auto it=mpCell_parameters.begin(); it != mpCell_parameters.end(); ++it) {
-    log_stream << "  " << it->first << ": " << it->second << std::endl;
+    for (auto it=mpCell_parameters.begin(); it != mpCell_parameters.end(); ++it) {
+      log_stream << "  " << it->first << ": " << it->second << std::endl;
+    }
+  }
+
+  if (!mpPassive_parameters.empty()) {
+    log_stream << "Passive parameters \n";
+
+    for (auto it=mpPassive_parameters.begin(); it != mpPassive_parameters.end(); ++it) {
+      log_stream << "  " << it->first << ": " << it->second << std::endl;
+    }
   }
 
   log_stream.close();
+}
+
+
+// Setters
+template <int DIM>
+void AbstractUterineCellFactoryTemplate<DIM>::SetCellType(std::string cell_type) {
+  mpCell_type = cell_type;
+  if (DIM == 3 && cell_type[cell_type.length() -1] != 'P') {
+    // Clear passive parameters if not with a passive cell
+    mpPassive_parameters.clear();
+  }
+}
+
+
+template <int DIM>
+void AbstractUterineCellFactoryTemplate<DIM>::SetEstrus(std::string estrus) {
+  mpEstrus = estrus;
 }

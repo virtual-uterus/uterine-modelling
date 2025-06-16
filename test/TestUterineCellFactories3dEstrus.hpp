@@ -1,5 +1,5 @@
-#ifndef TEST_TESTUTERINECELLFACTORIES3D_HPP_
-#define TEST_TESTUTERINECELLFACTORIES3D_HPP_
+#ifndef TEST_TESTUTERINECELLFACTORIES3DESTRUS_HPP_
+#define TEST_TESTUTERINECELLFACTORIES3DESTRUS_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include "PetscSetupAndFinalize.hpp"
@@ -14,7 +14,8 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
  public:
   void TestUterineCellFactoriesClass() {
     AbstractUterineCellFactoryTemplate<3>* factory(nullptr);
-    std::string cell_type = "Means";
+    std::string cell_type = "Roesler";
+    std::string estrus = "estrus";
     std::string save_dir;
 
     for (int i = 0; i < 4; ++i) {
@@ -25,8 +26,9 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
 
           std::cout << "Zero Cell Factory" << std::endl;
           factory->SetCellType(cell_type);
+          factory->SetEstrus(estrus);
           factory->ReadCellParams(factory->GetCellParamFile());
-          save_dir = "MonodomainTest/" + cell_type + "/zero_3d";
+          save_dir = "MonodomainTest/" + cell_type + "/estrus/zero_3d";
           break;
 
         case 1:
@@ -35,8 +37,9 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
 
           std::cout << "Simple Cell Factory" << std::endl;
           factory->SetCellType(cell_type);
+          factory->SetEstrus(estrus);
           factory->ReadCellParams(factory->GetCellParamFile());
-          save_dir = "MonodomainTest/" + cell_type + "/simple_3d";
+          save_dir = "MonodomainTest/" + cell_type + "/estrus/simple_3d";
           break;
 
         case 3:
@@ -45,8 +48,9 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
 
           std::cout << "Regular Cell Factory" << std::endl;
           factory->SetCellType(cell_type);
+          factory->SetEstrus(estrus);
           factory->ReadCellParams(factory->GetCellParamFile());
-          save_dir = "MonodomainTest/" + cell_type + "/regular_3d";
+          save_dir = "MonodomainTest/" + cell_type + "/estrus/regular_3d";
           break;
 
         case 4:
@@ -55,8 +59,9 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
 
           std::cout << "Region Cell Factory" << std::endl;
           factory->SetCellType(cell_type);
+          factory->SetEstrus(estrus);
           factory->ReadCellParams(factory->GetCellParamFile());
-          save_dir = "MonodomainTest/" + cell_type + "/region_3d";
+          save_dir = "MonodomainTest/" + cell_type + "/estrus/region_3d";
           break;
 
         default:
@@ -65,8 +70,9 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
 
           std::cout << "Zero Cell Factory (default case)" << std::endl;
           factory->SetCellType(cell_type);
+          factory->SetEstrus(estrus);
           factory->ReadCellParams(factory->GetCellParamFile());
-          save_dir = "MonodomainTest/" + cell_type + "/zero_3d";
+          save_dir = "MonodomainTest/" + cell_type + "/estrus/zero_3d";
           break;
       }
 
@@ -98,5 +104,6 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
   }
 };
 
-#endif  // TEST_TESTUTERINECELLFACTORIES3D_HPP_
+#endif  // TEST_TESTUTERINECELLFACTORIES3DESTRUS_HPP_
+
 

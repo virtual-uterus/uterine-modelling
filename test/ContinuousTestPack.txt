@@ -1,8 +1,13 @@
 TestReadParamConfig.hpp
+TestConductivityDistributions.hpp
+TestMeshConductivityDistributions.hpp
 TestChayKeizer1983CellSimulation.hpp
 TestTong2014CellSimulation.hpp
 TestMeans2023CellSimulation.hpp
+TestMeans2023PCellSimulation.hpp
 TestRoesler2024CellSimulation.hpp
 TestRoesler2024PCellSimulation.hpp
 TestUterineCellFactories2d.hpp
 TestUterineCellFactories3d.hpp
+TestUterineCellFactories3dEstrus.hpp
+TestUterineCellFactories3dPassive.hpp
