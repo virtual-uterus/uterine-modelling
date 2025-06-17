@@ -32,15 +32,17 @@ class TestConductivityDistributions : public CxxTest::TestSuite {
     TS_ASSERT_DELTA(linear_distribution(1.0, 1.0, 0.0, 1.0),
                     1.0, 1e-9);
     TS_ASSERT_DELTA(linear_distribution(1.0, 0.0, 1.0, 2.0),
-                    -1.0, 1e-9);
+                    0.0, 1e-9);
     TS_ASSERT_DELTA(linear_distribution(-1.0, 0.0, 1.0, 0.0),
-                    -1.0, 1e-9);
+                    0.0, 1e-9);
     TS_ASSERT_DELTA(linear_distribution(1.0, 0.0, 5.0, 0.0),
                     5.0, 1e-9);
     TS_ASSERT_DELTA(linear_distribution(0.0, 1.0, 2.0, 1.0),
-                    -1.0, 1e-9);
+                    0.0, 1e-9);
     TS_ASSERT_DELTA(linear_distribution(3.0, 1.0, 2.0, 1.0),
                     5.0, 1e-9);
+    TS_ASSERT_DELTA(linear_distribution(-100.0, 1.0, 2.0, 1.0),
+                    0.0, 1e-9);
 
     // Gaussian distribution test cases
     TS_ASSERT_DELTA(gaussian_distribution(0.0, 0.0, 1.0, 0.0, 1.0),
@@ -55,6 +57,8 @@ class TestConductivityDistributions : public CxxTest::TestSuite {
                     1.0, 1e-5);
     TS_ASSERT_DELTA(gaussian_distribution(3.0, 1.0, 1.0, 3.0, 2.0),
                     3.0, 1e-5);
+    TS_ASSERT_DELTA(gaussian_distribution(5.0, -50.0, 1.0, 3.0, -2.0),
+                    0.0, 1e-5);
   }
 };
 
