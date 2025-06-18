@@ -6,11 +6,12 @@
 #include <vector>
 
 #include "../toml.hpp"
-#include "AbstractUterineCellFactory3d.hpp"
+#include "AbstractUterineCellFactoryTemplate.hpp"
 #include "MonodomainProblem.hpp"
 #include "../stimulus/UterineRegionStimulus.hpp"
 
-class UterineRegionCellFactory3d : public AbstractUterineCellFactory3d {
+template <int DIM>
+class UterineRegionCellFactory : public AbstractUterineCellFactoryTemplate<DIM> {
  private:
   std::vector<double> mpXStimLeft;  // Cols: start, end
   std::vector<double> mpYStimLeft;  // Cols: start, end
@@ -23,8 +24,8 @@ class UterineRegionCellFactory3d : public AbstractUterineCellFactory3d {
   boost::shared_ptr<UterineRegionStimulus> mpCervicalStimulus;
 
  public:
-  UterineRegionCellFactory3d();
-  AbstractCvodeCell* CreateCardiacCellForTissueNode(Node<3>* pNode);
+  UterineRegionCellFactory();
+  AbstractCvodeCell* CreateCardiacCellForTissueNode(Node<DIM>* pNode);
   unsigned FindRegion(double x, double y, double z);
   unsigned IsInLeft(double x, double y, double z);
   unsigned IsInRight(double x, double y, double z);
@@ -42,6 +43,7 @@ class UterineRegionCellFactory3d : public AbstractUterineCellFactory3d {
   void WriteLogInfo(std::string log_file);
 };
 
+#include "../../src/factories/UterineRegionCellFactory.tpp"
 #endif  // INCLUDE_FACTORIES_UTERINEREGIONCELLFACTORY3D_HPP_
 
 

@@ -10,8 +10,11 @@
 	1. [General configuration files](#sims)
 	2. [Cell configuration files](#cells)
 	3. [Mesh configuration files](#mesh)
-2. [Running simulations](#simulations)
-3. [Editing code](#editing-code)
+3. [Passive cells](#passive)
+	1.  [Configuration files](#passive-config)
+	2.  [Distributions](#distros)
+4. [Running simulations](#simulations)
+5. [Editing code](#editing-code)
 	1. [Adding a cell](#add-cell)
 	2. [Adding a test](#add-test)
 
@@ -195,7 +198,7 @@ The three first categories are required for the cell model to work. The _Cell pa
 The orthotropic conductivity vector (ortho_conductivities) is only used if the orthotropic flag is true. In that case, an ortho file is required to be in the same folder as the mesh that is used.
 
 The region probabilities is only required when using the region stimulus. The location is selected with a random number generator and the probabilities should always sum to one. The region is either the ovarian end, centre, or cervical end of the uterine horns. The locations are specified in the mesh configuration files. 
-	
+
 **Note:** The units are specified as comments after _Cell properties_ and _Stimulus_ parameters. The initial value and range are specified after _Cell parameters_ parameters. 
 
 
@@ -207,6 +210,31 @@ The mesh configuration files located in the **config/mesh** folder provide the l
 3. _ovarian_ the highest region located near the ovaries.
 
 There is one section per horn which contains the x and y limits. They are used to stimulate the given horn rather than both. There is one file per mesh and must have the same name as the mesh.
+
+<a id="passive"></a>
+## Passive cells
+For cells that include passive cells, the cell name should finish with the letter P (capital is required). For example, the Means2023 cell model which includes passive cells is Means2023P and the configuration file is named MeansP.toml.
+
+<a id="passive-config"></a>
+### Configuration file
+The cell configuration file contains an additional category of parameters for the passive cell with the following parameters:
+1. **type**: Gaussian or linear, the type of distribution to use.
+2. **g_p**: the value of the passive cell conductance.
+3. **slope**: slope for the distribution.
+4. **centre**: centre of the distribution.
+5. **amplitude**: scaling factor for the Gaussian distribution.
+
+<a id="distros"></a>
+### Distributions
+Currently, there are two distributions: linear and Gaussian. The distributions modify the value of g_p and the tissue conductivity based on the z axis of the mesh. 
+The formula for the linear ad the Gaussian distributions is:
+``` linear
+new_value = baseline + (z - centre) * slope
+```
+``` Gaussian
+new_value = baseline + amplitude * exp(-slope * (z - centre) ^ 2)
+```
+where baseline is either g_p or the z-axis conductivity value.
 
 <a id="simulations"></a>
 ## Running simulations
@@ -230,13 +258,13 @@ This section details the steps for editing the code.
 To add a new cell to the project follow these steps:
 1. Ensure that the new cell model has the correct annotation by following the code generation from CellML [guide](https://chaste.cs.ox.ac.uk/trac/wiki/ChasteGuides/CodeGenerationFromCellML). 
 2. Place the annotated CellML file for the desired cell in the **src** folder located in the _uterine-modelling_ folder in the source code directory (refer to the [directory tree](#tree)). 
-3. Add a case for the new _cell_id_ in the switch statement of the *CreateCardiacCellForTissueNode* functions (see [code snippet](#code) for details) in the following files in the **src/projects/uterine-modelling/src/factories** folder.
+3. Add a case for the new _cell_id_ in the switch statement of the *InitCell* functions in the AbstractUterineCellFactoryTemplate.tpp file in the **src/projects/uterine-modelling/src/factories** folder (see [code snippet](#code) for details).
 4. Add the `#include` statement for the new cell before the `namespace` declaration (see [include statement](#include) for details) in the following files in the **include** folder located in the _uterine-modelling_ folder in the source code directory (refer to the [directory tree](#tree)):
-	- **AbstractUterineCellFactory.hpp**
-	- **AbstractUterineCellFactory3d.hpp**
+	- **AbstractUterineCellFactoryTemplate.hpp**
 5. Rebuild the project by following these commands while in the singularity container:
 ```bash
 $ cd Chaste/lib/projects/uterine-modelling/
+$ cmake ../../
 $ cmake --build .
 ```
 
@@ -244,15 +272,10 @@ $ cmake --build .
 Example of the code snippet to add from step 3:
 ```
 case cell_id:
-	cell = new CellNAMEFromCellMLCvode(mpSolver, mpStimulus);
-		
-	for (auto it=mpCell_parameters.begin(); it != mpCell_parameters.end(); ++it)
-	{
-		cell->SetParameter(it->first, it->second);
-	}
+	cell = new CellNAMEFromCellMLCvode(this->mpSolver, stim);
 	break;
 ```
-where cell_id is replaced with the new cell number and NAME is replaced with the new cell name. The `for` loop is only needed if the cell model has [modifiable parameters](https://chaste.cs.ox.ac.uk/trac/wiki/ChasteGuides/CodeGenerationFromCellML).
+where cell_id is replaced with the new cell number and NAME is replaced with the new cell name.
 
 
 <a id="include"></a>

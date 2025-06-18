@@ -1,42 +1,43 @@
-#ifndef TEST_TESTCHAYKEIZER1983CELLSIMULATION_HPP_
-#define TEST_TESTCHAYKEIZER1983CELLSIMULATION_HPP_
+#ifndef TEST_TESTMEANS2023PCELLSIMULATION_HPP_
+#define TEST_TESTMEANS2023PCELLSIMULATION_HPP_
 
 #include <cxxtest/TestSuite.h>
 #include "AbstractCvodeCell.hpp"
 #include "CellProperties.hpp"
 #include "EulerIvpOdeSolver.hpp"
 #include "ZeroStimulus.hpp"
-#include "ChayKeizer1983Cvode.hpp"
+#include "Means2023PCvode.hpp"
 #include "SteadyStateRunner.hpp"
 #include "FakePetscSetup.hpp"
 
-class TestChayKeizerCellSimulation : public CxxTest::TestSuite {
+class TestMeans2023PCellSimulation : public CxxTest::TestSuite {
  public:
-  void TestChayKeizerCellSimulationClass() {
+  void TestMeans2023PCellSimulationClass() {
     #ifdef CHASTE_CVODE
-      boost::shared_ptr<ZeroStimulus> p_stimulus(new ZeroStimulus());
+      boost::shared_ptr<ZeroStimulus> p_stimulus(
+        new ZeroStimulus());
       boost::shared_ptr<AbstractIvpOdeSolver> p_solver;
       boost::shared_ptr<AbstractCvodeCell> p_model(
-            new CellChayKeizer1983FromCellMLCvode(p_solver, p_stimulus));
+        new CellMeans2023PFromCellMLCvode(p_solver, p_stimulus));
       double max_timestep = 0.1;
       double sampling_timestep = max_timestep;
       double start_time = 0.0;
-      double end_time = 7000.0;
+      double end_time = 5000.0;
       unsigned steps_per_row = 1u;  // allows you to downsample output.
       bool clean_dir = false;
       unsigned precision = 6u;
       bool include_derived_quantities = true;
 
-      p_model->SetTolerances(1e-8, 1e-8);
+      p_model->SetTolerances(1e-7, 1e-7);
       p_model->SetMaxTimestep(max_timestep);
       OdeSolution solution = p_model->Compute(
-            start_time, end_time, sampling_timestep);
+          start_time, end_time, sampling_timestep);
 
       solution.CalculateDerivedQuantitiesAndParameters(p_model.get());
 
       solution.WriteToFile(
-            "SingleCellSimulationTest", "ChayKeizer1983Cvode", "ms",
-            steps_per_row, clean_dir, precision, include_derived_quantities);
+          "SingleCellSimulationTest", "Means2023PCvode", "ms",
+          steps_per_row, clean_dir, precision, include_derived_quantities);
 
     #else
       std::cout << "Cvode is not enabled.\n";
@@ -44,4 +45,4 @@ class TestChayKeizerCellSimulation : public CxxTest::TestSuite {
   }
 };
 
-#endif  // TEST_TESTCHAYKEIZER1983CELLSIMULATION_HPP_
+#endif  // TEST_TESTMEANS2023PCELLSIMULATION_HPP_

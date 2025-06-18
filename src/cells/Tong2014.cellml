@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<model cmeta:id="Tong2014" name="Tong2014" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+<model cmeta:id="Tong_2014" name="Tong_2014" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
     <!-- units-->
     <units name="msec">
         <unit prefix="milli" units="second"/>
@@ -27,10 +27,6 @@
     <units name="coulomb_per_mole">
         <unit units="coulomb"/>
         <unit exponent="-1" units="mole"/>
-    </units>
-    <units name="uA_per_uF">
-        <unit prefix="micro" units="ampere"/>
-        <unit exponent="-1" prefix="micro" units="farad"/>
     </units>
     <units name="per_msec">
         <unit exponent="-1" prefix="milli" units="second"/>
@@ -74,16 +70,17 @@
     </units>
     <!-- Model - stimulation interface-->
     <component name="interface">
-        <variable name="Ist" public_interface="out" units="uA_per_cm2"/>
-        <variable name="time" public_interface="in" units="msec"/>
+        <variable initial_value="0" name="I_hold" public_interface="none" units="uA_per_cm2"/>
+        <variable initial_value="-0.25" name="I_test" public_interface="none" units="uA_per_cm2"/>
         <variable initial_value="1000" name="stim_start" units="msec"/>
         <variable initial_value="46500" name="stim_interval" units="msec"/>
         <variable initial_value="10000" name="stim_duration" units="msec"/>
-        <variable initial_value="-0.3" name="stim_current" units="uA_per_cm2"/>
+        <variable cmeta:id="membrane_stimulus_current" name="I_stim" private_interface="out" units="uA_per_cm2"/>
+        <variable name="time" private_interface="in" units="msec"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply id="stimulus_calculation">
                 <eq/>
-                <ci>Ist</ci>
+                <ci>I_stim</ci>
                 <piecewise>
                     <piece>
                         <cn cellml:units="uA_per_cm2">0.0</cn>
@@ -94,7 +91,7 @@
                         </apply>
                     </piece>
                     <piece>
-                        <ci>stim_current</ci>
+                        <ci>I_test</ci>
                         <apply>
                             <lt/>
                             <apply>
@@ -110,7 +107,7 @@
                         </apply>
                     </piece>
                     <piece>
-                        <ci>stim_current</ci>
+                        <ci>I_test</ci>
                         <apply>
                             <lt/>
                             <apply>
@@ -138,18 +135,18 @@
     </connection>
     <connection>
         <map_components component_1="interface" component_2="membrane_potential"/>
-        <map_variables variable_1="Ist" variable_2="Ist"/>
+        <map_variables variable_1="I_stim" variable_2="I_stim"/>
     </connection>
     <!-- Model - Time variable-->
     <component name="environment">
-        <variable initial_value="0" name="time" public_interface="out" units="msec"/>
+        <variable name="time" public_interface="out" units="msec"/>
     </component>
     <!-- Model - V variable-->
     <component name="membrane_potential">
         <variable name="I_tot" public_interface="none" units="uA_per_cm2"/>
         <variable name="I_Ca_tot" public_interface="out" units="uA_per_cm2"/>
-        <variable initial_value="-50.80774403486136" name="v" public_interface="out" units="mV"/>
-        <variable name="Ist" public_interface="in" units="uA_per_cm2"/>
+        <variable cmeta:id="membrane_voltage" initial_value="-50.80774403486136" name="v" public_interface="out" units="mV"/>
+        <variable name="I_stim" public_interface="in" units="uA_per_cm2"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="Cm" public_interface="in" units="uF_per_cm2"/>
         <variable name="ina" public_interface="in" units="uA_per_cm2"/>
@@ -220,16 +217,12 @@
                     <ci>v</ci>
                 </apply>
                 <apply>
-                    <divide/>
+                    <minus/>
                     <apply>
-                        <minus/>
-                        <apply>
-                            <plus/>
-                            <ci>I_tot</ci>
-                            <ci>Ist</ci>
-                        </apply>
+                        <plus/>
+                        <ci>I_tot</ci>
+                        <ci>I_stim</ci>
                     </apply>
-                    <ci>Cm</ci>
                 </apply>
             </apply>
         </math>
@@ -366,7 +359,7 @@
         <variable name="nao" public_interface="out" units="mM"/>
         <variable name="clo" public_interface="out" units="mM"/>
         <variable name="mgo" public_interface="out" units="mM"/>
-        <variable name="buff" public_interface="out" units="dimensionless"/>
+        <variable cmeta:id="beta" name="buff" public_interface="out" units="dimensionless"/>
         <variable name="AV" public_interface="out" units="cm2_per_uL"/>
         <variable name="zca" public_interface="out" units="dimensionless"/>
         <variable name="zna" public_interface="out" units="dimensionless"/>
@@ -374,24 +367,24 @@
         <variable name="R" public_interface="out" units="joule_per_kelvin_per_kilomole"/>
         <variable name="frdy" public_interface="out" units="coulomb_per_mole"/>
         <variable name="temp" public_interface="out" units="kelvin"/>
-        <variable name="Cm" public_interface="out" units="uF_per_cm2"/>
-        <variable name="gna" public_interface="out" units="mS_per_cm2"/>
-        <variable name="gcal" public_interface="out" units="mS_per_cm2"/>
+        <variable cmeta:id="membrane_capacitance" initial_value="1.0" name="Cm" public_interface="out" units="uF_per_cm2"/>
+        <variable cmeta:id="gna" name="gna" public_interface="out" units="mS_per_cm2"/>
+        <variable cmeta:id="gcal" name="gcal" public_interface="out" units="mS_per_cm2"/>
         <variable name="ecal" public_interface="out" units="mV"/>
         <variable name="kmca" public_interface="out" units="mM"/>
-        <variable name="gcat" public_interface="out" units="mS_per_cm2"/>
+        <variable cmeta:id="gcat" name="gcat" public_interface="out" units="mS_per_cm2"/>
         <variable name="ecat" public_interface="out" units="mV"/>
         <variable name="gkca" public_interface="out" units="mS_per_cm2"/>
         <variable name="gb" public_interface="out" units="mS_per_cm2"/>
-        <variable name="gk1" public_interface="out" units="mS_per_cm2"/>
+        <variable cmeta:id="gk1" name="gk1" public_interface="out" units="mS_per_cm2"/>
         <variable name="gk2" public_interface="out" units="mS_per_cm2"/>
         <variable name="gbka" public_interface="out" units="dimensionless"/>
         <variable name="gbkab" public_interface="out" units="dimensionless"/>
         <variable name="gka" public_interface="out" units="mS_per_cm2"/>
-        <variable name="gkq1" public_interface="out" units="mS_per_cm2"/>
-        <variable name="gkq4" public_interface="out" units="mS_per_cm2"/>
-        <variable name="gkq5" public_interface="out" units="mS_per_cm2"/>
-        <variable name="gherg" public_interface="out" units="mS_per_cm2"/>
+        <variable cmeta:id="gkq1" name="gkq1" public_interface="out" units="mS_per_cm2"/>
+        <variable cmeta:id="gkq4" name="gkq4" public_interface="out" units="mS_per_cm2"/>
+        <variable cmeta:id="gkq5" name="gkq5" public_interface="out" units="mS_per_cm2"/>
+        <variable cmeta:id="gherg" name="gherg" public_interface="out" units="mS_per_cm2"/>
         <variable name="gcl" public_interface="out" units="mS_per_cm2"/>
         <variable name="gh" public_interface="out" units="mS_per_cm2"/>
         <variable name="gns" public_interface="out" units="mS_per_cm2"/>
@@ -506,11 +499,6 @@
             </apply>
             <apply>
                 <eq/>
-                <ci>Cm</ci>
-                <cn cellml:units="uF_per_cm2">1.0</cn>
-            </apply>
-            <apply>
-                <eq/>
                 <ci>gna</ci>
                 <cn cellml:units="mS_per_cm2">0</cn>
             </apply>
@@ -544,15 +532,17 @@
                 <ci>gkca</ci>
                 <cn cellml:units="mS_per_cm2">0.8</cn>
             </apply>
+            <!-- cn cellml:units="mS_per_cm2">0.004</cn -->
             <apply>
                 <eq/>
                 <ci>gb</ci>
-                <cn cellml:units="mS_per_cm2">0.0</cn>
+                <cn cellml:units="mS_per_cm2">0.004</cn>
             </apply>
+            <!-- cn cellml:units="mS_per_cm2">0.24</cn -->
             <apply>
                 <eq/>
                 <ci>gk1</ci>
-                <cn cellml:units="mS_per_cm2">0.24</cn>
+                <cn cellml:units="mS_per_cm2">0.52</cn>
             </apply>
             <apply>
                 <eq/>
@@ -574,25 +564,29 @@
                 <ci>gka</ci>
                 <cn cellml:units="mS_per_cm2">0.16</cn>
             </apply>
+            <!-- cn cellml:units="mS_per_cm2">0.0032</cn -->
             <apply>
                 <eq/>
                 <ci>gkq1</ci>
-                <cn cellml:units="mS_per_cm2">0.0032</cn>
+                <cn cellml:units="mS_per_cm2">0.00</cn>
             </apply>
+            <!-- cn cellml:units="mS_per_cm2">0.024</cni -->
             <apply>
                 <eq/>
                 <ci>gkq4</ci>
-                <cn cellml:units="mS_per_cm2">0.024</cn>
+                <cn cellml:units="mS_per_cm2">0.0</cn>
             </apply>
+            <!-- cn cellml:units="mS_per_cm2">0.016</cn -->
             <apply>
                 <eq/>
                 <ci>gkq5</ci>
-                <cn cellml:units="mS_per_cm2">0.016</cn>
+                <cn cellml:units="mS_per_cm2">0.0</cn>
             </apply>
+            <!-- cn cellml:units="mS_per_cm2">0.08</cn -->
             <apply>
                 <eq/>
                 <ci>gherg</ci>
-                <cn cellml:units="mS_per_cm2">0.08</cn>
+                <cn cellml:units="mS_per_cm2">0.0</cn>
             </apply>
             <apply>
                 <eq/>
@@ -5297,4 +5291,64 @@
         </component_ref>
     </group>
     <!-- Model - Mapping variables-->
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#membrane_stimulus_current">
+            <bqbiol:is xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" rdf:resource="https://chaste.comlab.ox.ac.uk/cellml/ns/oxford-metadata#membrane_stimulus_current" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#membrane_voltage">
+            <bqbiol:is xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" rdf:resource="https://chaste.comlab.ox.ac.uk/cellml/ns/oxford-metadata#membrane_voltage" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#beta">
+            <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#membrane_capacitance">
+            <bqbiol:is xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" rdf:resource="https://chaste.comlab.ox.ac.uk/cellml/ns/oxford-metadata#membrane_capacitance" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#gna">
+            <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#gcal">
+            <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#gcat">
+            <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#gk1">
+            <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#gkq1">
+            <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#gkq4">
+            <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#gkq5">
+            <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#gherg">
+            <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
+        </rdf:Description>
+    </rdf:RDF>
 </model>
