@@ -138,7 +138,7 @@
         <!--var Cm: uF_per_cm2 {pub: in};-->
         <variable cmeta:id="v_p" initial_value="-28.6223126364127" name="v_p" public_interface="out" units="mV"/>
         <!--dynamic passive membrane voltage
-var pVr: mV {init: -35.0, pub: out}; //resting passive membrane voltage (constant; Vp^r in Xu 2015)
+var v_pr: mV {init: -35.0, pub: out}; //resting passive membrane voltage (constant; Vp^r in Xu 2015)
 var pgr: nano_Siemens {init: 0.2, pub: out}; //passive leak conductance / recovery rate (constant, Gp^int Xu 2015)
 var I_pleak: nanoA {pub: in};-->
         <variable name="I_pleak" public_interface="in" units="pA_per_pF"/>
@@ -366,7 +366,7 @@ var{gna} gna: nS_per_pF {init: 0.04, pub: out};-->
         <!--passivecell parameters etc-->
         <variable name="v_p" public_interface="in" units="mV"/>
         <!--dynamic passive membrane voltage-->
-        <variable initial_value="-20" name="pVr" public_interface="out" units="mV"/>
+        <variable cmeta:id="v_pr" initial_value="-20" name="v_pr" public_interface="out" units="mV"/>
         <!--resting passive membrane voltage (constant; Vp^r in Xu 2015)
 var pgr: nano_Siemens {init: 0.2, pub: out}; //passive leak conductance / recovery rate (constant, Gp^int Xu 2015)-->
         <variable initial_value="0.0125" name="pgr" public_interface="out" units="nS_per_pF"/>
@@ -2837,7 +2837,7 @@ var pgr: nS_per_pF {init: 0.1, pub: out};-->
         <variable name="I_pleak" public_interface="out" units="pA_per_pF"/>
         <!--var pgr: nano_Siemens {pub: in};-->
         <variable name="pgr" public_interface="in" units="nS_per_pF"/>
-        <variable name="pVr" public_interface="in" units="mV"/>
+        <variable name="v_pr" public_interface="in" units="mV"/>
         <!--below just for fooling chaste cellml conversion
 complains about 'unused variable' otherwise-->
         <!--var fake_act_var: dimensionless;
@@ -2856,7 +2856,7 @@ I_leak = fake_act_var*Gp_int*(V - V_r);-->
                     <apply>
                         <minus/>
                         <ci>v_p</ci>
-                        <ci>pVr</ci>
+                        <ci>v_pr</ci>
                     </apply>
                 </apply>
             </apply>
@@ -2873,7 +2873,7 @@ enddef;-->
     <connection>
         <map_components component_1="passive_leak" component_2="parameters"/>
         <map_variables variable_1="pgr" variable_2="pgr"/>
-        <map_variables variable_1="pVr" variable_2="pVr"/>
+        <map_variables variable_1="v_pr" variable_2="v_pr"/>
     </connection>
     <!--passive-usmc coupling current-->
     <component name="passive_coupling">
@@ -2951,11 +2951,11 @@ enddef;-->
             <component_ref component="I_BKab"/>
         </component_ref>
     </group>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-    <rdf:Description rdf:about="#Means2023P">
-        <is-self-excitatory xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</is-self-excitatory>
-    </rdf:Description>
-</rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#Means2023P">
+            <is-self-excitatory xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</is-self-excitatory>
+        </rdf:Description>
+    </rdf:RDF>
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
         <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#membrane_voltage">
             <bqbiol:is xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" rdf:resource="https://chaste.comlab.ox.ac.uk/cellml/ns/oxford-metadata#membrane_voltage" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
@@ -2983,6 +2983,11 @@ enddef;-->
     </rdf:RDF>
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
         <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#gkv43">
+            <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#v_pr">
             <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
         </rdf:Description>
     </rdf:RDF>
