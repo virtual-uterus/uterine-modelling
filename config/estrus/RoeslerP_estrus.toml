@@ -19,6 +19,14 @@ cell_id = 5
    gkca = 2.4  # 2.4
    gcal = 0.8  # 0.6 
    gcat = 0.058  # 0.058
-   g_p = 0.050 # 0.013
    E2 = 40.0  # 40.0
    P4 = 14.0  # 14.0
+
+# Passive cell parameters
+[passive]
+   type = "linear"
+   g_p = 0.025
+   v_pr = -40
+   slope = 0.05
+   centre = 5.0
+   amplitude = 0.5

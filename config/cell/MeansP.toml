@@ -1,7 +1,7 @@
 # Cell properties
 capacitance = 1.0 # uF/cm2
 conductivities_2d = [0.00, 0.00] #x, y
-conductivities_3d = [0.1, 0.1, 0.1] #x, y, z
+conductivities_3d = [0.5, 0.5, 0.5] #x, y, z
 
 # Stimulus
 magnitude = -0.55e3 # uA/cm2
@@ -21,7 +21,8 @@ cell_id = 6
 # Passive cell parameters
 [passive]
    type = "gaussian"  # linear or gaussian
-   g_p = 0.025
+   g_p = 1.50
+   v_pr = -55
    slope = 0.05
    centre = 5.0
-   amplitude = 0.1
+   amplitude = 0.5
