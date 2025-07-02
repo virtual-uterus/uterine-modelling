@@ -211,6 +211,7 @@ void simulation_3d(std::string stimulus_type, std::string log_path) {
     std::vector<std::string> output_variables;
     output_variables.push_back("v_p");
     output_variables.push_back("g_p");
+    output_variables.push_back("cai");
     HeartConfig::Instance()->SetOutputVariables(output_variables);
 
     // Get the parameters for the passive cell

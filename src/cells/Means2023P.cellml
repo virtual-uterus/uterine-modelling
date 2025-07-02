@@ -179,7 +179,7 @@ var I_pleak: nanoA {pub: in};-->
     <component name="Ca_Concentrations">
         <variable name="J_tot" units="mM_per_msec"/>
         <variable name="J_Ca_mem" units="mM_per_msec"/>
-        <variable initial_value="0.000371022487263719" name="cai" public_interface="out" units="mM"/>
+        <variable cmeta:id="cai" initial_value="0.000371022487263719" name="cai" public_interface="out" units="mM"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="jnaca" public_interface="in" units="mM_per_msec"/>
         <variable name="jpmca" public_interface="in" units="mM_per_msec"/>
@@ -2989,6 +2989,11 @@ enddef;-->
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
         <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#g_p">
             <modifiable-parameter xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</modifiable-parameter>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#cai">
+            <derived-quantity xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</derived-quantity>
         </rdf:Description>
     </rdf:RDF>
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
