@@ -64,7 +64,7 @@ $ sudo apt-get install libgtk2.0-dev libfuse-dev libfuse3-dev
 
 The container can be pulled directly using singularity:
 ```
-$ singularity pull docker://chaste/release
+$ singularity pull docker://chaste/release:2024.2
 ```
 To use a different version of Chaste replace **chaste/release** with a different image (*i.e.* chaste/develop). The list of option can be found [here](https://hub.docker.com/search?q=chaste). This will create a .sif file that can be loaded with singularity.
 
