@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <boost/make_shared.hpp>
 
 #include "../toml.hpp"
 #include "AbstractUterineCellFactoryTemplate.hpp"
