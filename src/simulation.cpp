@@ -213,7 +213,7 @@ void simulation_3d(std::string stimulus_type, std::string log_path) {
     output_variables.push_back("g_p");
     HeartConfig::Instance()->SetOutputVariables(output_variables);
 
-    // Get the parameters for the passive cell
+/*     // Get the parameters for the passive cell
     const auto cell_params = toml::parse(USMC_SYSTEM_CONSTANTS::CONFIG_DIR +
                                          factory->GetCellParamFile());
     const auto& passive_params = toml::find(cell_params, "passive");
@@ -230,7 +230,7 @@ void simulation_3d(std::string stimulus_type, std::string log_path) {
 
     MonodomainTissue<3>* tissue = monodomain_problem.GetMonodomainTissue();
     tissue->SetConductivityModifier(&modifier);
-    monodomain_problem.Solve();  // Need this here otherwise code breaks
+    monodomain_problem.Solve();  // Need this here otherwise code breaks */
 
   } else {  // Need this here otherwise code breaks
     monodomain_problem.Solve();
