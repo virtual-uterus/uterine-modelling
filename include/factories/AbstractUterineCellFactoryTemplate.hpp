@@ -7,6 +7,8 @@
 #include <cmath>
 #include <unordered_map>
 
+#include <boost/make_shared.hpp>
+
 #include "../toml.hpp"
 #include "../conductivity/distribution_fcts.hpp"
 #include "MonodomainProblem.hpp"
