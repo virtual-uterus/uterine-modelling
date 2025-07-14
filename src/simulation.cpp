@@ -64,17 +64,44 @@ void run_simulation(const int dim) {
     HeartConfig::Instance()->SetMeshFileName(mesh_dir + mesh_name);
   }
   const double capacitance = toml::find<double>(cell_params, "capacitance");
-
+  const std::string output_dir = getenv("CHASTE_TEST_OUTPUT");
+  //below all from effort tidy up output directories
+  /* //search for 'testoutput' and append following directory string
+  //std::string teststr = "testoutput";
+  std::string teststr = cell_type;
+  //std::string output_dir_post = output_dir.substr((output_dir.find(teststr,0)+teststr.length),output_dir.length);
+  std::string output_dir_post = output_dir.substr(output_dir.find(teststr,0)+teststr.length()+1,output_dir.length());
+  //std::cout << "(simulation.cpp) found: " << output_dir_post << std::endl;
+  //std::string save_path = output_dir_post + "/" + cell_type + "/" + save_dir + "/" + stimulus_type; */
   std::string save_path = cell_type + "/" + save_dir + "/" + stimulus_type;
+
+  std::cout << "(simulation.cpp) save_path: " << save_path << std::endl;
+
+  //below issue chaste overwriting results directory now handled by NOT setting 'save_path' for output directory below
+  // and in uterine-simulation script for vtk conversion script
+  //test protecting the output directory from deletion, the default behaviour noted here
+  //./global/src/OutputFileHandler.cpp:149
+  //OutputFileHandler save_dir_file_handler(save_path, false);
 
   // Log file location
   std::string log_dir = cell_type + "/" + save_dir + "/log";
+  //std::string log_dir = output_dir_post + "/" + cell_type + "/" + save_dir + "/log";
+  //std::string log_dir = cell_type + "/" + save_dir + "/" + stimulus_type + "/log";
+
+  std::cout << "(simulation.cpp) log_dir: " << log_dir << std::endl;
+  std::cout << std::endl;
+
   OutputFileHandler output_file_handler(log_dir, false);
   std::string log_path =
     output_file_handler.GetOutputDirectoryFullPath() + "log.log";
 
   HeartConfig::Instance()->SetSimulationDuration(sim_duration);  // ms
-  HeartConfig::Instance()->SetOutputDirectory(save_path);
+  //below commented out: chaste deletes this results folder! instead now use default and handle
+  //moving vtk output in control script uterine-simulation
+  //HeartConfig::Instance()->SetOutputDirectory(save_path);
+  //HeartConfig::Instance()->SetOutputDirectory("./uterine-modeling");
+  //test the set directory -- these must be relative?
+  //std::cout << "(simulation.cpp) GetOutputDirectory set: " << HeartConfig::Instance()->GetOutputDirectory() << std::endl;
   HeartConfig::Instance()->SetOutputFilenamePrefix("results");
 
   HeartConfig::Instance()->SetVisualizeWithVtk(true);
@@ -206,6 +233,8 @@ void simulation_3d(std::string stimulus_type, std::string log_path) {
   std::string cell_type = factory->GetCellType();
 
   if (cell_type[cell_type.length() -1] == 'P') {
+    std::cout << "(simulation.cpp) Solving passive cell type" << std::endl;
+
     // Export passive cell potential and conductivities if passive cell
     // Set up tissue conductivity modifier if passive cell
     std::vector<std::string> output_variables;
@@ -229,7 +258,9 @@ void simulation_3d(std::string stimulus_type, std::string log_path) {
       &monodomain_problem.rGetMesh());
 
     MonodomainTissue<3>* tissue = monodomain_problem.GetMonodomainTissue();
-    tissue->SetConductivityModifier(&modifier);
+    tissue->SetConductivityModifier(&modifier); */
+
+    //below accidentally commented out and nothing happens!
     monodomain_problem.Solve();  // Need this here otherwise code breaks */
 
   } else {  // Need this here otherwise code breaks
