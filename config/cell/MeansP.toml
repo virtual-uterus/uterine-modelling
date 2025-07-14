@@ -21,7 +21,13 @@ cell_id = 6
 # Passive cell parameters
 [passive]
    type = "gaussian"  # linear or gaussian
-   g_p = 0.025
-   slope = 0.05
+   #g_p = 0.025
+   g_p = 0.2
+   #g_p = 0.0
+   #slope = 0.05
+   slope = 0.0
    centre = 5.0
-   amplitude = 0.1
+   amplitude = 1.0
+   #below for random noise (normally-dist) addition to g_p
+   mean = 1.0
+   stddev = 0.1
