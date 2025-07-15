@@ -83,7 +83,8 @@
         <variable name="I_Ca_tot" public_interface="in" units="pA_per_pF"/>
         <variable name="I_NS_tot" public_interface="in" units="pA_per_pF"/>
         <variable name="I_K_tot" public_interface="in" units="pA_per_pF"/>
-        <variable cmeta:id="membrane_voltage" initial_value="-36.8024674441334" name="v" public_interface="out" units="mV"/>
+        <!--var{membrane_voltage} v: mV {init: -36.8024674441334, pub: out};-->
+        <variable cmeta:id="membrane_voltage" initial_value="-53.90915441282156" name="v" public_interface="out" units="mV"/>
         <variable cmeta:id="membrane_capacitance" name="Cm" public_interface="in" units="uF_per_cm2"/>
         <variable name="ina" public_interface="in" units="pA_per_pF"/>
         <variable name="ib" public_interface="in" units="pA_per_pF"/>
@@ -179,7 +180,8 @@ var I_pleak: nanoA {pub: in};-->
     <component name="Ca_Concentrations">
         <variable name="J_tot" units="mM_per_msec"/>
         <variable name="J_Ca_mem" units="mM_per_msec"/>
-        <variable initial_value="0.000371022487263719" name="cai" public_interface="out" units="mM"/>
+        <!--var cai: mM {init: 0.000371022487263719, pub: out};-->
+        <variable cmeta:id="cai" initial_value="0.0001161881607214449" name="cai" public_interface="out" units="mM"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="jnaca" public_interface="in" units="mM_per_msec"/>
         <variable name="jpmca" public_interface="in" units="mM_per_msec"/>
@@ -895,7 +897,8 @@ var pgr: nS_per_pF {init: 0.1, pub: out};-->
         <variable name="mss" units="dimensionless"/>
         <variable name="hss" units="dimensionless"/>
         <variable name="htc" units="msec"/>
-        <variable initial_value="0.0594959692957891" name="h" public_interface="none" units="dimensionless"/>
+        <!--var h: dimensionless {init: 0.0594959692957891, pub: none};-->
+        <variable initial_value="0.404599170710196" name="h" public_interface="none" units="dimensionless"/>
         <variable name="ina" public_interface="out" units="pA_per_pF"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
@@ -1086,7 +1089,8 @@ var pgr: nS_per_pF {init: 0.1, pub: out};-->
         <variable name="fss" units="dimensionless"/>
         <variable name="fca" units="dimensionless"/>
         <variable name="f2tc" units="msec"/>
-        <variable initial_value="0.267097970071125" name="f2" public_interface="none" units="dimensionless"/>
+        <!--var f2: dimensionless {init: 0.267097970071125, pub: none};-->
+        <variable initial_value="0.9065967263076083" name="f2" public_interface="none" units="dimensionless"/>
         <variable name="ical" public_interface="out" units="pA_per_pF"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
@@ -1465,9 +1469,12 @@ var pgr: nS_per_pF {init: 0.1, pub: out};-->
         <variable name="qtc" units="msec"/>
         <variable name="r1tc" units="msec"/>
         <variable name="r2tc" units="msec"/>
-        <variable initial_value="0.421893737164962" name="q" public_interface="none" units="dimensionless"/>
-        <variable initial_value="0.0313952770016399" name="r1" public_interface="none" units="dimensionless"/>
-        <variable initial_value="0.181395386386042" name="r2" public_interface="none" units="dimensionless"/>
+        <!--var q: dimensionless {init: 0.421893737164962, pub: none};
+var r1: dimensionless {init: 0.0313952770016399, pub: none};
+var r2: dimensionless {init: 0.181395386386042, pub: none};-->
+        <variable initial_value="0.2060363247740295" name="q" public_interface="none" units="dimensionless"/>
+        <variable initial_value="0.1922244113609531" name="r1" public_interface="none" units="dimensionless"/>
+        <variable initial_value="0.1932803618375963" name="r2" public_interface="none" units="dimensionless"/>
         <variable name="ikv43" public_interface="out" units="pA_per_pF"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
@@ -2054,7 +2061,8 @@ var pgr: nS_per_pF {init: 0.1, pub: out};-->
         <variable name="ctc" units="msec"/>
         <variable name="K1cl" units="mM"/>
         <variable name="K2cl" units="dimensionless"/>
-        <variable initial_value="0.0738054059273608" name="c" public_interface="none" units="dimensionless"/>
+        <!--var c: dimensionless {init: 0.0738054059273608, pub: none};-->
+        <variable initial_value="0.0003764413740731269" name="c" public_interface="none" units="dimensionless"/>
         <variable name="icl" public_interface="out" units="pA_per_pF"/>
         <variable name="time" public_interface="in" units="msec"/>
         <variable name="v" public_interface="in" units="mV"/>
@@ -2951,11 +2959,11 @@ enddef;-->
             <component_ref component="I_BKab"/>
         </component_ref>
     </group>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-    <rdf:Description rdf:about="#Means2023P">
-        <is-self-excitatory xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</is-self-excitatory>
-    </rdf:Description>
-</rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#Means2023P">
+            <is-self-excitatory xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</is-self-excitatory>
+        </rdf:Description>
+    </rdf:RDF>
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
         <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#membrane_voltage">
             <bqbiol:is xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" rdf:resource="https://chaste.comlab.ox.ac.uk/cellml/ns/oxford-metadata#membrane_voltage" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
@@ -2993,6 +3001,11 @@ enddef;-->
     </rdf:RDF>
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
         <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#v_p">
+            <derived-quantity xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</derived-quantity>
+        </rdf:Description>
+    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="#cai">
             <derived-quantity xmlns="https://chaste.comlab.ox.ac.uk/cellml/ns/pycml#">yes</derived-quantity>
         </rdf:Description>
     </rdf:RDF>
