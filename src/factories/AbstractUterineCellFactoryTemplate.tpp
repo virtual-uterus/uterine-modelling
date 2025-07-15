@@ -135,6 +135,8 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
     double baseline;  // Base value of g_p
     double amplitude;  // Amplitude for the gaussian
     double conductance_value;  // Calculated conductance value
+    double mean; //for normal distribution mean
+    double stddev; //for normal distribution stddev    
 
     for (auto it=mpPassive_parameters.begin();
         it != mpPassive_parameters.end();
@@ -147,7 +149,12 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
             centre = it->second;
           } else if (it->first == "amplitude") {
             amplitude = it->second;
-          } else {
+          } else if (it->first == "mean") {
+            mean = it->second;
+          } else if (it->first == "stddev") {
+            stddev = it->second; 
+          }
+           else {
             const std::string err_msg = "Invalid passive paramter";
             const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
             unsigned line_number = 153;
@@ -156,10 +163,10 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
     }
 
     if (mpConductivity_dist == "linear") {
-      conductance_value = linear_distribution(z, baseline, slope, centre);
+      conductance_value = linear_distribution(z, baseline, slope, centre, mean, stddev);
     } else if (mpConductivity_dist == "gaussian") {
       conductance_value = gaussian_distribution(z, baseline, slope, centre,
-                                                amplitude);
+                                                amplitude, mean, stddev);
     } else {
       const std::string err_msg = "Invalid distribution";
       const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
