@@ -1,6 +1,6 @@
 #include "../../include/conductivity/UterineConductivityModifier.hpp"
 
-
+//default to linear
 UterineConductivityModifier::UterineConductivityModifier() :
   AbstractConductivityModifier<3, 3>(),
   mSpecialMatrix(zero_matrix<double>(3, 3)), mCentre(0.0), mSlope(1.0),
@@ -14,6 +14,7 @@ UterineConductivityModifier::UterineConductivityModifier() :
 
 UterineConductivityModifier::UterineConductivityModifier(
   double centre, double slope, double baseline, double amplitude,
+  double mean, double stddev,
   std::string type, AbstractTetrahedralMesh<3, 3>* mesh) :
   AbstractConductivityModifier<3, 3>(),
   mSpecialMatrix(zero_matrix<double>(3, 3)), mCentre(centre), mSlope(slope),
@@ -43,11 +44,12 @@ c_matrix<double, 3, 3>& UterineConductivityModifier::rCalculateModifiedConductiv
     if (mType == "linear") {
       mTensor(i, i) = linear_distribution(cur_centroid(2),
                                            rOriginalConductivity(i, i), mSlope,
-                                           mCentre);
+                                           mCentre, mMean, mStddev);
     } else if (mType == "gaussian") {
       mTensor(i, i) = gaussian_distribution(cur_centroid(2),
                                              rOriginalConductivity(i, i),
-                                             mSlope, mCentre, mAmplitude);
+                                             mSlope, mCentre, mAmplitude,
+                                            mMean, mStddev);
     }
   }
   return mTensor;
