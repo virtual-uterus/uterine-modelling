@@ -54,6 +54,8 @@ class TestUterineCellFactories : public CxxTest::TestSuite {
         toml::find<double>(passive_params, "slope"),
         conductivities[2],
         toml::find<double>(passive_params, "amplitude"),
+        toml::find<double>(passive_params, "mean"),
+        toml::find<double>(passive_params, "stddev"),
         distributions[i],
         &monodomain_problem.rGetMesh());
 
