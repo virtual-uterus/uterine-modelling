@@ -30,9 +30,9 @@ double gaussian_distribution(double z, double baseline, double slope,
   // Create a random number generator engine
   std::mt19937 generator(std::random_device{}());        
   // Define the normal distribution with mean 0 and standard deviation 1
-  std::normal_distribution<double> distribution(mean, stddev);
+  //std::normal_distribution<double> distribution(mean, stddev);
   //alternatively use exponential distribution with 1/mean as lambda
-  //std::exponential_distribution<double> distribution(1/mean);
+  std::exponential_distribution<double> distribution(1/mean);
 
   double mod_baseline = distribution(generator)*baseline;
 
