@@ -130,44 +130,30 @@ template <int DIM>
 void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
   AbstractCvodeCell* cell, double z) {
   if (mpCell_id > 1) {
-    double slope;  // Slope of the distribution
-    double centre;  // Centre of the distribution
-    double baseline;  // Base value of g_p
-    double amplitude;  // Amplitude for the gaussian
-    double conductance_value;  // Calculated conductance value
-
-    for (auto it=mpPassive_parameters.begin();
-        it != mpPassive_parameters.end();
-        ++it) {
-          if (it->first == "g_p") {
-            baseline = it->second;
-          } else if (it->first == "slope") {
-            slope = it->second;
-          } else if (it->first == "centre") {
-            centre = it->second;
-          } else if (it->first == "amplitude") {
-            amplitude = it->second;
-          } else {
-            const std::string err_msg = "Invalid passive paramter";
-            const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
-            unsigned line_number = 153;
-            throw Exception(err_msg, err_filename, line_number);
-          }
-    }
+    double conductance_value;  // Conductance value for the cell
 
     if (mpConductivity_dist == "linear") {
-      conductance_value = linear_distribution(z, baseline, slope, centre);
+      conductance_value = linear_distribution(
+        z,
+        mpPassive_parameters["g_p"],
+        mpPassive_parameters["slope"],
+        mpPassive_parameters["centre"]);
     } else if (mpConductivity_dist == "gaussian") {
-      conductance_value = gaussian_distribution(z, baseline, slope, centre,
-                                                amplitude);
+      conductance_value = gaussian_distribution(
+        z,
+        mpPassive_parameters["g_p"],
+        mpPassive_parameters["slope"],
+        mpPassive_parameters["centre"],
+        mpPassive_parameters["amplitude"]);
     } else {
       const std::string err_msg = "Invalid distribution";
       const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
-      unsigned line_number = 166;
+      unsigned line_number = 149;
       throw Exception(err_msg, err_filename, line_number);
     }
 
     cell->SetParameter("g_p", conductance_value);
+    cell->SetParameter("v_pr", mpPassive_parameters["v_pr"]);
   }
 }
 
@@ -241,6 +227,7 @@ void AbstractUterineCellFactoryTemplate<DIM>::WriteLogInfo(std::string log_file)
 
   if (!mpPassive_parameters.empty()) {
     log_stream << "Passive parameters \n";
+    log_stream << "  Distribution type: " <<  mpConductivity_dist << std::endl;
 
     for (auto it=mpPassive_parameters.begin(); it != mpPassive_parameters.end(); ++it) {
       log_stream << "  " << it->first << ": " << it->second << std::endl;
