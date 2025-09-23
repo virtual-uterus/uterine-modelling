@@ -32,10 +32,12 @@ template <int DIM>
 class AbstractUterineCellFactoryTemplate : public AbstractCardiacCellFactory<DIM> {
  protected:
   std::string mpCell_type;  // uSMC cell model type
-  std::string mpConductivity_dist;  // Conductivitiy distribution
+  std::string mpConductivity_dist;  // Conductivitiy distribution - passive cell
+  std::string mpTissue_dist;  // Conductivity distn - tissue wide
   std::string mpEstrus;  // Estrus stage if specified
   std::unordered_map<std::string, float> mpCell_parameters;
   std::unordered_map<std::string, float> mpPassive_parameters;
+  std::unordered_map<std::string, float> mpTissue_parameters;
   std::int16_t mpCell_id;  // 0 = HH, 1 = CK, 2 = Means, 3 = Tong, 4 = Roesler
 
 
@@ -47,6 +49,7 @@ class AbstractUterineCellFactoryTemplate : public AbstractCardiacCellFactory<DIM
   std::string GetCellParamFile();
   void SetCellParams(AbstractCvodeCell* cell);
   void SetPassiveParams(AbstractCvodeCell* cell, double z);
+  void SetTissueParams(AbstractCvodeCell* cell, double z);
   void InitCell(AbstractCvodeCell*& cell,
                 boost::shared_ptr<AbstractStimulusFunction> stimulus);
   void SetCellType(std::string cell_type);

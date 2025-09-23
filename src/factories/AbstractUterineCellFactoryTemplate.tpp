@@ -110,6 +110,17 @@ void AbstractUterineCellFactoryTemplate<DIM>::ReadCellParams(std::string cell_pa
         }
     }
   }
+
+/*   if (cell_params.contains("tissuemod")) {
+    for (const auto& [key, value] : toml::find<toml::value>(
+      cell_params, "tissuemod").as_table()) {
+        if (value.is_floating()) {
+            mpTissue_parameters[key] = toml::get<double>(value);
+        } else if (key == "conductivity_mod_type") {
+            mpTissue_dist = toml::get<std::string>(value);
+        }
+    }
+  } */
 }
 
 
@@ -135,6 +146,7 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
     double baseline;  // Base value of g_p
     double amplitude;  // Amplitude for the gaussian
     double conductance_value;  // Calculated conductance value
+    double min; //for miniumum of gaussian
     double mean; //for normal distribution mean
     double stddev; //for normal distribution stddev    
 
@@ -149,6 +161,8 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
             centre = it->second;
           } else if (it->first == "amplitude") {
             amplitude = it->second;
+          } else if (it->first == "min") {
+            min = it->second;
           } else if (it->first == "mean") {
             mean = it->second;
           } else if (it->first == "stddev") {
@@ -163,10 +177,10 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
     }
 
     if (mpConductivity_dist == "linear") {
-      conductance_value = linear_distribution(z, baseline, slope, centre, mean, stddev);
+      conductance_value = passive_linear_distribution(z, baseline, slope, centre, mean, stddev);
     } else if (mpConductivity_dist == "gaussian") {
-      conductance_value = gaussian_distribution(z, baseline, slope, centre,
-                                                amplitude, mean, stddev);
+      conductance_value = passive_gaussian_distribution(z, baseline, slope, centre,
+                                                amplitude, min, mean, stddev);
     } else {
       const std::string err_msg = "Invalid distribution";
       const std::string err_filename = "AbstractUterineCellFactoryTemplate.tpp";
@@ -177,7 +191,6 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
     cell->SetParameter("g_p", conductance_value);
   }
 }
-
 
 template <int DIM>
 void AbstractUterineCellFactoryTemplate<DIM>::InitCell(AbstractCvodeCell*& cell,

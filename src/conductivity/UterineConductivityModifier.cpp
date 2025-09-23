@@ -38,18 +38,18 @@ c_matrix<double, 3, 3>& UterineConductivityModifier::rCalculateModifiedConductiv
   Element<3, 3>* element = (mMesh->GetElement(elementIndex));
   c_vector<double, 3> cur_centroid = element->CalculateCentroid();
 
-  // Modify the current conductivity
+  // Modify the current passive cell coupling 
   // along the diagonal save to the "working memory", and return.
   for ( unsigned i=0; i < 3; ++i ) {
     if (mType == "linear") {
-      mTensor(i, i) = linear_distribution(cur_centroid(2),
+      mTensor(i, i) = passive_linear_distribution(cur_centroid(2),
                                            rOriginalConductivity(i, i), mSlope,
                                            mCentre, mMean, mStddev);
     } else if (mType == "gaussian") {
-      mTensor(i, i) = gaussian_distribution(cur_centroid(2),
+      mTensor(i, i) = passive_gaussian_distribution(cur_centroid(2),
                                              rOriginalConductivity(i, i),
                                              mSlope, mCentre, mAmplitude,
-                                            mMean, mStddev);
+                                            mMean, mMin, mStddev);
     }
   }
   return mTensor;

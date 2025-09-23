@@ -63,6 +63,83 @@ void run_simulation(const int dim) {
       cell_params, "conductivities_3d");
     HeartConfig::Instance()->SetMeshFileName(mesh_dir + mesh_name);
   }
+
+  //tissue conductivity modifier
+  //create tissue modifier
+	UterineTissueModifier modifier;
+   if (cell_params.contains("tissuemod")) {
+    for (const auto& [key, value] : toml::find<toml::value>(
+      cell_params, "tissuemod").as_table()) {
+        
+        if (value.is_floating()) {
+            std::cout << "(simulation.cpp) reading key value: " << key << std::endl;
+            if (key == "conduct_mod_center") {
+              modifier.mCentre = toml::get<double>(value);
+              std::cout << "     value: " << toml::get<double>(value) << std::endl;
+            }
+            else if (key == "conduct_mod_steep") {
+              modifier.mSteep = toml::get<double>(value);;
+              std::cout << "     value: " << toml::get<double>(value) << std::endl;
+            }
+            else if (key == "conduct_mod_min") {
+              modifier.mBaseline = toml::get<double>(value);;
+              std::cout << "     value: " << toml::get<double>(value) << std::endl;
+            }
+            else if (key == "conduct_mod_amplitude") {
+              modifier.mAmplitude = toml::get<double>(value);;
+              std::cout << "     value: " << toml::get<double>(value) << std::endl;
+            }
+            //modifier.mpTissue_parameters[key] = toml::get<double>(value);
+        } else if (key == "conductivity_mod_type") {
+            modifier.mpTissue_dist = toml::get<std::string>(value);
+        }
+    }
+  } 
+
+  //std::cout << "(simulation.cpp) tissue conductivity mod type: " << modifier.mpTissue_dist << std::endl;
+
+  //load these read parameters into the tissuemodifier 
+  //modifier.TissueModLoadParms();
+
+	/* const std::string cond_modifier_type = toml::find<std::string>(cell_params,
+		"conductivity_mod_type");
+
+  //load tissue conductivity modifier parms
+	//attempt parameter array 
+	std::vector<double> cond_mod_parms;
+
+	//load tissue modifier parms
+  if (cond_modifier_type == "none"){
+    std::cout << "(simulation.cpp) no tissue modifier" << std::endl;
+  }
+	else if (cond_modifier_type == "linear"){
+		//compiler wants these declared and init before type check...?! */
+	/* 	double conduct_mod_slope = -1;
+		double conduct_mod_max = -1; */		
+/*    std::cout << "(simulation.cpp) linear tissue modifier" << std::endl;
+		cond_mod_parms.push_back(toml::find<double>(cell_params, "conduct_mod_slope"));
+		cond_mod_parms.push_back(toml::find<double>(cell_params, "conduct_mod_max"));
+	}
+
+	else if (cond_modifier_type == "gaussian"){
+    std::cout << "(simulation.cpp) gaussian tissue modifier" << std::endl;
+		cond_mod_parms.push_back(toml::find<double>(cell_params, "conduct_mod_center"));
+		cond_mod_parms.push_back(toml::find<double>(cell_params, "conduct_mod_steep"));
+		cond_mod_parms.push_back(toml::find<double>(cell_params, "conduct_mod_min"));
+		
+	}
+
+  else {
+    std::cout << "(simulation.cpp) tissue modifer type unrecognised" << std::endl;
+
+    const std::string err_message = "Unrecognized tissue modifer type";
+    const std::string err_filename = "simulation.cpp";
+    unsigned line_number = 97;
+
+    throw Exception(err_message, err_filename, line_number);    
+
+  } */
+
   const double capacitance = toml::find<double>(cell_params, "capacitance");
   const std::string output_dir = getenv("CHASTE_TEST_OUTPUT");
   //below all from effort tidy up output directories
@@ -148,6 +225,17 @@ void run_simulation(const int dim) {
       log_stream << "  z axis conductivity = " << conductivities[2] << std::endl;
     }
   }
+  if (cell_params.contains("tissuemod")) {
+    log_stream << "  conductivity modifier type = " << modifier.mpTissue_dist << std::endl;
+    log_stream << "  conduct_mod_center = " << modifier.mCentre << std::endl;
+    log_stream << "  conduct_mod_steep = " << modifier.mSteep << std::endl;
+    log_stream << "  conduct_mod_min = " << modifier.mBaseline << std::endl;
+    log_stream << "  conduct_mod_amplitude = " << modifier.mAmplitude << std::endl;
+
+  }
+  
+  //log_stream << "  conductivity modfier type = " << cond_modifier_type << std::endl;
+
 
   log_stream << "Simulation parameters" << std::endl;
   log_stream << "  duration: " << sim_duration << " ms" << std::endl;
@@ -160,10 +248,10 @@ void run_simulation(const int dim) {
   if (dim == 2) {
     simulation_2d(stimulus_type, log_path);
   } else if (dim == 3) {
-    simulation_3d(stimulus_type, log_path);
+    simulation_3d(stimulus_type, log_path, save_path, modifier);
   } else {
     const std::string err_msg = "Invalid dimension";
-    const std::string err_filename = "main.cpp";
+    const std::string err_filename = "simulation.cpp";
     unsigned line_number = 140;
 
   throw Exception(err_msg, err_filename, line_number);
@@ -204,7 +292,7 @@ void simulation_2d(std::string stimulus_type, std::string log_path) {
 }
 
 
-void simulation_3d(std::string stimulus_type, std::string log_path) {
+void simulation_3d(std::string stimulus_type, std::string log_path, std::string save_path, UterineTissueModifier modifier) {
   // Include passive cell params to input arguments
   constexpr int DIM = 3;
 
@@ -230,6 +318,71 @@ void simulation_3d(std::string stimulus_type, std::string log_path) {
   MonodomainProblem<DIM> monodomain_problem(factory);
 
   monodomain_problem.Initialise();
+
+  //with the problem initialised, modify tissue conductivity if set
+  //if gaussian or linear tissue mod call routine, else skip
+  if (modifier.mpTissue_dist != "none") {
+    std::cout << "(simulation.cpp) 3d problem with tissue conductivity modifier type " 
+      << modifier.mpTissue_dist << " flagged" << std::endl;
+
+    //get the tissue model
+	  MonodomainTissue<3>* p_monodomain_tissue = monodomain_problem.GetMonodomainTissue();
+
+	  //following https://chaste.github.io/docs/user-tutorials/bidomainwithconductivitymodifier/
+	  //this does the conductivity modification in the model
+	  p_monodomain_tissue->SetConductivityModifier( &modifier );
+
+    //below is for visualisation -- for pulling _out_ the modified conductivities
+  	modifier.p_mesh = &(monodomain_problem.rGetMesh());	
+
+	  //for writing out modifier distribution conductivities
+    std::cout << "(simulation.cpp) Saving tissue conductivity modifier visual to file " << 
+      save_path << "_modifier tissue_conductivity_mod" << std::endl;
+	  VtkMeshWriter<3,3> conductivities_mesh_writer(save_path+"_modifier","tissue_conductivity_mod",false);
+
+    //output to a vtk file for visualisation
+	  //for mapping over the conductivity tensor to output var
+	  c_vector<double, 3> cur_conduct;
+	  std::vector< c_vector<double,3> > mod_conductivities;
+
+    for (AbstractTetrahedralMesh<3,3>::ElementIterator elt_iter=modifier.p_mesh->GetElementIteratorBegin();
+      elt_iter!=modifier.p_mesh->GetElementIteratorEnd();
+      ++elt_iter)
+		  {
+        unsigned index = elt_iter->GetIndex();
+
+        if (index == 0)
+			    {
+            cur_conduct[0] = p_monodomain_tissue->rGetIntracellularConductivityTensor(index)(0,0);
+				    cur_conduct[1] = p_monodomain_tissue->rGetIntracellularConductivityTensor(index)(1,1);
+				    cur_conduct[2] = p_monodomain_tissue->rGetIntracellularConductivityTensor(index)(2,2);	
+				    mod_conductivities.push_back( cur_conduct);
+          }
+        else
+        {
+				    /* cur_conduct[0] = p_monodomain_tissue->rGetIntracellularConductivityTensor(index)(0,0)/index;
+				    cur_conduct[1] = p_monodomain_tissue->rGetIntracellularConductivityTensor(index)(1,1)/index;
+				    cur_conduct[2] = p_monodomain_tissue->rGetIntracellularConductivityTensor(index)(2,2)/index; */
+            //testing without modification by index
+            cur_conduct[0] = p_monodomain_tissue->rGetIntracellularConductivityTensor(index)(0,0);
+				    cur_conduct[1] = p_monodomain_tissue->rGetIntracellularConductivityTensor(index)(1,1);
+				    cur_conduct[2] = p_monodomain_tissue->rGetIntracellularConductivityTensor(index)(2,2);
+				    mod_conductivities.push_back( cur_conduct);
+			  }
+
+        //debug
+        /* std::cout << "(simulation.cpp) mod_conductivities index: " << index << "conduct: " << 
+          cur_conduct[0] << "," << cur_conduct[1] << "," << cur_conduct[2] << std::endl; */
+
+      }
+
+    //pass this vector<c_vector>) to AddCellData for output
+	  conductivities_mesh_writer.AddCellData("Conductivity Modifier",mod_conductivities);
+	  conductivities_mesh_writer.WriteFilesUsingMesh(monodomain_problem.rGetMesh());
+
+  }
+
+
   std::string cell_type = factory->GetCellType();
 
   if (cell_type[cell_type.length() -1] == 'P') {

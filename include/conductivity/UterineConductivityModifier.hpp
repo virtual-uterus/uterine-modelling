@@ -16,18 +16,24 @@ class UterineConductivityModifier : public AbstractConductivityModifier<3, 3> {
   double mSlope;
   double mBaseline;
   double mAmplitude;
+  double mMin;
   double mMean;
   double mStddev;
   std::string mType;
   AbstractTetrahedralMesh<3, 3>* mMesh;
 
  public:
+
   UterineConductivityModifier();
   UterineConductivityModifier(double centre, double slope,
                               double baseline, double amplitude,
                               double mean, double stddev,
                               std::string type,
                               AbstractTetrahedralMesh<3, 3>* mesh);
+/*   UterineConductivityModifier(double centre, double slope,
+                              double baseline, double amplitude,
+                              std::string type,
+                              AbstractTetrahedralMesh<3, 3>* mesh);  */                             
   c_matrix<double, 3, 3>& rCalculateModifiedConductivityTensor(
     unsigned elementIndex,
     const c_matrix<double, 3, 3>& rOriginalConductivity,
