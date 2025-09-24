@@ -10,10 +10,21 @@ echo "<<<<<<<"
 echo ""
 
 # Check arguments
-if [[ $# -ne 1 ]]; then
+if [[ $# -lt 1 ]]; then
 	echo "Error: missing simulation dimension"
 	echo "usage: uterine-simulation <dim>"
 	exit
+fi
+
+#check also for loop request
+if [[ $# -eq 2 ]]; then
+    echo "Multiple jobs requested"
+    echo "Performing >" $2 "< simulations"
+
+	num_job=$2
+else
+	num_job=1
+
 fi
 
 # Move to the app directory and run the simulation
@@ -41,56 +52,88 @@ BASE_DIR=${CHASTE_TEST_OUTPUT}/${CELL_TYPE}/${SAVE_DIR}
 echo "BASE directory:"${BASE_DIR}$"..."
 echo ""
 
-./apps/main $1
+cur_job=1
+while [ "$cur_job" -le "$num_job" ]; do
+    echo "Running simulation >>" $cur_job "<< out of >>" $num_job "<<"
+	echo ""
 
-# Move to the stimulus folder
-cd ${BASE_DIR}
+	#cd to / return to base dir
+	cd ${CHASTE_BUILD_DIR}/projects/uterine-modelling
 
-#create log folder if non existent
-if [ ! -d "${BASE_DIR}/log" ]; then
-	mkdir ${BASE_DIR}/log
-fi
+	./apps/main $1
 
-# Move to the log folder to rename the log file
-cd ${BASE_DIR}/log
-NB_FILES=$(printf "%0.3d" $(ls | wc -l))
-mv log.log "simulation_${NB_FILES}.log"
+	# Move to the stimulus folder
+	cd ${BASE_DIR}
 
-#cd back to base_dir
-cd ${BASE_DIR}
+	#create log folder if non existent
+	if [ ! -d "${BASE_DIR}/log" ]; then
+		mkdir ${BASE_DIR}/log
+	fi
 
-#create BASE_DIR + stimulus folder if non existent
-if [ ! -d "${BASE_DIR}" ]; then
-	echo "making stimulus directory..."
-	mkdir ${BASE_DIR}/${STIMULUS}
-fi
+	# Move to the log folder to rename the log file
+	cd ${BASE_DIR}/log
+	NB_FILES=$(printf "%0.3d" $(ls | wc -l))
+	mv log.log "simulation_${NB_FILES}.log"
 
-echo ""
-echo "Moving results to directory " ${BASE_DIR}"/"${STIMULUS}"/results"
-echo ""
+	#cd back to base_dir
+	cd ${BASE_DIR}
 
-#test 
-#cd "${BASE_DIR}/${STIMULUS}/results"
-# Create results folder if it does not exist
-if [ ! -d "${BASE_DIR}/${STIMULUS}/results" ]; then
-	echo "making results directory..."
-	mkdir ${BASE_DIR}/${STIMULUS}/results
-fi
+	# for conductivity modifier visual file
+	#see if the mod directory exists and cd into it
+	#echo "Testing for conductivity modifier visual file..."
 
-#change to stimulus directory
-cd ${BASE_DIR}/${STIMULUS}
-#CUR_PWD=pwd
-echo "current pwd: "${PWD}
+	if [ -d "${BASE_DIR}/zero_modifier" ]; then
+		#echo "directory " ${BASE_DIR} "/zero_modifier exists..."
+		cd ${BASE_DIR}/zero_modifier
+
+		#test if new file exists
+		if [ -f "tissue_conductivity_mod.vtu" ]; then
+			#echo "Modifier file 'tissue_conductivity_mod.vtu' exists"
+			echo ""
+			echo "Moving tissue conductivity modifier vis file to 'simulation_cond_mod_"${NB_FILES}".vtu"
+			mv tissue_conductivity_mod.vtu "simulation_cond_mod_${NB_FILES}.vtu"
+		fi
+
+	fi
+
+	#create BASE_DIR + stimulus folder if non existent
+	if [ ! -d "${BASE_DIR}/${STIMULUS}" ]; then
+		echo "making stimulus directory..."
+		mkdir ${BASE_DIR}/${STIMULUS}
+	fi
+
+	echo ""
+	echo "Moving results to directory " ${BASE_DIR}"/"${STIMULUS}"/results"
+	echo ""
+
+	#test 
+	#cd "${BASE_DIR}/${STIMULUS}/results"
+	# Create results folder if it does not exist
+	if [ ! -d "${BASE_DIR}/${STIMULUS}/results" ]; then
+		echo "making results directory..."
+		mkdir ${BASE_DIR}/${STIMULUS}/results
+	fi
+
+	#change to stimulus directory
+	cd ${BASE_DIR}/${STIMULUS}
+	CUR_PWD=pwd
+	#echo "current pwd: "${PWD}
 
 
-# Annotate the data for viewing
-SIM_RES_NAME="simulation_${NB_FILES}.vtu"
+	# Annotate the data for viewing
+	SIM_RES_NAME="simulation_${NB_FILES}.vtu"
 
-echo ""
-echo "Saving results to filename " ${SIM_RES_NAME}
-echo ""
+	echo ""
+	echo "Saving results to filename " ${SIM_RES_NAME}
+	echo ""
 
-#below runs into issues with Chaste deleting results directory
-#python3 ${CHASTE_SOURCE_DIR}/python/utils/AddVtuTimeAnnotations.py vtk_output/results.vtu ${BASE_DIR}/${STIMULUS}/results/${SIM_RES_NAME}
-#below instead assumes output into default chasteoutput: CHASTE_TEST_OUTPUT/ChasteResults
-python3 ${CHASTE_SOURCE_DIR}/python/utils/AddVtuTimeAnnotations.py ${CHASTE_TEST_OUTPUT}/ChasteResults/vtk_output/results.vtu ${BASE_DIR}/${STIMULUS}/results/${SIM_RES_NAME}
+	#below runs into issues with Chaste deleting results directory
+	#python3 ${CHASTE_SOURCE_DIR}/python/utils/AddVtuTimeAnnotations.py vtk_output/results.vtu ${BASE_DIR}/${STIMULUS}/results/${SIM_RES_NAME}
+	#below instead assumes output into default chasteoutput: CHASTE_TEST_OUTPUT/ChasteResults
+	python3 ${CHASTE_SOURCE_DIR}/python/utils/AddVtuTimeAnnotations.py ${CHASTE_TEST_OUTPUT}/ChasteResults/vtk_output/results.vtu ${BASE_DIR}/${STIMULUS}/results/${SIM_RES_NAME}
+
+	cur_job=$(($cur_job+1))
+done
+echo ">>>>>"
+echo "Completed" $(($cur_job-1)) "simulations"
+echo "<<<<<"
