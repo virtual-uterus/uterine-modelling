@@ -21,7 +21,7 @@
 
 <a id="overview"></a>
 ## Overview
-This project is an implementation of the uterine smooth muscle models into the chaste modeling framework developed by the uterus group at Auckland Bioengineering Institute, under the 12-Labours umbrella of systems biology. Cell models of uterime smooth muscle cells are included such as the simplified model of Means, et al., 2023, and the non-pregnant model of Roesler, et al., 2025 [LINKS PENDING]. Tissue models integrating our published cell models are based on our modeling framework known as a Functional Tissue Unit -- and the uterine variety is based on the published tissue model of Means, et al., 2025. Various geometries based on microCT imaging of rat uteri and MRI imaging of human uteri are also provided. Updates to this project are ongoing and expect revisions.
+This project is an implementation of the uterine smooth muscle models into the chaste modeling framework developed by the uterus group at Auckland Bioengineering Institute, under the 12-Labours umbrella of systems biology. Cell models of uterine smooth muscle cells are included such as the simplified model of Means, et al., 2023, and the non-pregnant model of Roesler, et al., 2025 [LINKS PENDING]. Tissue models integrating our published cell models are based on our modeling framework known as a Functional Tissue Unit -- and the uterine variety is based on the published tissue model of Means, et al., 2025. Various geometries based on microCT imaging of rat uteri and MRI imaging of human uteri are also provided. Updates to this project are ongoing and expect revisions.
 <a id="general-setup"></a>
 ## General setup
  Here is an example of the directory tree:
