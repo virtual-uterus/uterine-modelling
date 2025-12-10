@@ -373,6 +373,8 @@ void simulation_3d(std::string stimulus_type, std::string log_path, std::string 
         //debug
         /* std::cout << "(simulation.cpp) mod_conductivities index: " << index << "conduct: " << 
           cur_conduct[0] << "," << cur_conduct[1] << "," << cur_conduct[2] << std::endl; */
+        /* std::cout << "(simulation.cpp) mod_conductivities index: " << index << "conduct: " << 
+          cur_conduct[0] << std::endl; */
 
       }
 

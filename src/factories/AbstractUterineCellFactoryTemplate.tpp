@@ -26,7 +26,7 @@ template <int DIM>
 AbstractCvodeCell* AbstractUterineCellFactoryTemplate<DIM>::CreateCardiacCellForTissueNode(
   Node<DIM>* pNode) {
   AbstractCvodeCell* cell(nullptr);
-  double z;
+  double coordinate;
 
   // Initialise cell with ZeroStimulus
   this->InitCell(cell, this->mpZeroStimulus);
@@ -36,8 +36,11 @@ AbstractCvodeCell* AbstractUterineCellFactoryTemplate<DIM>::CreateCardiacCellFor
 
   // Set passive cell parameters
   if (DIM == 3 && !mpPassive_parameters.empty()) {
-    z = pNode->rGetLocation()[2];
-    this->SetPassiveParams(cell, z);
+    //below passes 'z' coordinate
+    coordinate = pNode->rGetLocation()[2];
+    //below passes 'y'
+    //coordinate = pNode->rGetLocation()[1];
+    this->SetPassiveParams(cell, coordinate);
   }
 
   return cell;
@@ -139,7 +142,7 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetCellParams(
 
 template <int DIM>
 void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
-  AbstractCvodeCell* cell, double z) {
+  AbstractCvodeCell* cell, double coordinate) {
   if (mpCell_id > 1) {
     double slope;  // Slope of the distribution
     double centre;  // Centre of the distribution
@@ -177,9 +180,13 @@ void AbstractUterineCellFactoryTemplate<DIM>::SetPassiveParams(
     }
 
     if (mpConductivity_dist == "linear") {
-      conductance_value = passive_linear_distribution(z, baseline, slope, centre, mean, stddev);
+      conductance_value = passive_linear_distribution(coordinate, baseline, slope, centre, mean, stddev);
     } else if (mpConductivity_dist == "gaussian") {
-      conductance_value = passive_gaussian_distribution(z, baseline, slope, centre,
+      //below for along z-axis
+      /* conductance_value = passive_gaussian_distribution(z, baseline, slope, centre,
+                                                amplitude, min, mean, stddev); */
+      //below for along y-axis
+      conductance_value = passive_gaussian_distribution(coordinate, baseline, slope, centre,
                                                 amplitude, min, mean, stddev);
     } else {
       const std::string err_msg = "Invalid distribution";

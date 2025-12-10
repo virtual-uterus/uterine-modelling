@@ -70,22 +70,50 @@ public:
         //get this element's centroid -- used for calculating position-based variation
         Element<3,3>* p_element = (p_mesh->GetElement(elementIndex));
         c_vector<double, 3> cur_centroid = p_element->CalculateCentroid();
+        
 
         for ( unsigned i=0; i<3; i++ )
         {
+
+            //below for gaussian
             //for some reason, chaste divides the conductances by the...elementIndex...so we multiply here
             //mTensor(i,i) = elementIndex*rOriginalConductivity(i,i)*(mBaseline + mAmplitude*exp(-mSteep*pow((cur_centroid(2)-mCentre),2.0)));
 
             //testing without multiplying by index
-            mTensor(i,i) = rOriginalConductivity(i,i)*(mBaseline + mAmplitude*exp(-mSteep*pow((cur_centroid(2)-mCentre),2.0)));
+            //below along 'z' or 2nd coord
+            //mTensor(i,i) = rOriginalConductivity(i,i)*(mBaseline + mAmplitude*exp(-mSteep*pow((cur_centroid(2)-mCentre),2.0)));
+            //below along 'y' or 1st
+            //mTensor(i,i) = rOriginalConductivity(i,i)*(mBaseline + mAmplitude*exp(-mSteep*pow((cur_centroid(1)-mCentre),2.0)));
+
+            //below for linear - along 'z' (coord 2)
+            mTensor(i,i) = rOriginalConductivity(i,i)*(mSteep*cur_centroid(2) + mCentre);
+            //below for linear - along 'y' (coord 1)
+            //mTensor(i,i) = rOriginalConductivity(i,i)*(mSteep*cur_centroid(1) + mCentre);
+
+            /* //piecewise linear hack
+            //slope = (mSteep - mCentre)/(mAmplitude - mBaseline);
+
+            //depending on where in intervals return piecewise bits
+            if (cur_centroid(2) < mBaseline){
+                mTensor(i,i) = rOriginalConductivity(i,i)*mCentre;
+            }
+            else if ((cur_centroid(2) >= mBaseline) && (cur_centroid(2) < mAmplitude)){
+                double slope = (mSteep - mCentre)/(mAmplitude - mBaseline);
+                mTensor(i,i) = rOriginalConductivity(i,i)*(slope*(cur_centroid(2) - mBaseline)+mCentre);
+            }
+            else{
+                mTensor(i,i) = rOriginalConductivity(i,i)*mSteep;
+            } */
+            
 
 
 
         }          
         //debug
-        /* std::cout << "(UterineTissueModifer.hpp) cur_centroid(2): " << cur_centroid(2) << " mTensor: " 
-            << mTensor(0,0)/elementIndex << "," << mTensor(1,1)/elementIndex << "," << mTensor(2,2)/elementIndex << std::endl;
- */
+        /* std::cout << "(UterineTissueModifer.hpp) cur_centroid(1): " << cur_centroid(1) << " OriginalCond: " << rOriginalConductivity(0,0) << " mTensor: " 
+            << mTensor(0,0) << std::endl;  */
+            //"," << mTensor(1,1) << "," << mTensor(2,2) << std::endl;
+
         return mTensor;
     }
 };

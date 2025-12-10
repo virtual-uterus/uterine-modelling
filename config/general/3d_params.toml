@@ -1,10 +1,21 @@
 # General parameters
 save_dir = "monodomain_3d"
 #mesh_name = "uterus_scaffold_scaled_3"
+#mesh_name = "Segmentation3_clean_repair_t1.1"
+#mesh_name = "human_uterus_mean_fixed.1"
 #mesh_name = "rat_uterus_idealised_10mm_4704_elem"
-mesh_name = "test_cylinder1p1.1"
+#rat scaffolds - tess2 
+#mesh_name = "rat_scaffold_fitting_workflow_AWA026_mod_tess2_repair1.1"
+#mesh_name = "rat_scaffold_fitting_workflow_AWA033_mod_tess2_repair1.1"
+#mesh_name = "rat_scaffold_fitting_workflow_AWB003_mod_tess2_repair1.1"
+#mesh_name = "rat_scaffold_fitting_workflow_AWB008_mod_tess2_repair1.1"
+mesh_name = "rat_scaffold_fitting_workflow_AWB009_mod_tess2_repair1.1"
+#mesh_name = "lammers_slab_reproduce_t1_dx0p4.1"
+#mesh_name = "tube_to_box_t1p1.1"
 #mesh_dir = "/mesh/uterus/scaffolds/"  # Must end with /
-mesh_dir = "/mesh/uterus/"
+#below for modified rat scaffolds
+mesh_dir = "/mesh/uterus/reduced_rat_t1/"
+#mesh_dir = "/mesh/uterus/"
 stimulus_type = "zero"
 orthotropic = false
 
@@ -18,7 +29,7 @@ z_stim_end = 2.15
 
 # Time paramters in millisec
 #sim_duration = 15.0e3
-sim_duration = 20000.0
+sim_duration = 10000.0
 ode_timestep = 1.0
 pde_timestep = 1.0
 print_timestep = 2.0

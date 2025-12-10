@@ -10,7 +10,7 @@
 #include "factories/UterineRegularCellFactory.hpp"
 #include "factories/UterineZeroCellFactory.hpp"
 #include "factories/UterineRegionCellFactory.hpp"
-#include "conductivity/UterineConductivityModifier.hpp"
+//#include "conductivity/UterineConductivityModifier.hpp"
 #include "conductivity/UterineTissueModifier.hpp"
 #include "VtkMeshWriter.hpp"
 

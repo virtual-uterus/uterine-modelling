@@ -1,5 +1,6 @@
 # Chaste uterine modeling
 # Table of contents
+0. [Overview](#overview)
 1. [General setup](#general-setup)
    1. [Installing uterine-chaste](#install)
    2. [Installing uterine-modelling](#uterine-modelling)
@@ -18,6 +19,9 @@
 	1. [Adding a cell](#add-cell)
 	2. [Adding a test](#add-test)
 
+<a id="overview"></a>
+## Overview
+Brief description of the project and code abilities.
 <a id="general-setup"></a>
 ## General setup
  Here is an example of the directory tree:
